@@ -20,8 +20,8 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-l
 
 FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm --global install turbo
-RUN turbo prune nextjs --docker
+#RUN pnpm --global install turbo
+#RUN turbo prune nextjs --docker
 RUN pnpm run build
 
 FROM base AS runtime
