@@ -69,4 +69,4 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: sasin91/sasin91.xyz:latest
+          tags: lotd/sasin91.xyz:latest
