@@ -12,8 +12,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-l
 
 FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-#RUN pnpm --global install turbo
-#RUN turbo prune nextjs --docker
 RUN pnpm run build
 
 FROM base AS runtime
@@ -26,12 +24,6 @@ USER nextjs
 
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=build /app/dist /app/dist
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=build --chown=nextjs:nodejs /app/apps/nextjs/.next/standalone ./
-COPY --from=build --chown=nextjs:nodejs /app/apps/nextjs/.next/static ./apps/nextjs/.next/static
-COPY --from=build --chown=nextjs:nodejs /app/apps/nextjs/public ./apps/nextjs/public
- 
+
 EXPOSE 8000
-# CMD [ "pnpm", "start" ]
-CMD node apps/nextjs/server.js
+CMD [ "pnpm", "start" ]
