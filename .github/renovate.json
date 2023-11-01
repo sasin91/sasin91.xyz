@@ -3,7 +3,9 @@
   "extends": ["config:base"],
   "packageRules": [
     {
-      "matchPackagePatterns": ["^@acme/"],
+    "matchPackagePatterns": [
+        "^@sasin91/"
+    ],
       "enabled": false
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "name": "@acme/prettier-config",
+"name": "@sasin91/prettier-config",
   "private": true,
   "version": "0.1.0",
   "main": "index.mjs",
@@ -14,8 +14,8 @@
     "prettier-plugin-tailwindcss": "^0.5.6"
   },
   "devDependencies": {
-    "@acme/tsconfig": "^0.1.0",
+    "@sasin91/tsconfig": "^0.1.0",
     "typescript": "^5.2.2"
   },
-  "prettier": "@acme/prettier-config"
+"prettier": "@sasin91/prettier-config"
 }
