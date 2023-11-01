@@ -2,14 +2,6 @@ FROM node:20-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ENV AUTH_URL="https://sasin91.xyz"
-RUN --mount=type=secret,id=AUTH_SECRET \
-  cat /run/secrets/AUTH_SECRET
-RUN --mount=type=secret,id=DATABASE_URL \
-  cat /run/secrets/DATABASE_URL
-RUN --mount=type=secret,id=AUTH_DISCORD_ID \
-  cat /run/secrets/AUTH_DISCORD_ID
-RUN --mount=type=secret,id=AUTH_DISCORD_SECRET \
-  cat /run/secrets/AUTH_DISCORD_SECRET
 
 RUN corepack enable
 COPY . /app
