@@ -1,5 +1,5 @@
 {
-"name": "@sasin91/eslint-config",
+  "name": "@sasin91/eslint-config",
   "version": "0.2.0",
   "private": true,
   "license": "MIT",
@@ -38,5 +38,5 @@
       "./base.js"
     ]
   },
-"prettier": "@sasin91/prettier-config"
+  "prettier": "@sasin91/prettier-config"
 }

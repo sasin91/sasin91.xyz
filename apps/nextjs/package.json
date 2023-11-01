@@ -1,5 +1,5 @@
 {
-"name": "@sasin91/nextjs",
+  "name": "@sasin91/nextjs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -47,10 +47,10 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-    "@sasin91/eslint-config/base",
-    "@sasin91/eslint-config/nextjs",
-    "@sasin91/eslint-config/react"
+      "@sasin91/eslint-config/base",
+      "@sasin91/eslint-config/nextjs",
+      "@sasin91/eslint-config/react"
     ]
   },
-"prettier": "@sasin91/prettier-config"
+  "prettier": "@sasin91/prettier-config"
 }

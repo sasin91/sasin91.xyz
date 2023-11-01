@@ -1,5 +1,5 @@
 {
-"name": "@sasin91/db",
+  "name": "@sasin91/db",
   "version": "0.1.0",
   "private": true,
   "main": "./index.ts",
@@ -30,8 +30,8 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-    "@sasin91/eslint-config/base"
+      "@sasin91/eslint-config/base"
     ]
   },
-"prettier": "@sasin91/prettier-config"
+  "prettier": "@sasin91/prettier-config"
 }

@@ -1,5 +1,5 @@
 {
-"name": "@sasin91/prettier-config",
+  "name": "@sasin91/prettier-config",
   "private": true,
   "version": "0.1.0",
   "main": "index.mjs",
@@ -17,5 +17,5 @@
     "@sasin91/tsconfig": "^0.1.0",
     "typescript": "^5.2.2"
   },
-"prettier": "@sasin91/prettier-config"
+  "prettier": "@sasin91/prettier-config"
 }
