@@ -1,0 +1,70 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: letsencrypt
+  namespace: default
+
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: jonas.kerwin.hansen@gmail.com
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+      - http01:
+          ingress:
+            class: kong
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sasin91-xyz
+  namespace: default
+spec:
+  secretName: sasin91-xyz
+  issuerRef:
+    name: letsencrypt
+  dnsNames:
+    - sasin91.xyz
+---
+# LinkerD routing header
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: set-l5d-header
+  namespace: default
+plugin: request-transformer
+config:
+  add:
+    headers:
+      - l5d-dst-override:$(headers.host).svc.cluster.local
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sasin91-xyz
+  namespace: default
+  annotations:
+    cert-manager.io/issuer: "letsencrypt"
+    konghq.com/protocols: "https"
+    konghq.com/https-redirect-status-code: "301"
+    konghq.com/strip-path: "false"
+    konghq.com/plugins: set-l5d-header
+    linkerd/inject: ingress
+spec:
+  ingressClassName: kong
+  tls:
+  - hosts:
+    - sasin91.xyz
+    secretName: sasin91-xyz
+  rules:
+  - host: sasin91.xyz
+    http:
+      paths:
+      - backend:
+          service:
+            name: webapp-service
+            port:
+              name: app
+        path: /
+        pathType: Prefix

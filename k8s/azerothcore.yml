@@ -1,0 +1,139 @@
+apiVersion: configuration.konghq.com/v1beta1
+kind: TCPIngress
+metadata:
+  name: azerothcore
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: kong
+    linkerd/inject: ingress
+spec:
+  rules:
+    -- auth
+    - port: 3724
+      backend:
+        serviceName: ac-authserver
+        servicePort: 3724
+    -- world
+    - port: 8085
+      backend:
+        serviceName: ac-worldserver
+        servicePort: 8085
+    -- world soap
+    - port: 7878
+      backend:
+        serviceName: ac-worldserver
+        servicePort: 7878
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ac-worldserver
+  namespace: default
+  labels:
+    tier: game
+  annotations:
+    linkerd.io/inject: enabled
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ac-worldserver
+  template:
+    metadata:
+      labels:
+        app: ac-worldserver
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+        - name: ac-worldserver
+          image: acore/ac-wotlk-worldserver:master
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: ac-worldserver-env
+          resources:
+            limits:
+              cpu: "4"
+              memory: "16Gi"
+      imagePullSecrets:
+        - name: regcred
+----
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ac-worldserver
+  namespace: default
+spec:
+  maxReplicas: 8
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ac-worldserver
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ac-authserver
+  namespace: default
+  labels:
+    tier: game
+  annotations:
+    linkerd.io/inject: enabled
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ac-authserver
+  template:
+    metadata:
+      labels:
+        app: ac-authserver
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+        - name: ac-authserver
+          image: acore/ac-wotlk-authserver:master
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: ac-authserver-env
+          resources:
+            limits:
+              cpu: "4"
+              memory: "16Gi"
+      imagePullSecrets:
+        - name: regcred
+----
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ac-authserver
+  namespace: default
+spec:
+  maxReplicas: 8
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ac-authserver

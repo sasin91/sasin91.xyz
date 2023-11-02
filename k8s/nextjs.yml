@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nextjs-service
+  namespace: default
+  labels:
+    tier: frontend
+spec:
+  type: ClusterIP
+  ports:
+    - name: app
+      port: 80
+      targetPort: 3000
+  selector:
+    app: nextjs
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextjs
+  namespace: default
+  labels:
+    tier: frontend
+  annotations:
+    linkerd.io/inject: enabled
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nextjs
+  template:
+    metadata:
+      labels:
+        app: nextjs
+      annotations:
+        linkerd.io/inject: enabled
+    spec:
+      containers:
+        - name: nextjs
+          image: lotd/sasin91.xyz
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: nextjs-env
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "256Mi"
+      imagePullSecrets:
+        - name: regcred
+----
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nextjs
+  namespace: default
+spec:
+  maxReplicas: 4
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nextjs
