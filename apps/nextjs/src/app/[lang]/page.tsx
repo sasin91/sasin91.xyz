@@ -1,11 +1,11 @@
-import { Lng } from '~/app/i18n/settings';
-import AppFooter from '~/components/app-footer';
+import type { Lng } from '~/app/i18n/settings';
+import AppFooter from '~/app/_components/app-footer';
 
-import AppHeader from '~/components/app-header';
-import ContactSection from '~/components/landing-page/contact-section';
-import FeatureSection from '~/components/landing-page/feature-section';
-import HeroSection from '~/components/landing-page/hero-section';
-import TimelineSection from '~/components/landing-page/timeline-section';
+import AppHeader from '~/app/_components/app-header';
+import ContactSection from '~/app/_components/landing-page/contact-section';
+import FeatureSection from '~/app/_components/landing-page/feature-section';
+import HeroSection from '~/app/_components/landing-page/hero-section';
+import TimelineSection from '~/app/_components/landing-page/timeline-section';
 
 export default function Welcome({ params }: { params: { lang: Lng } }) {
   return (

@@ -17,7 +17,7 @@
     "@trpc/client": "next",
     "@trpc/server": "next",
     "superjson": "1.13.1",
-    "zod": "^3.22.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@sasin91/eslint-config": "^0.2.0",

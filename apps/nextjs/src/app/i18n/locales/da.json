@@ -1,6 +1,7 @@
 {
   "app": {
-    "title": "Jonas Hansen - Webudvikler der kan alt fra server & netværk til frontend"
+    "title": "Jonas Hansen",
+    "description": "Webudvikler der kan alt fra server & netværk til frontend"
   },
   "timeline": {
     "webintegrator": {
@@ -61,7 +62,7 @@
     "tagline": "Med mig på holdet, har i en medspiller som kan løfte lidt af det hele"
   },
   "hero": {
-    "headline": "👋 Jeg er Jonas, en webudvikler fra Slagelse. {0} Jeg har arbejdet med PHP og Laravel siden 2015, {0} og har siden da været med til at udvikle et billet agentur, en video streaming platform og {0} en rekruteringsplatform.",
+    "headline": "👋 Jeg er Jonas, en webudvikler fra Slagelse. <br /> Jeg har arbejdet med PHP og Laravel siden 2015, <br /> og har siden da været med til at udvikle et billet agentur, en video streaming platform og <br /> en rekruteringsplatform.",
     "headline1": "Jeg trives med nye og spændende ideér og udfordringer, og er altid klar på at lære noget nyt.",
     "headline2": "Og anerkender vigtigheden af at skrive ren og læsbar kode, som er nem at vedligeholde."
   },
@@ -76,8 +77,9 @@
       "home": "Hjem",
       "about": "Om",
       "contact": "Kontakt",
-      "uses": "Udstyr",
-      "projects": "Projekter"
+      "blog": "Blog",
+      "projects": "Projekter",
+      "game": "Spil"
     },
     "authenticated": {
       "dashboard": "Instrumentbræt",
@@ -108,6 +110,16 @@
   "form": {
     "errors": {
       "required": "{label} er krævet"
+    }
+  },
+  "by {authorName}, {authorRole}": "af {authorName}, {authorRole}",
+  "projects": {
+    "game": {
+      "login": {
+        "headline": "👋 Hvem der?",
+        "name": "Gamer tag 👊",
+        "password": "Kodeord"
+      }
     }
   }
 }

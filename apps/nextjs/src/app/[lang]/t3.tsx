@@ -1,11 +1,11 @@
 import { Suspense } from "react";
 
-import { AuthShowcase } from "./_components/auth-showcase";
+import { AuthShowcase } from "~/app/_components/auth-showcase";
 import {
   CreatePostForm,
   PostCardSkeleton,
   PostList,
-} from "./_components/posts";
+} from "~/app/_components/posts";
 
 export default function HomePage() {
   return (

@@ -1,12 +1,12 @@
 import { ChevronDownIcon, CircleIcon, PlusIcon, StarIcon } from "lucide-react";
-import { Lng } from "~/app/i18n/settings";
-import AppFooter from "~/components/app-footer";
-import AppHeader from "~/components/app-header";
-import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
-import Grid from "~/components/ui/grid";
-import { Separator } from "~/components/ui/separator";
+import type { Lng } from "~/app/i18n/settings";
+import AppFooter from "~/app/_components/app-footer";
+import AppHeader from "~/app/_components/app-header";
+import { Button } from "~/app/_components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/app/_components/ui/card";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "~/app/_components/ui/dropdown-menu";
+import Grid from "~/app/_components/ui/grid";
+import { Separator } from "~/app/_components/ui/separator";
 
 function DemoGithub() {
     return (
