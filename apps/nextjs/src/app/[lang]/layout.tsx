@@ -9,7 +9,6 @@ import { cn } from "~/utils/tailwind";
 import "~/styles/globals.css";
 
 import { headers } from "next/headers";
-import { t } from "i18next";
 
 import { useTranslation } from "../i18n";
 import { TRPCReactProvider } from "./providers";
@@ -22,6 +21,7 @@ import { TRPCReactProvider } from "./providers";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t } = await useTranslation(params.lang);
 
   const title = t("app.title");
@@ -50,16 +50,10 @@ interface Props {
   params: { lang: Lng };
 }
 
-export default function layout({ children, params: { lang } }: Props) {
+export default function RootLayout({ children, params: { lang } }: Props) {
   return (
     <html lang={lang}>
-      <body
-        className={cn(
-          GeistSans.className,
-          GeistSans.variable,
-          "to-magenta-100/20 bg-gradient-to-br from-white via-cyan-100/5 font-sans antialiased",
-        )}
-      >
+      <body className={cn(GeistSans.className, GeistSans.variable)}>
         <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
       </body>
     </html>

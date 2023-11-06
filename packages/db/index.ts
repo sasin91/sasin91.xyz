@@ -3,9 +3,10 @@ import mysql from "mysql2/promise";
 
 import * as auth from "./schema/auth";
 import * as contact from "./schema/contact";
+import * as player from "./schema/player";
 import * as post from "./schema/post";
 
-export const schema = { ...auth, ...post, ...contact };
+export const schema = { ...auth, ...post, ...contact, ...player };
 
 export { mySqlTable as tableCreator } from "./schema/_table";
 

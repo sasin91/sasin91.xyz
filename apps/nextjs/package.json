@@ -17,6 +17,9 @@
     "@cloudinary/url-gen": "^1.12.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
+    "@pmndrs/assets": "^1.6.0",
+    "@react-three/drei": "^9.88.11",
+    "@react-three/fiber": "^8.15.9",
     "@sasin91/api": "^0.1.0",
     "@sasin91/auth": "^0.1.0",
     "@sasin91/db": "^0.1.0",
@@ -28,6 +31,7 @@
     "@trpc/next": "next",
     "@trpc/react-query": "next",
     "@trpc/server": "next",
+    "@types/three": "^0.158.1",
     "accept-language": "^3.0.18",
     "clsx": "^2.0.0",
     "drizzle-orm": "^0.28.6",
@@ -44,6 +48,7 @@
     "react-i18next": "^13.3.1",
     "superjson": "1.13.1",
     "tailwind-merge": "^2.0.0",
+    "three": "^0.158.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -51,6 +56,7 @@
     "@sasin91/prettier-config": "^0.1.0",
     "@sasin91/tailwind-config": "^0.1.0",
     "@sasin91/tsconfig": "^0.1.0",
+    "@tailwindcss/forms": "^0.5.6",
     "@types/node": "^18.18.8",
     "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
@@ -58,6 +64,7 @@
     "eslint": "^8.52.0",
     "prettier": "^3.0.3",
     "tailwindcss": "3.3.5",
+    "tailwindcss-textshadow": "^2.1.3",
     "typescript": "^5.2.2"
   },
   "eslintConfig": {

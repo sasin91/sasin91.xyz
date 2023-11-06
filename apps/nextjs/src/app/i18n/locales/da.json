@@ -118,8 +118,12 @@
       "login": {
         "headline": "👋 Hvem der?",
         "name": "Gamer tag 👊",
-        "password": "Kodeord"
-      }
-    }
+        "password": "Kodeord",
+        "discord": "Log ind med Discord"
+      },
+      "title": "Spil"
+    },
+    "title": "Mine projekter",
+    "description": "Normalt noget jeg selv finder nyttigt og/eller interessant at bygge"
   }
 }
