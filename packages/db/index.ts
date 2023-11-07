@@ -14,4 +14,4 @@ export * from "drizzle-orm";
 
 const poolConnection = mysql.createPool(process.env.DATABASE_URL!);
 
-export const db = drizzle(poolConnection);
+export const db = drizzle<typeof schema>(poolConnection);
