@@ -6,7 +6,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const playerRouter = createTRPCRouter({
   byId: publicProcedure
-    .input(z.object({ name: z.string() }))
+    .input(z.object({ id: z.string() }))
     .query(({ ctx, input }) =>
       ctx.db.query.player.findFirst({
         where: eq(schema.player.id, input.id),
