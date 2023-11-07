@@ -1,62 +1,73 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import i18next, { FlatNamespace, KeyPrefix } from 'i18next'
-import { initReactI18next, useTranslation as useTranslationOrg, UseTranslationOptions, UseTranslationResponse, FallbackNs } from 'react-i18next'
-import { useCookies } from 'react-cookie'
-import resourcesToBackend from 'i18next-resources-to-backend'
+import { useEffect, useState } from "react";
+import i18next, { FlatNamespace, KeyPrefix } from "i18next";
 // import LocizeBackend from 'i18next-locize-backend'
-import LanguageDetector from 'i18next-browser-languagedetector'
-import { getOptions, languages, cookieName } from './settings'
+import LanguageDetector from "i18next-browser-languagedetector";
+import resourcesToBackend from "i18next-resources-to-backend";
+import { useCookies } from "react-cookie";
+import {
+  FallbackNs,
+  initReactI18next,
+  UseTranslationOptions,
+  useTranslation as useTranslationOrg,
+  UseTranslationResponse,
+} from "react-i18next";
 
-const runsOnServerSide = typeof window === 'undefined'
+import { cookieName, getOptions, languages } from "./settings";
+
+const runsOnServerSide = typeof window === "undefined";
 
 // on client side the normal singleton is ok
 i18next
   .use(initReactI18next)
   .use(LanguageDetector)
-  .use(resourcesToBackend((language: string) => import(`./locales/${language}.json`)))
-//   .use(resourcesToBackend((language: string, namespace: string) => import(`./locales/${language}/${namespace}.json`)))
+  .use(
+    resourcesToBackend(
+      (language: string) => import(`./locales/${language}.json`),
+    ),
+  )
+  //   .use(resourcesToBackend((language: string, namespace: string) => import(`./locales/${language}/${namespace}.json`)))
   .init({
     ...getOptions(),
     lng: undefined, // let detect the language on client side
     detection: {
-      order: ['path', 'htmlTag', 'cookie', 'navigator'],
+      order: ["path", "htmlTag", "cookie", "navigator"],
     },
-    preload: runsOnServerSide ? languages : []
-  })
+    preload: runsOnServerSide ? languages : [],
+  });
 
 export function useTranslation<
   Ns extends FlatNamespace,
-  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined
+  KPrefix extends KeyPrefix<FallbackNs<Ns>> = undefined,
 >(
   lng: string,
   ns?: Ns,
   options?: UseTranslationOptions<KPrefix>,
 ): UseTranslationResponse<FallbackNs<Ns>, KPrefix> {
-  const [cookies, setCookie] = useCookies([cookieName])
-  const ret = useTranslationOrg(ns, options)
-  const { i18n } = ret
+  const [cookies, setCookie] = useCookies([cookieName]);
+  const ret = useTranslationOrg(ns, options);
+  const { i18n } = ret;
   if (runsOnServerSide && lng && i18n.resolvedLanguage !== lng) {
-    i18n.changeLanguage(lng)
+    i18n.changeLanguage(lng);
   } else {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage)
+    const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      if (activeLng === i18n.resolvedLanguage) return
-      setActiveLng(i18n.resolvedLanguage)
-    }, [activeLng, i18n.resolvedLanguage])
+      if (activeLng === i18n.resolvedLanguage) return;
+      setActiveLng(i18n.resolvedLanguage);
+    }, [activeLng, i18n.resolvedLanguage]);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      if (!lng || i18n.resolvedLanguage === lng) return
-      i18n.changeLanguage(lng)
-    }, [lng, i18n])
+      if (!lng || i18n.resolvedLanguage === lng) return;
+      i18n.changeLanguage(lng);
+    }, [lng, i18n]);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
-      if (cookies.i18next === lng) return
-      setCookie(cookieName, lng, { path: '/' })
-    }, [lng, cookies.i18next])
+      if (cookies.i18next === lng) return;
+      setCookie(cookieName, lng, { path: "/" });
+    }, [lng, cookies.i18next]);
   }
-  return ret
+  return ret;
 }
