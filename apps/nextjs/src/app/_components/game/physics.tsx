@@ -5,9 +5,13 @@ import { Capsule } from "three/examples/jsm/math/Capsule";
 
 import useOctree from "~/app/hooks/useOctree";
 import Ball from "./ball";
-import { ballCount, balls, radius, v1, v2, v3 } from "./game";
+import { balls, radius, v1, v2, v3 } from "./game";
 import Player from "./player";
 import SphereCollider from "./sphere-collider";
+
+const scene = import("@pmndrs/assets/hdri/city.exr").then(
+  (module) => module.default,
+);
 
 export type Collider = {
   sphere?: Sphere;
@@ -21,9 +25,7 @@ export type checkSphereCollisionsFn = (
 ) => void;
 
 export default function Physics() {
-  const { nodes, scene } = useGLTF(
-    "https://cdn.jsdelivr.net/gh/Sean-Bradley/React-Three-Fiber-Boilerplate@octree/public/models/scene-transformed.glb",
-  );
+  const { nodes, scene } = useGLTF("/assets/maps/scene-transformed.glb");
   const octree = useOctree(scene);
 
   const colliders = useRef<Collider[]>([]);

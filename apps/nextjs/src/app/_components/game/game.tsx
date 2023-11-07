@@ -71,8 +71,8 @@ export default function Game() {
             shadow-camera-top={30}
             shadow-camera-bottom={-30}
           />
-          <Environment files={suspend(city)} />
           <Physics />
+          <Environment files={suspend(city)} background />
           <PointerLockControls />
         </PerformanceMonitor>
       </Canvas>
