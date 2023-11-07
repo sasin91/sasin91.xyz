@@ -13,6 +13,7 @@ import { Collider } from "./physics";
 const GRAVITY = 30;
 const STEPS_PER_FRAME = 5;
 
+// @ts-expect-error
 const suzi = import("@pmndrs/assets/models/suzi.glb").then(
   (module) => module.default,
 );
@@ -207,5 +208,5 @@ export default function Player({
     teleportPlayerIfOob(camera, capsule, playerVelocity);
   });
 
-  return <Gltf src={suspend(suzi)} receiveShadow castShadow />;
+  return <Gltf src={suspend(suzi) as string} receiveShadow castShadow />;
 }

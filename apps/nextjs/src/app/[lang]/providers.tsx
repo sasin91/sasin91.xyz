@@ -35,7 +35,7 @@ export function TRPCReactProvider(props: {
     api.createClient({
       transformer: superjson,
       links: [
-        loggerLink({
+        loggerLink<any>({
           enabled: (opts) =>
             process.env.NODE_ENV === "development" ||
             (opts.direction === "down" && opts.result instanceof Error),
