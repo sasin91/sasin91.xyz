@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { useTranslation } from "~/app/i18n";
 import type { Props } from "~/app/types/Props";
-import MoonImage from "~/images/tyler-van-der-hoeven-_ok8uVzL2gI-unsplash.jpg";
+import MoonImage from "~/assets/tyler-van-der-hoeven-_ok8uVzL2gI-unsplash.jpg";
 
 export default async function ProjectsPage({ params }: Props) {
   const { t } = await useTranslation(params.lang);
