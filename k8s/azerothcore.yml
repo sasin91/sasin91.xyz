@@ -48,7 +48,7 @@ spec:
       containers:
         - name: ac-worldserver
           image: acore/ac-wotlk-worldserver:master
-          imagePullPolicy: Always
+          ImagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           envFrom:
@@ -60,7 +60,7 @@ spec:
               memory: "16Gi"
       imagePullSecrets:
         - name: regcred
-----
+---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -105,7 +105,7 @@ spec:
       containers:
         - name: ac-authserver
           image: acore/ac-wotlk-authserver:master
-          imagePullPolicy: Always
+          ImagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           envFrom:
@@ -117,7 +117,7 @@ spec:
               memory: "16Gi"
       imagePullSecrets:
         - name: regcred
-----
+---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:

@@ -13,7 +13,7 @@ spec:
       targetPort: 3000
   selector:
     app: nextjs
-----
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -38,7 +38,7 @@ spec:
       containers:
         - name: nextjs
           image: lotd/sasin91.xyz
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
           envFrom:
@@ -46,11 +46,9 @@ spec:
                 name: nextjs-env
           resources:
             limits:
-              cpu: "0.5"
-              memory: "256Mi"
-      imagePullSecrets:
-        - name: regcred
-----
+              cpu: "0.1"
+              memory: "128Mi"
+---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -59,14 +57,32 @@ metadata:
 spec:
   maxReplicas: 4
   metrics:
-  - resource:
-      name: cpu
-      target:
-        averageUtilization: 80
-        type: Utilization
-    type: Resource
+    - resource:
+        name: cpu
+        target:
+          averageUtilization: 80
+          type: Utilization
+      type: Resource
   minReplicas: 1
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
     name: nextjs
+---
+apiVersion: v1
+data:
+  AUTH_URL: "https://sasin91.xyz"
+  AUTH_SECRET: "fIGSVwmdgf3w/Omx2RKR7gMVb0d/b76qSsZ1GUDaRIM="
+  AUTH_DISCORD_ID: "1169345679261450260"
+  AUTH_DISCORD_SECRET: "be9b5c6ca8e1170cbe27e4af7d3e53367d5b357bf48182f80bc22d30947e7fd2"
+  NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: "sasin91"
+  CLOUDINARY_API_KEY: "775616311731857"
+  CLOUDINARY_API_SECRET: "oJrhUma6byz3ox2CzKPrOeoc0V8"
+  NODE_ENV: prod
+  DATABASE_URL: "mysql://root:secret@mariadb-service/sasin91"
+kind: ConfigMap
+metadata:
+  labels:
+    tier: frontend
+  name: nextjs-env
+  namespace: default

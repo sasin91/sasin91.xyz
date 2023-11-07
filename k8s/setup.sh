@@ -1,7 +1,5 @@
 #! /usr/bin/env bash
 bash ./get_helm.sh
-curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh
-export PATH=$PATH:$HOME.linkerd2/bin
 
 helm repo add linkerd https://helm.linkerd.io/stable
 helm repo add l5d-smi https://linkerd.github.io/linkerd-smi
