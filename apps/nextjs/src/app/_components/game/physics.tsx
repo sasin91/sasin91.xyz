@@ -1,17 +1,16 @@
 import { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
-import { Sphere, Vector3 } from "three";
+import { useLoader } from "@react-three/fiber";
+import { suspend } from "suspend-react";
+import { FileLoader, Sphere, Vector3 } from "three";
 import { Capsule } from "three/examples/jsm/math/Capsule";
 
 import useOctree from "~/app/hooks/useOctree";
 import Ball from "./ball";
 import { balls, radius, v1, v2, v3 } from "./game";
+import { NightSky } from "./night-sky";
 import Player from "./player";
 import SphereCollider from "./sphere-collider";
-
-const scene = import("@pmndrs/assets/hdri/city.exr").then(
-  (module) => module.default,
-);
 
 export type Collider = {
   sphere?: Sphere;
@@ -82,6 +81,7 @@ export default function Physics() {
   return (
     <>
       <group dispose={null}>
+        <NightSky />
         <mesh
           castShadow
           receiveShadow

@@ -5,19 +5,12 @@ import {
   Environment,
   PerformanceMonitor,
   PointerLockControls,
-  Sky,
-  Stars,
   Stats,
 } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { suspend } from "suspend-react";
 import { Vector3 } from "three";
 
 import Physics from "./physics";
-
-const city = import("@pmndrs/assets/hdri/city.exr").then(
-  (module) => module.default,
-);
 
 export const Gravity = 30;
 export const ballCount = 100;
@@ -41,21 +34,6 @@ export default function Game() {
           onDecline={() => setDpr(0.25)}
         >
           <Stats />
-          <Sky
-            distance={450000}
-            sunPosition={[0, 1, 0]}
-            inclination={0}
-            azimuth={0.25}
-          />
-          <Stars
-            radius={100}
-            depth={50}
-            count={5000}
-            factor={4}
-            saturation={0}
-            fade
-            speed={1}
-          />
           <ambientLight />
           <pointLight position={[10, 10, 10]} />
           <directionalLight
@@ -72,7 +50,6 @@ export default function Game() {
             shadow-camera-bottom={-30}
           />
           <Physics />
-          <Environment files={suspend(city)} background />
           <PointerLockControls />
         </PerformanceMonitor>
       </Canvas>
