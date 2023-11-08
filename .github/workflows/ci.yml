@@ -35,17 +35,6 @@ jobs:
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
-      - name: Make production envfile
-        uses: SpicyPizza/create-envfile@v1
-        with:
-          envkey_AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          envkey_AUTH_DISCORD_ID: ${{ secrets.AUTH_DISCORD_ID }}
-          envkey_AUTH_DISCORD_SECRET: ${{ secrets.AUTH_DISCORD_SECRET }}
-          envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          envkey_CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          envkey_CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          envkey_NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          file_name: .env
 
       - name: Install deps (with cache)
         run: pnpm install
@@ -66,17 +55,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Make production envfile
-        uses: SpicyPizza/create-envfile@v1
-        with:
-          envkey_AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
-          envkey_AUTH_DISCORD_ID: ${{ secrets.AUTH_DISCORD_ID }}
-          envkey_AUTH_DISCORD_SECRET: ${{ secrets.AUTH_DISCORD_SECRET }}
-          envkey_DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          envkey_CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
-          envkey_CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
-          envkey_NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
-          file_name: .env
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
@@ -84,3 +62,11 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: lotd/sasin91.xyz:latest
+          build-args:
+            - AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+            - AUTH_DISCORD_ID: ${{ secrets.AUTH_DISCORD_ID }}
+            - AUTH_DISCORD_SECRET: ${{ secrets.AUTH_DISCORD_SECRET }}
+            - DATABASE_URL: ${{ secrets.DATABASE_URL }}
+            - CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+            - CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+            - NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
