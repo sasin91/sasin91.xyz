@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 node:20-slim AS base
+FROM --platform=linux/amd64 node:21-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 ENV AUTH_URL="https://sasin91.xyz"
