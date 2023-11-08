@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "pnpm with-env next build",
+    "build": "pnpm next build",
     "clean": "git clean -xdf .next .turbo node_modules",
     "dev": "pnpm with-env next dev",
     "lint": "dotenv -v SKIP_ENV_VALIDATION=1 next lint",
@@ -34,6 +34,7 @@
     "@types/three": "^0.158.1",
     "accept-language": "^3.0.18",
     "clsx": "^2.0.0",
+    "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.6",
     "geist": "^1.0.0",
     "i18next": "^23.6.0",
