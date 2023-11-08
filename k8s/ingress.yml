@@ -54,17 +54,17 @@ metadata:
 spec:
   ingressClassName: kong
   tls:
-  - hosts:
-    - sasin91.xyz
-    secretName: sasin91-xyz
+    - hosts:
+        - sasin91.xyz
+      secretName: sasin91-xyz
   rules:
-  - host: sasin91.xyz
-    http:
-      paths:
-      - backend:
-          service:
-            name: webapp-service
-            port:
-              name: app
-        path: /
-        pathType: Prefix
+    - host: sasin91.xyz
+      http:
+        paths:
+          - backend:
+              service:
+                name: nextjs-service
+                port:
+                  name: app
+            path: /
+            pathType: Prefix
