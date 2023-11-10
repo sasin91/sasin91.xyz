@@ -10,6 +10,7 @@ import {
 
 import { useTranslation } from "~/app/i18n/client";
 import type { Lng } from "~/app/i18n/settings";
+import { DesktopNavigation, MobileNavigation } from "./app-navigation";
 import Logo from "./ui/logo";
 
 export default function AppHeader({ lang }: { lang: Lng }) {
@@ -50,18 +51,13 @@ export default function AppHeader({ lang }: { lang: Lng }) {
                   <Logo className="h-8 w-auto" />
                 </div>
                 <div className="hidden md:ml-6 md:flex md:space-x-8">
-                  {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
-                  {links.map((link) => (
-                    <Link key={link.key} href={link.href}>
-                      {link.label}
-                    </Link>
-                  ))}
+                  <DesktopNavigation links={links} />
                 </div>
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <Link
-                    as="button"
+                    as="a"
                     type="button"
                     className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     href={`/${lang}/projects/game`}
@@ -90,16 +86,7 @@ export default function AppHeader({ lang }: { lang: Lng }) {
           <Disclosure.Panel className="md:hidden">
             <div className="space-y-1 pb-3 pt-2">
               {/* Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" */}
-              {links.map((link) => (
-                <Disclosure.Button
-                  key={link.key}
-                  as={Link}
-                  href={link.href}
-                  className="block border-l-4 border-indigo-500 bg-indigo-50 py-2 pl-3 pr-4 text-base font-medium text-indigo-700 sm:pl-5 sm:pr-6"
-                >
-                  {link.label}
-                </Disclosure.Button>
-              ))}
+              <MobileNavigation links={links} />
             </div>
             <div className="border-t border-gray-200 pb-3 pt-4">
               <div className="flex items-center px-4 sm:px-6">

@@ -2,7 +2,6 @@
 
 import { Suspense, useState } from "react";
 import {
-  Environment,
   PerformanceMonitor,
   PointerLockControls,
   Stats,
