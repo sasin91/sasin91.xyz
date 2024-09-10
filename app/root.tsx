@@ -14,6 +14,8 @@ import { useChangeLanguage } from "remix-i18next/react";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
+  { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
+  { rel: "icon", href: "/favicon.png", type: "image/png" },
 ];
 
 export const handle = {
