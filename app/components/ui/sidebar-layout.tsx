@@ -78,7 +78,7 @@ export function SidebarLayout({
             <OpenMenuIcon />
           </NavbarItem>
         </div>
-        <div className="min-w-0 flex-1">{navbar}</div>
+        <div className="min-w-0 flex-1 hidden lg:block">{navbar}</div>
       </header>
 
       {/* Content */}
