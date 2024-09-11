@@ -1,3 +1,5 @@
+import { MenuProps } from "@headlessui/react";
+import { LanguagesIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
   Dropdown,
@@ -6,15 +8,17 @@ import {
   DropdownLabel,
   DropdownMenu,
 } from "./dropdown";
-import { LanguagesIcon } from "lucide-react";
-import { NavbarItem } from "./navbar";
+import { ExoticComponent, ForwardRefExoticComponent } from "react";
 
-export const LanguageMenu = () => {
+export const LanguageMenu = ({
+  as,
+  ...props
+}: MenuProps<ForwardRefExoticComponent<any> | ExoticComponent>) => {
   const { t, i18n } = useTranslation();
 
   return (
-    <Dropdown>
-      <DropdownButton as={NavbarItem} aria-label={t("languages.select")}>
+    <Dropdown {...props}>
+      <DropdownButton as={as} aria-label={t("languages.select")}>
         <LanguagesIcon />
       </DropdownButton>
       <DropdownMenu className="min-w-64" anchor="bottom end">

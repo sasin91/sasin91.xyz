@@ -41,12 +41,15 @@ import {
 import {
   Sidebar,
   SidebarBody,
+  SidebarFooter,
+  SidebarHeader,
   SidebarItem,
   SidebarLabel,
 } from "~/components/ui/sidebar";
 import { StackedLayout } from "~/components/ui/stacked-layout";
 import ThemeSwitch from "~/components/ui/theme-switch";
 import Underline from "~/components/ui/underline";
+import { Button } from "~/components/ui/button";
 
 type LoaderData = {
   title: string;
@@ -423,13 +426,19 @@ export default function Index() {
           </NavbarSection>
           <NavbarSpacer />
           <NavbarSection>
-            <LanguageMenu />
+            <LanguageMenu as={NavbarItem} />
             <ThemeSwitch />
           </NavbarSection>
         </Navbar>
       }
       sidebar={
         <Sidebar>
+          <SidebarHeader>
+            <SidebarItem className="flex items-center gap-2">
+              <LanguageMenu as={NavbarItem} />
+              <ThemeSwitch />
+            </SidebarItem>
+          </SidebarHeader>
           <SidebarBody>
             <SidebarItem href="/" current={pathname === "/"}>
               <HomeIcon />
