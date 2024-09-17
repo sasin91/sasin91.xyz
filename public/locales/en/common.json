@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Jonas Hansen",
-    "description": "Web developer who knows everything from server & network to front end"
+    "description": "Experienced developer with expertise across the full stack"
   },
   "timeline": {
     "webintegrator": {
@@ -77,7 +77,8 @@
   },
   "navigation": {
     "global": {
-      "about_me": "About Me"
+      "about_me": "About Me",
+      "blog": "Blog"
     },
     "authenticated": {
       "dashboard": "Dashboard",

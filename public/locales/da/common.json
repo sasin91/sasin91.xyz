@@ -1,7 +1,7 @@
 {
   "app": {
     "title": "Jonas Hansen",
-    "description": "Webudvikler der kan alt fra server & netværk til frontend"
+    "description": "Erfaren udvikler med ekspertise på tværs af hele stakken"
   },
   "timeline": {
     "webintegrator": {
@@ -82,7 +82,8 @@
   },
   "navigation": {
     "global": {
-      "about_me": "Om mig"
+      "about_me": "Om mig",
+      "blog": "Blog"
     },
     "authenticated": {
       "dashboard": "Instrumentbræt",
