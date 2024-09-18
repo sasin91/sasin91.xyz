@@ -151,5 +151,7 @@
     "en": "English",
     "da": "Danish",
     "select": "Select language"
-  }
+  },
+  "uneccessary": "unnecessary",
+  "read_more_here": "Read more here"
 }

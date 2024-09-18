@@ -1,26 +1,19 @@
 import {
-  json,
-  type LoaderFunctionArgs,
-  type MetaFunction,
-} from "@netlify/remix-runtime";
-import {
   AppWindowIcon,
   AtSignIcon,
   ClipboardCheckIcon,
   CogIcon,
   DatabaseIcon,
   HistoryIcon,
-  HomeIcon,
   LockIcon,
   RefreshCwIcon,
   ShieldCheckIcon,
   UploadCloudIcon,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import i18next from "~/i18next.server";
-
-import { useLocation } from "@remix-run/react";
+import { json, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { AnchorHTMLAttributes, PropsWithChildren, type HTMLProps } from "react";
+import { AppNavbar, AppSidebar } from "~/components/app-navigation";
 import { FacebookIcon } from "~/components/svgs/facebook-icon";
 import { GithubIcon } from "~/components/svgs/github-icon";
 import { InstagramIcon } from "~/components/svgs/instagram-icon";
@@ -29,35 +22,20 @@ import { MeshPattern } from "~/components/svgs/mesh-pattern";
 import { TwitterIcon } from "~/components/svgs/twitter-icon";
 import { YoutubeIcon } from "~/components/svgs/youtube-icon";
 import { Heading } from "~/components/ui/heading";
-import { LanguageMenu } from "~/components/ui/language-menu";
-import { Link } from "~/components/ui/link";
-import {
-  Navbar,
-  NavbarDivider,
-  NavbarItem,
-  NavbarSection,
-  NavbarSpacer,
-} from "~/components/ui/navbar";
-import {
-  Sidebar,
-  SidebarBody,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarItem,
-  SidebarLabel,
-} from "~/components/ui/sidebar";
 import { StackedLayout } from "~/components/ui/stacked-layout";
-import ThemeSwitch from "~/components/ui/theme-switch";
 import Underline from "~/components/ui/underline";
-import { Button } from "~/components/ui/button";
+import i18next from "~/i18next.server";
+import { getLang } from "~/utils/i18n";
 
 type LoaderData = {
   title: string;
   description: string;
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const t = await i18next.getFixedT(request);
+export async function loader({ params }: LoaderFunctionArgs) {
+  const lang = getLang(params);
+
+  const t = await i18next.getFixedT(lang);
 
   const data: LoaderData = {
     title: t("app.title"),
@@ -70,8 +48,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
     {
-      title: data!.title,
-      description: data!.description,
+      title: data?.title,
+      description: data?.description,
     },
   ];
 };
@@ -200,6 +178,7 @@ function TimelineItem(item: TimelineItemType) {
       className={`group transition-all duration-300 ease-in-out text-secondary-foreground`}
       target="_blank"
       href={item.href || "#"}
+      rel="noreferrer"
     >
       <time
         dateTime={item.date.toISOString()}
@@ -404,50 +383,8 @@ function ContactSection(props: HTMLProps<HTMLDivElement>) {
 }
 
 export default function Index() {
-  const { t } = useTranslation("common");
-  const { pathname } = useLocation();
-
   return (
-    <StackedLayout
-      navbar={
-        <Navbar>
-          <Link href="/">
-            <img
-              src="/favicon.png"
-              alt={t("app.title")}
-              className="w-8 h-8 rounded-full"
-            />
-          </Link>
-          <NavbarDivider />
-          <NavbarSection>
-            <NavbarItem href="/" current={pathname === "/"}>
-              {t("navigation.global.about_me")}
-            </NavbarItem>
-          </NavbarSection>
-          <NavbarSpacer />
-          <NavbarSection>
-            <LanguageMenu as={NavbarItem} />
-            <ThemeSwitch />
-          </NavbarSection>
-        </Navbar>
-      }
-      sidebar={
-        <Sidebar>
-          <SidebarHeader>
-            <SidebarItem className="flex items-center gap-2">
-              <LanguageMenu as={NavbarItem} />
-              <ThemeSwitch />
-            </SidebarItem>
-          </SidebarHeader>
-          <SidebarBody>
-            <SidebarItem href="/" current={pathname === "/"}>
-              <HomeIcon />
-              <SidebarLabel>{t("navigation.global.about_me")}</SidebarLabel>
-            </SidebarItem>
-          </SidebarBody>
-        </Sidebar>
-      }
-    >
+    <StackedLayout navbar={<AppNavbar />} sidebar={<AppSidebar />}>
       <article className="isolate">
         <HeroSection />
 
