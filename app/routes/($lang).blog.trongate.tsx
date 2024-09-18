@@ -103,7 +103,7 @@ export default function BlogTrongate() {
               src="/images/blog/trongate/trongate_lvim_validation.png"
               className="aspect-video rounded-xl bg-background object-cover"
             />
-            <figcaption className="mt-4 flex gap-x-2 text-sm leading-6 text-primary-500">
+            <figcaption className="mt-4 flex gap-x-2 text-sm leading-6 text-primary">
               <InformationCircleIcon
                 aria-hidden="true"
                 className="mt-0.5 h-5 w-5 flex-none text-primary"
