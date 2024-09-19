@@ -108,11 +108,7 @@ export default function BlogTrongate() {
                 aria-hidden="true"
                 className="mt-0.5 h-5 w-5 flex-none text-primary"
               />
-              <Trans
-                i18nKey="posts.trongate.callback_validation"
-                ns="blog"
-                components={{ u: <Underline active={true} /> }}
-              />
+              {t("posts.trongate.callback_validation")}
             </figcaption>
           </section>
           <section className="mt-10 max-w-2xl">
