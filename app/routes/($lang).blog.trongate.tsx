@@ -163,9 +163,7 @@ export default function BlogTrongate() {
           </section>
         </article>
         <footer>
-          <p className="text-left">
-            // sasin91, {new Date().toLocaleDateString()}
-          </p>
+          <p className="text-left">// sasin91, 18.09.2024</p>
         </footer>
       </div>
     </StackedLayout>
