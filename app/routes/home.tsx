@@ -8,11 +8,9 @@ import TimelineSection from "~/home/timeline-section";
 import type { Route } from "./+types/home";
 
 export function meta({ }: Route.MetaArgs) {
-  const { t } = useTranslation();
-
   return [
-    { title: t('app.title') },
-    { name: "description", content: t('app.description') },
+    { title: 'Jonas Hansen' },
+    { name: "description", content: 'Experienced developer with expertise across the full stack' },
   ];
 }
 
