@@ -1,13 +1,30 @@
+import { useTranslation } from "react-i18next";
+import { AppNavbar, AppSidebar } from "~/components/app-navigation";
+import { StackedLayout } from "~/components/ui/stacked-layout";
+import ContactSection from "~/home/contact-section";
+import { FeatureSection } from "~/home/feature-section";
+import HeroSection from "~/home/hero-section";
+import TimelineSection from "~/home/timeline-section";
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
+  const { t } = useTranslation();
+
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: t('app.title') },
+    { name: "description", content: t('app.description') },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <StackedLayout navbar={<AppNavbar />} sidebar={<AppSidebar />}>
+      <article className="isolate">
+        <HeroSection />
+        <TimelineSection />
+        <FeatureSection />
+        <ContactSection />
+      </article>
+    </StackedLayout>
+  )
 }

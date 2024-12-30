@@ -1,14 +1,42 @@
 import {
   isRouteErrorResponse,
   Links,
-  Meta,
   Outlet,
   Scripts,
-  ScrollRestoration,
+  ScrollRestoration
 } from "react-router";
 
+import i18n from "i18next";
+import BrowserLanguageDetector from "i18next-browser-languagedetector";
+import HttpBackend from "i18next-http-backend";
+import { Loader } from "lucide-react";
+import { I18nextProvider, initReactI18next } from "react-i18next";
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
+import { BackgroundBeams } from "./components/ui/background-beams";
+
+i18n
+  .use(initReactI18next)
+  .use(BrowserLanguageDetector)
+  .use(HttpBackend)
+  .init({
+    supportedLngs: ["en", "da"],
+    fallbackLng: "en",
+    ns: "common",
+    defaultNS: "common",
+    saveMissing: true,
+
+    backend: {
+      backendOptions: [{
+        loadPath: '/locales/{{lng}}/{{ns}}.json'
+      }]
+    },
+
+    interpolation: {
+      escapeValue: false // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
+    }
+  });
+
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -22,18 +50,39 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
   { rel: "stylesheet", href: stylesheet },
+  { rel: "icon", href: "/favicon.png", type: "image/png" },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function HydrateFallback() {
   return (
-    <html lang="en">
+    <div className="flex items-center justify-center min-h-screen bg-background to-magenta-100/20 bg-gradient-to-br from-background via-cyan-100/5">
+      <div className="flex flex-col items-center">
+        <BackgroundBeams />
+
+        <Loader className="w-16 h-16 text-blue-600 animate-spin" />
+      </div>
+    </div>
+  );
+}
+
+export function Layout({ children }: { children: React.ReactNode }) {
+  const locale = i18n.resolvedLanguage || 'en'
+
+  // This hook will change the i18n instance language to the current locale
+  // detected by the loader, this way, when we do something to change the
+  // language, this locale will change and i18next will load the correct
+  // translation files
+  i18n.changeLanguage(locale);
+
+  return (
+    <html lang={locale} dir={i18n.dir()}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
+
         <Links />
       </head>
-      <body>
+      <body className="dark">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -43,7 +92,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <I18nextProvider i18n={i18n}>
+      <Outlet />
+    </I18nextProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
