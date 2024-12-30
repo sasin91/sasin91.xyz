@@ -1,0 +1,26 @@
+{
+  "description": "My thoughts and observations about everything and anything",
+  "index": {
+    "title": "Blog"
+  },
+  "sidebar": {
+    "heading": "Posts"
+  },
+  "posts": {
+    "trongate": {
+      "summary": "Trongate is often misunderstood and gets a bad reputation because it breaks with common standards and takes a journey back to its roots. <br /> In this article, I will explore and highlight this rough diamond that deserves a spot in the limelight.",
+      "intro": "An exciting PHP framework that challenges the established standards and offers a simple yet effective approach to development.",
+      "tagline": "I have worked with PHP for {{phpExpYears}} years, and one recurring thing is <underline>unnecessary</underline> code that needs maintenance. <br /> Occam's razor is clearly visible when all you want is to tear <underline>everything</underline> out by the roots and start fresh, hoping to build something more simple.",
+      "mhavc": "This is where Trongate shines; you get a simple starting point with a solid starting architecture due to everything being divided into modules, including media and JavaScript files.",
+      "missing_i18n": "A criticism that could be made is that internationalization (i18n) hasn't been considered, and there is actually no real language support. <br /> This is true and something I have <pr-link>previously</pr-link> addressed. It's on the roadmap, and I look forward to seeing how it gets resolved. :)",
+      "callback_validation": "Another feature that often flies under the radar is <u>callback</u> based validation.",
+      "hope": "My hope with this article is to spark people's interest and highlight a rough diamond that unfortunately has gained a somewhat bad reputation.",
+      "before_i_go": "Before I go, I just want to shout out",
+      "mx": "A library based on <htmx-link>HTMX</htmx-link> and in many ways has the same features, just using mx- instead of hx-.",
+      "mx_more": "And yet it offers so much more, with close integration, built-in modal support, <mx-during-request>\"optimistic\" UI</mx-during-request>, and <mx-after-swap>more.</mx-after-swap>"
+    }
+  },
+  "blog": {
+    "recent": "The latest posts"
+  }
+}

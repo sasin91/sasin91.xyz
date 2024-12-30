@@ -1,0 +1,1 @@
+import{l as o}from"./chunk-K6AXKMTT-BxoATuLT.js";import{d as s}from"./tailwind--Tq6Lkz8.js";function a({className:t,level:e=1,...r}){let n=`h${e}`;return o.jsx(n,{...r,className:s(t,"text-2xl/8 font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-300 sm:text-xl/8")})}export{a as H};

@@ -1,0 +1,158 @@
+{
+  "app": {
+    "title": "Jonas Hansen",
+    "description": "Experienced developer with expertise across the full stack",
+    "loading": "Loading, please wait..."
+  },
+  "timeline": {
+    "webintegrator": {
+      "name": "Trained WebIntegrator 🎉",
+      "description": "I passed my training as a WebIntegrator with a 12. \nI have learned how to make websites, webshops and much more."
+    },
+    "ghc": {
+      "name": "Web developer at GHC Travel ✈️",
+      "description": "After some internships elsewhere, in 2017 I got my first job as a web developer at GHC Travel. \nI was responsible for migrating and modernizing their existing website from pure PHP to Laravel 6"
+    },
+    "syncronet": {
+      "name": "Developer at Syncronet 📺",
+      "description": "After COVID-19 hit Denmark, I unfortunately had to change jobs. \nI got a job at Syncronet where I have been around to help develop their video streaming platform. \nIn broad strokes, I took most of it."
+    },
+    "juice": {
+      "name": "Web developer at JUICE 👊",
+      "description": "In 2023, I got the opportunity to be part of something new and exciting. \nI got a job at JUICE, where I have helped develop a platform that turns the job market upside down.",
+      "description_2": "Like a boomerang, I'm back at Juice again. \n:)"
+    },
+    "supeo": {
+      "name": "Developer at Supeo",
+      "description": "At Supeo, I have been given an exciting opportunity to work with primarily Laravel and React, we work with several different domains in a changeable everyday life. \nIn short, no two days are alike and there are plenty of opportunities to learn new things."
+    }
+  },
+  "features": {
+    "servers": {
+      "description": "I have experience with many different Linux distros, and can set up a server or a cluster from scratch.",
+      "name": "Servers"
+    },
+    "security": {
+      "name": "Security 🛡️",
+      "description": "I have, among other things, \nworked with setting up secured VPN networks and has experience in making secure web applications."
+    },
+    "backend_development": {
+      "name": "Backend API development ⚙️",
+      "description": "I have experience in creating APIs in Laravel, and have, among other things, \nmade an API for a video streaming platform and a ticket booking platform."
+    },
+    "automated_testing": {
+      "name": "Automated testing",
+      "description": "I have experience doing automated tests in Laravel and Symfony with PHPUnit, I make use of TDD as far and as possible."
+    },
+    "databases": {
+      "name": "Databases 🍩",
+      "description": "I have extensive experience with MySQL, MariaDB"
+    },
+    "frontend_development": {
+      "name": "Frontend development ✨",
+      "description": "I have experience in creating frontends in Vue, React and Laravel blade Livewire."
+    },
+    "app_development": {
+      "name": "App development 📱",
+      "description": "I have experience in making apps in React Native incl. \nnative modules in Java/Kotlin"
+    },
+    "vcs": {
+      "name": "Version Control",
+      "description": "I have experience with Git and have, among other things, \nused it to keep track of my own projects as well as projects at work."
+    },
+    "backups": {
+      "name": "Backups 💾",
+      "description": "I have learned how important it is to have backups of one's data, and have experience in making backups of databases and files."
+    },
+    "headline": "Get in the air safely and quickly",
+    "tagline": "With me on the team, you have a teammate who can lift a bit of everything"
+  },
+  "menus": {
+    "main": {
+      "open": "Open main menu",
+      "close": "Close menu"
+    },
+    "locale": {
+      "open": "select language"
+    }
+  },
+  "navigation": {
+    "global": {
+      "about_me": "About Me",
+      "blog": "Blog"
+    },
+    "authenticated": {
+      "dashboard": "Dashboard",
+      "profile": "Profile",
+      "admin": "Admin",
+      "log_out": "log out"
+    },
+    "guest": {
+      "log_in": "Log in"
+    },
+    "welcome": {
+      "hero": "Intro",
+      "timeline": "Experience",
+      "features": "Skills",
+      "contact": "Contact"
+    }
+  },
+  "hero": {
+    "headline": "👋 I'm Jonas, a web developer from Slagelse. \n{0} I have been working with PHP and Laravel since 2015, {0} and since then have helped develop a ticket agency, a video streaming platform and {0} a recruiting platform.",
+    "headline1": "I thrive on new and exciting ideas and challenges, and am always ready to learn something new.",
+    "headline2": "And recognizes the importance of writing clean and readable code that is easy to maintain."
+  },
+  "contactForm": {
+    "headline": "Do I sound exciting?",
+    "tagline": "I'm always ready for a chat, so send me an email 🤗"
+  },
+  "form": {
+    "errors": {
+      "required": "{label} required"
+    }
+  },
+  "menu": {
+    "color_theme": "Select color scheme"
+  },
+  "faq": {
+    "title": "Frequently asked questions",
+    "content": [
+      {
+        "question": "Why React & Laravel?",
+        "answer": "Popularity, ease of use and honing my skills with tools i actively use at my job. {0} React in particular because i can experiment with packages and tools i wouldn't otherwise choose at work."
+      },
+      {
+        "question": "Isn't it a bit overkill to use React & Laravel for a personal website?",
+        "answer": "Perhaps, i could probably get away with using a static site generator but i find more value in using tools i actively use at my job."
+      },
+      {
+        "question": "How are you hosting this site?",
+        "answer": "Initially i used fly.io which was a breeze but i figured i could reduce costs by hosting it myself. {0} I'm using a self-built FreeBSD box with Nginx, PHP, Redis and PostgreSQL in separate jails."
+      },
+      {
+        "question": "Why FreeBSD?",
+        "answer": "Well, i started off building the box as a NAS with then FreeNAS now TrueNAS. {0} After tinkering with it and diving into FreeBSD and ZFS it has quickly grown on me and it's a learning experience to manage it myself."
+      }
+    ]
+  },
+  "profile": {
+    "information": {
+      "header": "Profile Information",
+      "description": "Update your account's profile information and email address.",
+      "resend_verification": "Click here to re-send the verification email.",
+      "verification_link_sent": "A new verification link has been sent to your email address.",
+      "form": {
+        "name": "Name",
+        "email": "E-mail",
+        "submit": "Save"
+      }
+    }
+  },
+  "languages": {
+    "en": "English",
+    "da": "Danish",
+    "select": "Select language"
+  },
+  "uneccessary": "unnecessary",
+  "read_more_here": "Read more here"
+}
