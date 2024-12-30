@@ -13,14 +13,14 @@ export const meta: MetaFunction = () => {
 };
 
 export default function BlogIndex() {
-  const { t } = useTranslation("blog");
+  const { t } = useTranslation<"blog">("blog");
 
   return (
     <div className="py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl">
           <Heading className="text-center" level={1}>
-            {t("recent")}
+            {t("blog.recent")}
           </Heading>
           <div className="mt-10 space-y-16 border-t border-primary pt-10 sm:mt-16 sm:pt-16  flex items-center justify-center">
             <BackgroundGradient>
@@ -32,9 +32,7 @@ export default function BlogIndex() {
                   </Link>
                 }
                 date="2024-09-14"
-                description={
-                  <Trans ns="blog" i18nKey="posts.trongate.summary" />
-                }
+                description={t("posts.trongate.summary")}
               >
                 <div className="relative mt-8 flex items-center">
                   <img
