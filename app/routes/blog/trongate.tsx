@@ -8,9 +8,8 @@ import Underline from "~/components/ui/underline";
 
 export const meta: MetaFunction = () => {
   return [
-    {
-      title: "Trongate",
-    },
+    { title: 'Blog :: Trongate' },
+    { name: "description", content: 'Refreshing simple with a pinch of nostalgia, was it truly better in the old days?' },
   ];
 };
 

@@ -6,13 +6,9 @@ import { Heading } from "~/components/ui/heading";
 import { Link } from "~/components/ui/link";
 
 export const meta: MetaFunction = () => {
-  const { t } = useTranslation('blog');
-
   return [
-    {
-      title: t('index.title'),
-      description: t('description'),
-    },
+    { title: 'Blog' },
+    { name: "description", content: 'My thoughts and observations about everything and anything' },
   ];
 };
 
@@ -24,7 +20,7 @@ export default function BlogIndex() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl">
           <Heading className="text-center" level={1}>
-            {t("blog.recent")}
+            {t("recent")}
           </Heading>
           <div className="mt-10 space-y-16 border-t border-primary pt-10 sm:mt-16 sm:pt-16  flex items-center justify-center">
             <BackgroundGradient>
