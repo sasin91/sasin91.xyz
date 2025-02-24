@@ -14,7 +14,7 @@ export default function ContactSection(props: HTMLProps<HTMLDivElement>) {
         >
             <MeshPattern className="absolute inset-0 -z-10 h-full w-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,skyblue,transparent)]" />
             <div className="max-w-xl mx-auto lg:max-w-4xl">
-                <Heading level={1} className="!text-4xl">
+                <Heading level={1} className="text-4xl!">
                     {t("contactForm.headline")}
                 </Heading>
 

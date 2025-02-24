@@ -13,7 +13,7 @@ export const navLinkClasses = (active: boolean, className: ClassValue = "") =>
     "px-1",
     "pt-1",
     active
-      ? "border-indigo-400 text-sm font-medium leading-5 text-primary transition duration-150 ease-in-out focus:border-indigo-700 focus:outline-none dark:border-indigo-600"
+      ? "border-indigo-400 text-sm font-medium leading-5 text-primary transition duration-150 ease-in-out focus:border-indigo-700 focus:outline-hidden dark:border-indigo-600"
       : "group border-transparent text-sm font-medium leading-5 transition-all duration-300 ease-in-out",
     className
   );

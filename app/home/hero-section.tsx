@@ -31,7 +31,7 @@ export default function HeroSection(props: HTMLProps<HTMLDivElement>) {
     const { t } = useTranslation();
   
     const iconClasses =
-      "h-6 w-6 bg-gradient-to-r from-secondary-200 via-violet-400 to-primary-200 bg-[length:0%_2px] bg-left-bottom bg-no-repeat text-primary transition-all duration-500 ease-out group-hover:bg-[length:100%_2px] group-hover:text-secondary-foreground";
+      "h-6 w-6 bg-linear-to-r from-secondary-200 via-violet-400 to-primary-200 bg-[length:0%_2px] bg-left-bottom bg-no-repeat text-primary transition-all duration-500 ease-out group-hover:bg-[length:100%_2px] group-hover:text-secondary-foreground";
   
     return (
       <div {...props}>
@@ -111,11 +111,11 @@ export default function HeroSection(props: HTMLProps<HTMLDivElement>) {
             <img
               src="/images/hero.png"
               alt={t("app.title")}
-              className="mt-10 aspect-[6/5] w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36"
+              className="mt-10 aspect-6/5 w-full max-w-lg rounded-2xl object-cover sm:mt-16 lg:mt-0 lg:max-w-none xl:row-span-2 xl:row-end-2 xl:mt-36"
             />
           </div>
         </div>
-        <div className="absolute inset-x-0 bottom-0 h-24 -z-10 bg-gradient-to-t from-background sm:h-32" />
+        <div className="absolute inset-x-0 bottom-0 h-24 -z-10 bg-linear-to-t from-background sm:h-32" />
       </div>
     );
   }

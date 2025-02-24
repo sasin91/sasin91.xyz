@@ -20,7 +20,7 @@ function TrongateLogo() {
       <img
         alt="Trongate: The framework they don't want you to know about"
         src="/images/blog/trongate/trongate_logo_trans_bg.png"
-        className="object-fill rounded-xl shadow"
+        className="object-fill rounded-xl shadow-sm"
       />
     </div>
   );

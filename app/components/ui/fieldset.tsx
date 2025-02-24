@@ -11,7 +11,7 @@ export function Fieldset({
       {...props}
       className={cn(
         className,
-        "[&>*+[data-slot=control]]:mt-6 [&>[data-slot=text]]:mt-1"
+        "[&>*+[data-slot=control]]:mt-6 *:data-[slot=text]:mt-1"
       )}
     />
   );
@@ -28,7 +28,7 @@ export function Legend({
       className={cn(
         "text-base/6 font-semibold text-zinc-950 sm:text-sm/6 dark:text-white",
         className,
-        "data-[disabled]:opacity-50"
+        "data-disabled:opacity-50"
       )}
     />
   );
@@ -61,7 +61,7 @@ export function Field({
         "[&>[data-slot=description]+[data-slot=control]]:mt-3",
         "[&>[data-slot=control]+[data-slot=description]]:mt-3",
         "[&>[data-slot=control]+[data-slot=error]]:mt-3",
-        "[&>[data-slot=label]]:font-medium"
+        "*:data-[slot=label]:font-medium"
       )}
     />
   );
@@ -78,7 +78,7 @@ export function Label({
       className={cn(
         "select-none text-base/6 text-zinc-950 sm:text-sm/6 dark:text-white",
         className,
-        "data-[disabled]:opacity-50"
+        "data-disabled:opacity-50"
       )}
     />
   );
@@ -98,7 +98,7 @@ export function Description({
       className={cn(
         "text-base/6 text-zinc-500 sm:text-sm/6 dark:text-zinc-400",
         className,
-        "data-[disabled]:opacity-50"
+        "data-disabled:opacity-50"
       )}
     />
   );
@@ -118,7 +118,7 @@ export function ErrorMessage({
       className={cn(
         "text-base/6 text-red-600 sm:text-sm/6 dark:text-red-500",
         className,
-        "data-[disabled]:opacity-50"
+        "data-disabled:opacity-50"
       )}
     />
   );

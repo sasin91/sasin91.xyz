@@ -29,13 +29,13 @@ function MobileSidebar({
     <Headless.Dialog open={open} onClose={close} className="lg:hidden">
       <Headless.DialogBackdrop
         transition
-        className="fixed inset-0 bg-black/30 transition data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
+        className="fixed inset-0 bg-black/30 transition data-closed:opacity-0 data-enter:duration-300 data-leave:duration-200 data-enter:ease-out data-leave:ease-in"
       />
       <Headless.DialogPanel
         transition
-        className="fixed inset-y-0 w-full max-w-80 p-2 transition duration-300 ease-in-out data-[closed]:-translate-x-full"
+        className="fixed inset-y-0 w-full max-w-80 p-2 transition duration-300 ease-in-out data-closed:-translate-x-full"
       >
-        <div className="flex h-full flex-col rounded-lg bg-white shadow-sm ring-1 ring-zinc-950/5 dark:bg-zinc-900 dark:ring-white/10">
+        <div className="flex h-full flex-col rounded-lg bg-white shadow-xs ring-1 ring-zinc-950/5 dark:bg-zinc-900 dark:ring-white/10">
           <div className="-mb-3 px-4 pt-3">
             <Headless.CloseButton as={NavbarItem} aria-label="Close navigation">
               <CloseMenuIcon />
@@ -59,14 +59,14 @@ export function StackedLayout({
   const [showSidebar, setShowSidebar] = useState(false);
 
   return (
-    <div className="relative isolate flex min-h-svh w-full flex-col to-magenta-100/20 bg-gradient-to-br from-background via-cyan-100/5">
+    <div className="relative isolate flex min-h-svh w-full flex-col to-magenta-100/20 bg-linear-to-br from-background via-cyan-100/5">
       {/* Sidebar on mobile */}
       <MobileSidebar open={showSidebar} close={() => setShowSidebar(false)}>
         {sidebar}
       </MobileSidebar>
 
       {/* Navbar */}
-      <header className="sticky top-0 z-40 flex-none w-full transition-colors duration-500 rounded-lg shadow-lg backdrop-blur supports-backdrop-blur:bg-white/95 bg-luminary px-4">
+      <header className="sticky top-0 z-40 flex-none w-full transition-colors duration-500 rounded-lg shadow-lg backdrop-blur-sm supports-backdrop-blur:bg-white/95 bg-luminary px-4">
         <div className="py-2.5 lg:hidden">
           <NavbarItem
             onClick={() => setShowSidebar(true)}
@@ -82,7 +82,7 @@ export function StackedLayout({
 
       {/* Content */}
       <main className="flex flex-1 flex-col pb-2 lg:px-2">
-        <div className="grow p-6 lg:rounded-lg lg:p-10 lg:shadow-sm lg:ring-1 lg:ring-zinc-950/5 dark:lg:ring-white/10 to-magenta-100/20 bg-gradient-to-br from-background via-cyan-100/5">
+        <div className="grow p-6 lg:rounded-lg lg:p-10 lg:shadow-xs lg:ring-1 lg:ring-zinc-950/5 dark:lg:ring-white/10 to-magenta-100/20 bg-linear-to-br from-background via-cyan-100/5">
           {children}
         </div>
       </main>

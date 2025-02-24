@@ -56,7 +56,7 @@ export const links: Route.LinksFunction = () => [
 
 export function HydrateFallback() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background to-magenta-100/20 bg-gradient-to-br from-background via-cyan-100/5">
+    <div className="flex items-center justify-center min-h-screen bg-background to-magenta-100/20 bg-linear-to-br from-background via-cyan-100/5">
       <div className="flex flex-col items-center">
         <BackgroundBeams />
 

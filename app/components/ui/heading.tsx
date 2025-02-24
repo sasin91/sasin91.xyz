@@ -12,7 +12,7 @@ export function Heading({ className, level = 1, ...props }: HeadingProps) {
       {...props}
       className={cn(
         className,
-        "text-2xl/8 font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-300 sm:text-xl/8"
+        "text-2xl/8 font-semibold text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-pink-300 sm:text-xl/8"
       )}
     />
   );
@@ -26,7 +26,7 @@ export function Subheading({ className, level = 2, ...props }: HeadingProps) {
       {...props}
       className={cn(
         className,
-        "text-base/7 font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-300 sm:text-sm/6"
+        "text-base/7 font-semibold text-transparent bg-clip-text bg-linear-to-r from-purple-500 to-pink-300 sm:text-sm/6"
       )}
     />
   );

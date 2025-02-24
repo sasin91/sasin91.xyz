@@ -38,7 +38,7 @@ export default function BlogIndex() {
                   <img
                     alt="Trongate: The framework they don't want you to know about"
                     src="/images/blog/trongate/the_framework.webp"
-                    className="object-fill rounded-xl shadow py-1.5 px-1.5"
+                    className="object-fill rounded-xl shadow-sm py-1.5 px-1.5"
                   />
                 </div>
               </BlogArticle>

@@ -19,7 +19,7 @@ export default function Underline({
     <span
       {...props}
       className={cn(
-        "bg-gradient-to-r",
+        "bg-linear-to-r",
         "from-purple-500",
         "via-violet-400",
         "to-pink-300",
