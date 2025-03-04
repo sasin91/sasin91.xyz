@@ -1,9 +1,13 @@
 "use client";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
-import React from "react";
+import React, { type ComponentProps } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { duotoneDark, duotoneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import {
+  duotoneDark,
+  duotoneLight,
+} from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { useTheme } from "~/contexts/theme-context";
+import { cn } from "~/utils/tailwind";
 
 type CodeBlockProps = {
   language: string;
@@ -31,7 +35,9 @@ export const CodeBlock = ({
   code,
   highlightLines = [],
   tabs = [],
-}: CodeBlockProps) => {
+  className = "",
+  ...rest
+}: ComponentProps<"div"> & CodeBlockProps) => {
   const { dark } = useTheme();
 
   const [copied, setCopied] = React.useState(false);
@@ -57,7 +63,13 @@ export const CodeBlock = ({
     : highlightLines;
 
   return (
-    <div className="relative w-full rounded-lg bg-background text-foreground p-4 font-mono text-sm">
+    <div
+      className={cn(
+        "relative w-full rounded-lg bg-background text-foreground p-4 font-mono text-sm",
+        className
+      )}
+      {...rest}
+    >
       <div className="flex flex-col gap-2">
         {tabsExist && (
           <div className="flex  overflow-x-auto">

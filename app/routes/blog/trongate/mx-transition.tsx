@@ -5,7 +5,8 @@ import BlogLink from "~/components/ui/blog-link";
 import { CodeBlock } from "~/components/ui/code-block";
 import { Heading } from "~/components/ui/heading";
 import { TrongateLogo } from "../trongate";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ChangeEvent } from "react";
+import { flushSync } from "react-dom";
 
 export const meta: MetaFunction = () => {
   return [
@@ -18,12 +19,16 @@ export const meta: MetaFunction = () => {
 };
 
 function MxTransitionTabs() {
+  const { t } = useTranslation();
+
   const transitionOptions = [
     "push",
     "pop",
     "flip",
     "flip-reverse",
     "reload",
+    "enter",
+    "exit",
   ] as const;
 
   const [transition, setTransition] =
@@ -119,6 +124,20 @@ function MxTransitionTabs() {
 
   const [tab, setTab] = useState<Tab>(tabs[0]);
 
+  const viewTransition = (callback: () => void) => {
+    // Check if the View Transition API is supported
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        flushSync(callback);
+
+        return Promise.resolve();
+      });
+    } else {
+      // Fallback for browsers that don't support View Transitions
+      callback();
+    }
+  };
+
   useEffect(() => {
     setTab(tabs.find((t) => t.id === tab.id) ?? tabs[0]);
   }, [tabs]);
@@ -130,7 +149,7 @@ function MxTransitionTabs() {
           htmlFor="transition"
           className="block text-sm/6 font-medium text-gray-900"
         >
-          transition
+          Transition
         </label>
         <div className="mt-2 grid grid-cols-1">
           <select
@@ -138,9 +157,10 @@ function MxTransitionTabs() {
             name="transition"
             defaultValue="reload"
             onChange={(changeEvent) => {
-              setTransition(
-                transitionOptions.find((t) => t === changeEvent.target.value)!
-              );
+              const transition = transitionOptions.find(
+                (t) => t === changeEvent.target.value
+              )!;
+              setTransition(transition);
             }}
             className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
           >
@@ -156,10 +176,11 @@ function MxTransitionTabs() {
       </div>
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 sm:hidden">
-          {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
           <select
             onChange={(changeEvent) => {
-              setTab(tabs.find((t) => t.id === changeEvent.target.value)!);
+              viewTransition(() => {
+                setTab(tabs.find((t) => t.id === changeEvent.target.value)!);
+              });
             }}
             defaultValue={tabs[0].id}
             aria-label="Select a tab"
@@ -184,7 +205,9 @@ function MxTransitionTabs() {
                 <li
                   key={t.label}
                   onClick={() => {
-                    setTab(t);
+                    viewTransition(() => {
+                      setTab(t);
+                    });
                   }}
                   className={t.id === tab.id ? "text-indigo-400" : ""}
                 >
@@ -196,7 +219,14 @@ function MxTransitionTabs() {
         </div>
       </div>
 
-      <CodeBlock language={tab.language} filename={tab.label} code={tab.code} />
+      <CodeBlock
+        style={{
+          viewTransitionName: transition,
+        }}
+        language={tab.language}
+        filename={tab.label}
+        code={tab.code}
+      />
     </div>
   );
 }

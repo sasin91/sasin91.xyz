@@ -1,13 +1,12 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans:
-    'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -36,8 +35,8 @@
   --color-card: hsl(var(--card));
   --color-card-foreground: hsl(var(--card-foreground));
 
-  --shadow-input:
-    0px 2px 3px -1px rgba(0, 0, 0, 0.1), 0px 1px 0px 0px rgba(25, 28, 33, 0.02),
+  --shadow-input: 0px 2px 3px -1px rgba(0, 0, 0, 0.1),
+    0px 1px 0px 0px rgba(25, 28, 33, 0.02),
     0px 0px 0px 1px rgba(25, 28, 33, 0.08);
 
   --radius-lg: var(--radius);
@@ -65,88 +64,6 @@
     to {
       height: 0;
     }
-  }
-}
-
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-}
-
-@layer base {
-
-  :root  {
-    --background: 259 100% 95%;
-    --foreground: 259 5% 10%;
-    --card: 259 50% 90%;
-    --card-foreground: 259 5% 15%;
-    --popover: 259 100% 95%;
-    --popover-foreground: 259 100% 10%;
-    --primary: 259 83% 83%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 259 30% 70%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 221 30% 85%;
-    --muted-foreground: 259 5% 39%;
-    --accent: 221 30% 80%;
-    --accent-foreground: 259 5% 15%;
-    --destructive: 0 100% 39%;
-    --destructive-foreground: 259 5% 90%;
-    --border: 259 30% 50%;
-    --input: 259 30% 39%;
-    --ring: 259 83% 83%;
-    --radius: 0.5rem;
-  }
-  .dark  {
-    --background: 259 50% 10%;
-    --foreground: 259 5% 90%;
-    --card: 259 50% 10%;
-    --card-foreground: 259 5% 90%;
-    --popover: 259 50% 5%;
-    --popover-foreground: 259 5% 90%;
-    --primary: 259 83% 83%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 259 30% 20%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 221 30% 25%;
-    --muted-foreground: 259 5% 60%;
-    --accent: 221 30% 25%;
-    --accent-foreground: 259 5% 90%;
-    --destructive: 0 100% 39%;
-    --destructive-foreground: 259 5% 90%;
-    --border: 259 30% 39%;
-    --input: 259 30% 39%;
-    --ring: 259 83% 83%;
-    --radius: 0.5rem;
-  }
-
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-@layer view-transition {
-  @view-transition {
-    navigation: auto;
   }
 
   @keyframes shrink {
@@ -194,37 +111,37 @@
 
   @keyframes flipouttoleft {
     from {
-        transform: rotateY(0);
+      transform: rotateY(0);
     }
     to {
-        transform: rotateY(-90deg) scale(0.9);
+      transform: rotateY(-90deg) scale(0.9);
     }
   }
 
   @keyframes flipouttoright {
     from {
-        transform: rotateY(0);
+      transform: rotateY(0);
     }
     to {
-        transform: rotateY(90deg) scale(0.9);
+      transform: rotateY(90deg) scale(0.9);
     }
   }
 
   @keyframes flipintoleft {
     from {
-        transform: rotateY(-90deg) scale(0.9);
+      transform: rotateY(-90deg) scale(0.9);
     }
     to {
-        transform: rotateY(0);
+      transform: rotateY(0);
     }
   }
 
   @keyframes flipintoright {
     from {
-        transform: rotateY(90deg) scale(0.9);
+      transform: rotateY(90deg) scale(0.9);
     }
     to {
-        transform: rotateY(0);
+      transform: rotateY(0);
     }
   }
 
@@ -264,17 +181,17 @@
     perspective: 1200px;
 
     &::view-transition-old(page) {
-        animation-name: flipouttoleft;
-        animation-duration: 125ms;
-        backface-visibility: hidden;
-        transform-origin: center right;
+      animation-name: flipouttoleft;
+      animation-duration: 125ms;
+      backface-visibility: hidden;
+      transform-origin: center right;
     }
 
     &::view-transition-new(page) {
-        animation-name: flipintoright;
-        animation-duration: 250ms;
-        backface-visibility: hidden;
-        transform-origin: center left;
+      animation-name: flipintoright;
+      animation-duration: 250ms;
+      backface-visibility: hidden;
+      transform-origin: center left;
     }
   }
 
@@ -283,17 +200,17 @@
     perspective: 1200px;
 
     &::view-transition-old(page) {
-        animation-name: flipouttoright;
-        animation-duration: 125ms;
-        backface-visibility: hidden;
-        transform-origin: center left;
+      animation-name: flipouttoright;
+      animation-duration: 125ms;
+      backface-visibility: hidden;
+      transform-origin: center left;
     }
 
     &::view-transition-new(page) {
-        animation-name: flipintoleft;
-        animation-duration: 250ms;
-        backface-visibility: hidden;
-        transform-origin: center right;
+      animation-name: flipintoleft;
+      animation-duration: 250ms;
+      backface-visibility: hidden;
+      transform-origin: center right;
     }
   }
 
@@ -311,5 +228,83 @@
     ::view-transition-group(page) {
       animation-duration: 0s;
     }
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer base {
+  :root {
+    --background: 259 100% 95%;
+    --foreground: 259 5% 10%;
+    --card: 259 50% 90%;
+    --card-foreground: 259 5% 15%;
+    --popover: 259 100% 95%;
+    --popover-foreground: 259 100% 10%;
+    --primary: 259 83% 83%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 259 30% 70%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 221 30% 85%;
+    --muted-foreground: 259 5% 39%;
+    --accent: 221 30% 80%;
+    --accent-foreground: 259 5% 15%;
+    --destructive: 0 100% 39%;
+    --destructive-foreground: 259 5% 90%;
+    --border: 259 30% 50%;
+    --input: 259 30% 39%;
+    --ring: 259 83% 83%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 259 50% 10%;
+    --foreground: 259 5% 90%;
+    --card: 259 50% 10%;
+    --card-foreground: 259 5% 90%;
+    --popover: 259 50% 5%;
+    --popover-foreground: 259 5% 90%;
+    --primary: 259 83% 83%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 259 30% 20%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 221 30% 25%;
+    --muted-foreground: 259 5% 60%;
+    --accent: 221 30% 25%;
+    --accent-foreground: 259 5% 90%;
+    --destructive: 0 100% 39%;
+    --destructive-foreground: 259 5% 90%;
+    --border: 259 30% 39%;
+    --input: 259 30% 39%;
+    --ring: 259 83% 83%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  @view-transition {
+    navigation: auto;
   }
 }
