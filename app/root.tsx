@@ -1,43 +1,35 @@
+import { Loader } from "lucide-react";
 import {
   isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration
+  ScrollRestoration,
+  useLoaderData,
+  type LoaderFunctionArgs,
 } from "react-router";
-
-import i18n from "i18next";
-import BrowserLanguageDetector from "i18next-browser-languagedetector";
-import HttpBackend from "i18next-http-backend";
-import { Loader } from "lucide-react";
-import { I18nextProvider, initReactI18next } from "react-i18next";
+import { useChangeLanguage } from "remix-i18next/react";
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import { BackgroundBeams } from "./components/ui/background-beams";
 
-i18n
-  .use(initReactI18next)
-  .use(BrowserLanguageDetector)
-  .use(HttpBackend)
-  .init({
-    supportedLngs: ["en", "da"],
-    fallbackLng: "en",
-    ns: "common",
-    defaultNS: "common",
-    saveMissing: true,
+import { useTranslation } from "react-i18next";
+import i18next from "~/i18next.server";
 
-    backend: {
-      backendOptions: [{
-        loadPath: '/locales/{{lng}}/{{ns}}.json'
-      }]
-    },
+export async function loader({ request }: LoaderFunctionArgs) {
+  let locale = await i18next.getLocale(request);
 
-    interpolation: {
-      escapeValue: false // react already safes from xss => https://www.i18next.com/translation-function/interpolation#unescape
-    }
-  });
+  return { locale };
+}
 
+export let handle = {
+  // In the handle export, we can add a i18n key with namespaces our route
+  // will need to load. This key can be a single string or an array of strings.
+  // TIP: In most cases, you should set this to your defaultNS from your i18n config
+  // or if you did not set one, set it to the i18next default namespace "translation"
+  i18n: "common",
+};
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -67,6 +59,17 @@ export function HydrateFallback() {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  // Get the locale from the loader
+  let { locale } = useLoaderData<typeof loader>();
+
+  let { i18n } = useTranslation();
+
+  // This hook will change the i18n instance language to the current locale
+  // detected by the loader, this way, when we do something to change the
+  // language, this locale will change and i18next will load the correct
+  // translation files
+  useChangeLanguage(locale);
+
   return (
     <html lang={i18n.language} dir="ltr" className="dark">
       <head>
@@ -85,11 +88,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return (
-    <I18nextProvider i18n={i18n}>
-      <Outlet />
-    </I18nextProvider>
-  );
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

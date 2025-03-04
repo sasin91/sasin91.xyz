@@ -5,4 +5,12 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [reactRouter(), tsconfigPaths(), tailwindcss()],
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'ESNext'
+    }
+  },
+  build: {
+    target: 'ESNext'
+  }
 });
