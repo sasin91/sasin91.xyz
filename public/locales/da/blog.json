@@ -19,7 +19,8 @@
       "mx": "Et bibliotek baseret på <htmx-link>HTMX</htmx-link> og meget hen af vejen har de samme features, bare mx- istedet for hx-",
       "mx_more": "Og dog tilbyder så meget mere, i form af en tæt integration, indbygget modal support, <mx-during-request>\"optimistisk\" UI</mx-during-request> og <mx-after-swap>mere.</mx-after-swap>",
       "mx-transition": {
-        "intro": "mx-transition giver en nem og intuitiv måde at tilføje animationer til elementer og hele siden"
+        "intro": "mx-transition giver en nem og intuitiv måde at tilføje animationer til elementer og hele siden",
+        "about_view_transitions": "View transitions er en <chrome-dev-article>relativt ny browserfunktion</chrome-dev-article>, den tilbyder flydende og granulære skfit mellem elementer og sider gennem CSS animationer"
       }
     }
   },

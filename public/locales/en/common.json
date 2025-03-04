@@ -154,5 +154,6 @@
     "select": "Select language"
   },
   "uneccessary": "unnecessary",
-  "read_more_here": "Read more here"
+  "read_more_here": "Read more here",
+  "page": "Page"
 }
