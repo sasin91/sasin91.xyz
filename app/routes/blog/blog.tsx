@@ -42,6 +42,26 @@ export default function BlogIndex() {
                   />
                 </div>
               </BlogArticle>
+
+              <BlogArticle
+                title={
+                  <Link href="/blog/trongate/mx-transition">
+                    <span className="absolute inset-0" />
+                    Trongate mx-transition attribute
+                  </Link>
+                }
+                date="2025-03-03"
+                description={t('posts.trongate.mx-transition.intro')}
+                >
+
+                <div className="relative mt-8 flex items-center">
+                  <img
+                    alt="CSS View transitions"
+                    src="/images/blog/trongate/view_transitions.png"
+                    className="object-fill rounded-xl shadow-sm py-1.5 px-1.5 w-full"
+                  />
+                </div>
+                </BlogArticle>
             </BackgroundGradient>
           </div>
         </div>

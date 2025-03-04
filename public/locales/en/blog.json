@@ -17,7 +17,10 @@
       "hope": "My hope with this article is to spark people's interest and highlight a rough diamond that unfortunately has gained a somewhat bad reputation.",
       "before_i_go": "Before I go, I just want to shout out",
       "mx": "A library based on <htmx-link>HTMX</htmx-link> and in many ways has the same features, just using mx- instead of hx-.",
-      "mx_more": "And yet it offers so much more, with close integration, built-in modal support, <mx-during-request>\"optimistic\" UI</mx-during-request>, and <mx-after-swap>more.</mx-after-swap>"
+      "mx_more": "And yet it offers so much more, with close integration, built-in modal support, <mx-during-request>\"optimistic\" UI</mx-during-request>, and <mx-after-swap>more.</mx-after-swap>",
+      "mx-transition": {
+        "intro": "MX transition provides an easy and intuitive way to add animations to items and the whole page"
+      }
     }
   },
   "blog": {

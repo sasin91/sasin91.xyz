@@ -22,7 +22,7 @@ import {
 
 export function AppNavbar() {
   const { pathname } = useLocation();
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
 
   return (
     <Navbar>

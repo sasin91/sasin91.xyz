@@ -13,7 +13,7 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-function TrongateLogo() {
+export function TrongateLogo() {
   return (
     <div className="relative flex items-center rounded-full">
       <BackgroundBeams />
