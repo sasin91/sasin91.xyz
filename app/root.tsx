@@ -14,8 +14,10 @@ import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import { BackgroundBeams } from "./components/ui/background-beams";
 
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import i18next from "~/i18next.server";
+import { ThemeContext, type Theme } from "./contexts/theme-context";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   let locale = await i18next.getLocale(request);
@@ -88,7 +90,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const [theme, setTheme] = useState<Theme>("dark");
+  const dark = theme !== "light";
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as Theme;
+    setTheme(savedTheme || "dark");
+
+    return () => {
+      localStorage.setItem("theme", theme);
+    };
+  }, []);
+
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme, dark }}>
+      <Outlet />
+    </ThemeContext.Provider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

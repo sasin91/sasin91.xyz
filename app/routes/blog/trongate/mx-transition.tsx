@@ -124,7 +124,7 @@ function MxTransitionTabs() {
   }, [tabs]);
 
   return (
-    <div className="bg-gray-900 px-4 py-6 sm:px-6 lg:px-8">
+    <div className="bg-background text-foreground px-4 py-6 sm:px-6 lg:px-8">
       <div>
         <label
           htmlFor="transition"

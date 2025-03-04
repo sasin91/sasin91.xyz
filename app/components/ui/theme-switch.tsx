@@ -1,23 +1,12 @@
 import { MoonIcon, SunIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
-type Theme = "light" | "dark";
+import { useTheme } from "~/contexts/theme-context";
 
 export default function ThemeSwitch() {
   const { t } = useTranslation();
 
-  const [theme, setTheme] = useState<Theme>("dark");
-  const dark = theme !== "light";
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as Theme;
-    setTheme(savedTheme || "dark");
-
-    return () => {
-      localStorage.setItem("theme", theme);
-    };
-  }, []);
+  const { theme, setTheme, dark } = useTheme();
 
   useEffect(() => {
     document.documentElement.classList.remove("light", "dark");

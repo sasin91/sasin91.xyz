@@ -2,7 +2,9 @@
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { duotoneDark, duotoneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { useTheme } from "~/contexts/theme-context";
+
 type CodeBlockProps = {
   language: string;
   filename: string;
@@ -30,6 +32,8 @@ export const CodeBlock = ({
   highlightLines = [],
   tabs = [],
 }: CodeBlockProps) => {
+  const { dark } = useTheme();
+
   const [copied, setCopied] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState(0);
 
@@ -53,7 +57,7 @@ export const CodeBlock = ({
     : highlightLines;
 
   return (
-    <div className="relative w-full rounded-lg bg-slate-900 p-4 font-mono text-sm">
+    <div className="relative w-full rounded-lg bg-background text-foreground p-4 font-mono text-sm">
       <div className="flex flex-col gap-2">
         {tabsExist && (
           <div className="flex  overflow-x-auto">
@@ -86,7 +90,7 @@ export const CodeBlock = ({
       </div>
       <SyntaxHighlighter
         language={activeLanguage}
-        style={atomDark}
+        style={dark ? duotoneDark : duotoneLight}
         customStyle={{
           margin: 0,
           padding: 0,
