@@ -1,7 +1,6 @@
 import { Transition } from '@headlessui/react';
 import { Form, Head, Link, usePage } from '@inertiajs/react';
 
-import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/delete-user';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
@@ -10,9 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import { edit } from '@/routes/profile';
-import { send } from '@/routes/verification';
-import { type BreadcrumbItem, type SharedData } from '@/types';
+import { BreadcrumbItem } from '@/types';
+import ProfileController from '@/wayfinder/App/Http/Controllers/Settings/ProfileController';
+import { edit } from '@/wayfinder/routes/profile';
+import { send } from '@/wayfinder/routes/verification';
+import type { Inertia } from '@/wayfinder/types'
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -28,7 +29,7 @@ export default function Profile({
     mustVerifyEmail: boolean;
     status?: string;
 }) {
-    const { auth } = usePage<SharedData>().props;
+    const { auth } = usePage<Inertia.SharedData>().props;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -58,7 +59,7 @@ export default function Profile({
                                     <Input
                                         id="name"
                                         className="mt-1 block w-full"
-                                        defaultValue={auth.user.name}
+                                        defaultValue={auth.user!.name}
                                         name="name"
                                         required
                                         autoComplete="name"
@@ -78,7 +79,7 @@ export default function Profile({
                                         id="email"
                                         type="email"
                                         className="mt-1 block w-full"
-                                        defaultValue={auth.user.email}
+                                        defaultValue={auth.user!.email}
                                         name="email"
                                         required
                                         autoComplete="username"
@@ -92,7 +93,7 @@ export default function Profile({
                                 </div>
 
                                 {mustVerifyEmail &&
-                                    auth.user.email_verified_at === null && (
+                                    auth.user!.email_verified_at === null && (
                                         <div>
                                             <p className="-mt-4 text-sm text-muted-foreground">
                                                 Your email address is

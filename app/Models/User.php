@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -48,5 +49,18 @@ class User extends Authenticatable
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
         ];
+    }
+
+    public function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => sprintf(
+                'https://ui-avatars.com/api?name=%s&size=%i&background=%s&color=%s&rounded=true',
+                urlencode($this->name),
+                128,
+                '0D8ABC',
+                'FFFFFF'
+            )
+        );
     }
 }

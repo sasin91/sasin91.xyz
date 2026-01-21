@@ -2,7 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 
 import AppLogoIcon from '@/components/app-logo-icon';
-import { home } from '@/routes';
+import { home } from '@/wayfinder/routes';
 import { type SharedData } from '@/types';
 
 interface AuthLayoutProps {
