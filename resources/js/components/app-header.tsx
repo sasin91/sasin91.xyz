@@ -128,6 +128,23 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                     <span>{item.title}</span>
                                                 </Link>
                                             ))}
+
+                                            {!auth.user && (
+                                                <>
+                                                    <Link
+                                                        href={login()}
+                                                        className="flex items-center space-x-2 font-medium"
+                                                    >
+                                                        <span>Log in</span>
+                                                    </Link>
+                                                    <Link
+                                                        href={register()}
+                                                        className="flex items-center space-x-2 font-medium rounded-md bg-primary px-3 py-2 text-primary-foreground"
+                                                    >
+                                                        <span>Register</span>
+                                                    </Link>
+                                                </>
+                                            )}
                                         </div>
 
                                         <div className="flex flex-col space-y-4">
