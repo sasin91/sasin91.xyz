@@ -27,7 +27,7 @@ function FeatureCard(feature: Feature) {
 
 export function FeatureSection(props: HTMLProps<HTMLDivElement>) {
     return (
-        <div {...props} className="pb-8 mt-32 overflow-hidden sm:mt-40">
+        <section {...props} className="pb-8 mt-32 overflow-hidden sm:mt-40">
             <div className="max-w-md px-6 mx-auto text-center sm:max-w-3xl lg:max-w-7xl lg:px-8">
                 <h2 className="text-lg font-semibold text-sky-400">
                     Get in the air safely and quickly
@@ -85,6 +85,6 @@ export function FeatureSection(props: HTMLProps<HTMLDivElement>) {
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }

@@ -8,11 +8,15 @@ import { type BreadcrumbItem } from '@/types';
 export default function AppHeaderLayout({
     children,
     breadcrumbs,
-}: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
+    mainVariant = 'header',
+}: PropsWithChildren<{
+    breadcrumbs?: BreadcrumbItem[];
+    mainVariant?: 'header' | 'sidebar';
+}>) {
     return (
         <AppShell>
             <AppHeader breadcrumbs={breadcrumbs} />
-            <AppContent>{children}</AppContent>
+            <AppContent variant={mainVariant}>{children}</AppContent>
         </AppShell>
     );
 }

@@ -7,10 +7,10 @@ import AppLayout from '@/layouts/app-layout';
 
 export default function Welcome() {
     return (
-        <AppLayout>
+        <AppLayout mainVariant="header">
             <Head title="Jonas Hansen - Fullstack Developer" />
 
-            <div className="space-y-32 sm:space-y-40">
+            <div className="w-full">
                 <HeroSection id="hero" />
                 <TimelineSection id="timeline" />
                 <FeatureSection id="features" />

@@ -32,12 +32,12 @@ export default function HeroSection(props: HTMLProps<HTMLDivElement>) {
         "h-6 w-6 bg-linear-to-r from-secondary-200 via-violet-400 to-primary-200 bg-[length:0%_2px] bg-left-bottom bg-no-repeat text-primary transition-all duration-500 ease-out group-hover:bg-[length:100%_2px] group-hover:text-secondary-foreground";
 
     return (
-        <div {...props}>
+        <section {...props}>
             <div
                 className="absolute inset-y-0 right-1/2 -z-10 -mr-96 w-[200%] origin-top-right skew-x-[-30deg] bg-background shadow-xl shadow-primary/10 ring-1 ring-background/50 sm:-mr-80 lg:-mr-96"
                 aria-hidden="true"
             />
-            <div className="px-6 pb-32 mx-auto max-w-7xl sm:pb-40 lg:px-8">
+            <div className="px-6 pb-4 mx-auto max-w-7xl sm:pb-6 lg:px-8">
                 <div className="max-w-2xl mx-auto lg:mx-0 lg:grid lg:max-w-none lg:grid-cols-2 lg:gap-x-16 lg:gap-y-6 xl:grid-cols-1 xl:grid-rows-1 xl:gap-x-8">
                     <div className="max-w-xl mt-6 lg:mt-0 xl:col-end-1 xl:row-start-1">
                         <Heading className="max-w-2xl lg:col-span-2 xl:col-auto">
@@ -114,6 +114,6 @@ export default function HeroSection(props: HTMLProps<HTMLDivElement>) {
                 </div>
             </div>
             <div className="absolute inset-x-0 bottom-0 h-24 -z-10 bg-linear-to-t from-background sm:h-32" />
-        </div>
+        </section>
     );
 }
