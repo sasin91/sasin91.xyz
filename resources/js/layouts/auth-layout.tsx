@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 
-import AppSidebarLayout from '@/layouts/app/app-sidebar-layout';
+import AppHeaderLayout from '@/layouts/app/app-header-layout';
 import { type BreadcrumbItem } from '@/types';
 
 interface AuthLayoutProps {
@@ -14,8 +14,8 @@ export default ({
     ...props
 }: AuthLayoutProps) => {
     return (
-        <AppSidebarLayout breadcrumbs={breadcrumbs} {...props}>
+        <AppHeaderLayout breadcrumbs={breadcrumbs} {...props}>
             {children}
-        </AppSidebarLayout>
+        </AppHeaderLayout>
     );
 };
