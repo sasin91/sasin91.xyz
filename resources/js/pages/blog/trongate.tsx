@@ -1,13 +1,13 @@
+import { Head } from '@inertiajs/react';
 import { ShieldQuestionIcon } from "lucide-react";
-import { Head, Link } from '@inertiajs/react';
-import { BackgroundBeams } from "@/components/ui/background-beams";
-import { Heading } from "@/components/ui/heading";
-import { Underline } from "@/components/ui/underline";
-import AppLayout from '@/layouts/app-layout';
 
 import trongateLogoImg from '@/../images/blog/trongate/trongate_logo_trans_bg.png';
 import trongateModuleImg from '@/../images/blog/trongate/trongate_lvim_mangos-account.png';
 import trongateValidationImg from '@/../images/blog/trongate/trongate_lvim_validation.png';
+import { BackgroundBeams } from "@/components/ui/background-beams";
+import { Heading } from "@/components/ui/heading";
+import { Underline } from "@/components/ui/underline";
+import AppLayout from '@/layouts/app-layout';
 
 export function TrongateLogo() {
   return (

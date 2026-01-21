@@ -4,8 +4,8 @@ import AppearanceTabs from '@/components/appearance-tabs';
 import HeadingSmall from '@/components/heading-small';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
-import { edit as editAppearance } from '@/wayfinder/routes/appearance';
 import { type BreadcrumbItem } from '@/types';
+import { edit as editAppearance } from '@/wayfinder/routes/appearance';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

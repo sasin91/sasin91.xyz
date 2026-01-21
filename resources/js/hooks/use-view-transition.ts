@@ -10,7 +10,7 @@ import { useCallback } from "react";
 export function useViewTransition() {
   return useCallback((callback: () => void) => {
     if ("startViewTransition" in document) {
-      (document as any).startViewTransition(callback);
+      (document as Document & { startViewTransition: (cb: () => void) => void }).startViewTransition(callback);
     } else {
       callback();
     }

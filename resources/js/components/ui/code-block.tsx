@@ -1,7 +1,8 @@
 "use client";
 import { CopyCheckIcon, CopyIcon } from "lucide-react";
-import { type ComponentProps, type CSSProperties, useEffect, useState } from "react";
+import { type ComponentProps, type CSSProperties, useEffect, useMemo, useState } from "react";
 import { codeToHtml } from "shiki";
+
 import { useViewTransition } from "@/hooks/use-view-transition";
 import { cn } from "@/lib/utils";
 
@@ -10,8 +11,8 @@ type CodeBlockProps = {
   filename: string;
   highlightLines?: number[];
 } & (
-  | { code: string; tabs?: never }
-  | {
+    | { code: string; tabs?: never }
+    | {
       code?: never;
       tabs: Array<{
         name: string;
@@ -20,7 +21,7 @@ type CodeBlockProps = {
         highlightLines?: number[];
       }>;
     }
-);
+  );
 
 function useDarkMode() {
   const [isDark, setIsDark] = useState(() => {
@@ -64,7 +65,9 @@ export const CodeBlock = ({
   const [highlightedHtml, setHighlightedHtml] = useState<string[]>([]);
 
   const tabsExist = tabs.length > 0;
-  const codeTabs = tabsExist ? tabs : [{ name: filename, code: code!, language, highlightLines }];
+  const codeTabs = useMemo(() => {
+    return tabsExist ? tabs : [{ name: filename, code: code!, language, highlightLines }];
+  }, [tabsExist, tabs, filename, code, language, highlightLines]);
 
   useEffect(() => {
     Promise.all(
@@ -84,7 +87,7 @@ export const CodeBlock = ({
         }).catch(() => `<pre><code>${tab.code}</code></pre>`)
       )
     ).then(setHighlightedHtml);
-  }, [code, tabs, language, dark, highlightLines]);
+  }, [codeTabs, language, dark, highlightLines]);
 
   return (
     <div className={cn("relative w-full rounded-lg bg-background text-foreground p-4 font-mono text-sm", className)} {...rest}>
@@ -95,9 +98,8 @@ export const CodeBlock = ({
               <button
                 key={index}
                 onClick={() => withTransition(() => setActiveTab(index))}
-                className={`px-3 !py-2 text-xs transition-colors font-sans ${
-                  activeTab === index ? "text-white" : "text-zinc-400 hover:text-zinc-200"
-                }`}
+                className={`px-3 !py-2 text-xs transition-colors font-sans ${activeTab === index ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+                  }`}
               >
                 {tab.name}
               </button>

@@ -13,8 +13,8 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/wayfinder/routes';
 import { type NavItem } from '@/types';
+import { dashboard } from '@/wayfinder/routes';
 
 import AppLogo from './app-logo';
 

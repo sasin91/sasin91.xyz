@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, Search, User } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Menu, User } from 'lucide-react';
 
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Icon } from '@/components/icon';
@@ -33,10 +33,11 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useActiveUrl } from '@/hooks/use-active-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
+import { type BreadcrumbItem, type NavItem } from '@/types';
 import { dashboard, home, login, register } from '@/wayfinder/routes';
 import blog from '@/wayfinder/routes/blog';
-import { type BreadcrumbItem, type NavItem } from '@/types';
 import type { Inertia } from '@/wayfinder/types'
+
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
 

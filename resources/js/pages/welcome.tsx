@@ -1,8 +1,9 @@
 import { Head } from '@inertiajs/react';
+
+import ContactSection from '@/components/home/contact-section';
+import { FeatureSection } from '@/components/home/feature-section';
 import HeroSection from '@/components/home/hero-section';
 import TimelineSection from '@/components/home/timeline-section';
-import { FeatureSection } from '@/components/home/feature-section';
-import ContactSection from '@/components/home/contact-section';
 import AppLayout from '@/layouts/app-layout';
 
 export default function Welcome() {

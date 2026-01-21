@@ -10,8 +10,8 @@ import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { type BreadcrumbItem } from '@/types';
-import { edit } from '@/wayfinder/routes/user-password';
 import PasswordController from '@/wayfinder/App/Http/Controllers/Settings/PasswordController';
+import { edit } from '@/wayfinder/routes/user-password';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

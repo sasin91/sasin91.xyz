@@ -1,7 +1,8 @@
-import type { ForwardedRef } from "react";
-import { forwardRef } from "react";
 import { Link } from '@inertiajs/react';
 import type { InertiaLinkProps } from '@inertiajs/react';
+import type { ForwardedRef } from "react";
+import { forwardRef } from "react";
+
 import { Underline } from "@/components/ui/underline";
 import { cn } from "@/lib/utils";
 

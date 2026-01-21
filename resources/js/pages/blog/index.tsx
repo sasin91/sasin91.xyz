@@ -1,11 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
+
+import theFrameworkImg from '@/../images/blog/trongate/the_framework.webp';
+import viewTransitionsImg from '@/../images/blog/trongate/view_transitions.png';
 import BlogArticle from '@/components/blog-article';
 import { BackgroundGradient } from '@/components/ui/background-gradient';
 import { Heading } from '@/components/ui/heading';
 import AppLayout from '@/layouts/app-layout';
 
-import theFrameworkImg from '@/../images/blog/trongate/the_framework.webp';
-import viewTransitionsImg from '@/../images/blog/trongate/view_transitions.png';
 
 export default function BlogIndex() {
     return (

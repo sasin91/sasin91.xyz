@@ -1,4 +1,5 @@
 import type { HTMLProps } from "react";
+
 import { Underline } from "@/components/ui/underline";
 
 type TimelineItemType = {

@@ -1,5 +1,6 @@
 import { AtSignIcon } from "lucide-react";
 import type { AnchorHTMLAttributes, HTMLProps, PropsWithChildren } from "react";
+
 import { FacebookIcon } from "@/components/svgs/facebook-icon";
 import { GithubIcon } from "@/components/svgs/github-icon";
 import { InstagramIcon } from "@/components/svgs/instagram-icon";
@@ -7,6 +8,7 @@ import { LinkedinIcon } from "@/components/svgs/linkedin-icon";
 import { TwitterIcon } from "@/components/svgs/twitter-icon";
 import { YoutubeIcon } from "@/components/svgs/youtube-icon";
 import { Heading } from "@/components/ui/heading";
+
 import heroImage from "../../../images/hero.png";
 
 type SocialItem = { name: string };

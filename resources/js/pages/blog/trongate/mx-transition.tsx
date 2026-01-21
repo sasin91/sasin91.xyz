@@ -1,15 +1,16 @@
-import { ChevronDownIcon } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
 import { Head, Link } from '@inertiajs/react';
+import { ChevronDownIcon } from "lucide-react";
+import { useState, useMemo } from "react";
+
+import viewTransitionsVideo from '@/../videos/blog/trongate/view_transitions.webm';
 import BlogLink from "@/components/ui/blog-link";
 import { CodeBlock } from "@/components/ui/code-block";
 import { Heading } from "@/components/ui/heading";
-import { TrongateLogo } from "../trongate";
 import { Underline } from "@/components/ui/underline";
 import { useViewTransition } from "@/hooks/use-view-transition";
 import AppLayout from '@/layouts/app-layout';
 
-import viewTransitionsVideo from '@/../videos/blog/trongate/view_transitions.webm';
+import { TrongateLogo } from "../trongate";
 
 const transitionOptions = [
   "push",
@@ -113,11 +114,8 @@ function MxTransitionTabs() {
     [transition]
   );
 
-  const [tab, setTab] = useState<Tab>(tabs[0]);
-
-  useEffect(() => {
-    setTab(tabs.find((t) => t.id === tab.id) ?? tabs[0]);
-  }, [tabs]);
+  const [activeTabId, setActiveTabId] = useState<string>(tabs[0].id);
+  const tab = useMemo(() => tabs.find((t) => t.id === activeTabId) ?? tabs[0], [tabs, activeTabId]);
 
   return (
     <div className="px-4 py-6 bg-background text-foreground sm:px-6 lg:px-8">
@@ -170,7 +168,7 @@ function MxTransitionTabs() {
           <select
             onChange={(changeEvent) => {
               const newTab = tabs.find((t) => t.id === changeEvent.target.value)!;
-              withTransition(() => setTab(newTab));
+              withTransition(() => setActiveTabId(newTab.id));
             }}
             defaultValue={tabs[0].id}
             aria-label="Select a tab"
@@ -194,8 +192,8 @@ function MxTransitionTabs() {
               {tabs.map((t) => (
                 <li
                   key={t.label}
-                  onClick={() => withTransition(() => setTab(t))}
-                  className={t.id === tab.id ? "text-indigo-400" : ""}
+                  onClick={() => withTransition(() => setActiveTabId(t.id))}
+                  className={t.id === activeTabId ? "text-indigo-400" : ""}
                 >
                   {t.label}
                 </li>
