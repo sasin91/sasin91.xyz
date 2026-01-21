@@ -5,7 +5,7 @@ import { Underline } from "@/components/ui/underline";
 
 export default function ContactSection(props: HTMLProps<HTMLDivElement>) {
     return (
-        <div
+        <section
             {...props}
             className="relative px-6 py-24 mx-auto mt-32 bg-gradient-conic at-top to-magenta-100/20 isolate max-w-7xl from-background via-primary-100/5 sm:mt-40 sm:py-32 lg:px-8"
         >
@@ -26,6 +26,6 @@ export default function ContactSection(props: HTMLProps<HTMLDivElement>) {
                     </a>
                 </span>
             </div>
-        </div>
+        </section>
     );
 }

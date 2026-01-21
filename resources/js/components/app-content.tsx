@@ -17,7 +17,7 @@ export function AppContent({
 
     return (
         <main
-            className="mx-auto flex h-full w-full max-w-7xl flex-1 flex-col gap-4 rounded-xl"
+            className="relative isolate flex min-h-svh w-full flex-col to-magenta-100/20 bg-linear-to-br from-background via-cyan-100/5"
             {...props}
         >
             {children}

@@ -85,7 +85,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
 
     const mainNavItems = getNavItems(!!auth.user);
     return (
-        <>
+        <header className="sticky top-0 z-40 flex-none w-full transition-colors duration-500 rounded-lg shadow-lg backdrop-blur-sm supports-backdrop-blur:bg-white/95 bg-luminary px-4">
             <div className="border-b border-sidebar-border/80">
                 <div className="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
                     {/* Mobile Menu */}
@@ -307,6 +307,6 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                     </div>
                 </div>
             )}
-        </>
+        </header>
     );
 }

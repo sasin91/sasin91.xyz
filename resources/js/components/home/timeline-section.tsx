@@ -45,7 +45,7 @@ function TimelineItem(item: TimelineItemType) {
 
 export default function TimelineSection(props: HTMLProps<HTMLDivElement>) {
     return (
-        <div {...props} className="px-6 mx-auto -mt-8 max-w-7xl lg:px-8">
+        <section {...props} className="px-6 mx-auto -mt-8 max-w-7xl lg:px-8">
             <div className="grid max-w-2xl grid-cols-1 gap-8 mx-auto overflow-hidden lg:mx-0 lg:max-w-none lg:grid-cols-3">
                 <TimelineItem
                     name="Trained WebIntegrator 🎉"
@@ -78,6 +78,6 @@ export default function TimelineSection(props: HTMLProps<HTMLDivElement>) {
                     date={new Date("2024-09")}
                 />
             </div>
-        </div>
+        </section>
     );
 }
