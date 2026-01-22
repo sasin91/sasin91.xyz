@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Menu, User } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Menu, User, Dumbbell } from 'lucide-react';
 
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Icon } from '@/components/icon';
@@ -36,6 +36,7 @@ import { cn, toUrl } from '@/lib/utils';
 import { type BreadcrumbItem, type NavItem } from '@/types';
 import { dashboard, home, login, register } from '@/wayfinder/routes';
 import blog from '@/wayfinder/routes/blog';
+import training from '@/wayfinder/routes/training';
 import type { Inertia } from '@/wayfinder/types'
 
 import AppLogo from './app-logo';
@@ -58,6 +59,11 @@ const getNavItems = (auth: boolean): NavItem[] => [
                 title: 'Dashboard',
                 href: dashboard(),
                 icon: LayoutGrid,
+            },
+            {
+                title: 'Training',
+                href: training.index(),
+                icon: Dumbbell,
             },
         ]
         : []),

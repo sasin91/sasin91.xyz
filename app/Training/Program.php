@@ -3,16 +3,16 @@
 namespace App\Training;
 
 use Carbon\CarbonInterval;
+use Illuminate\Contracts\Support\Arrayable;
 
-class Program
+interface Program extends Arrayable
 {
-    public function __construct(
-        public string $name,
-        public ProgramType $type,
-        public CarbonInterval $duration,
-        /** @var array<Schema> */
-        public array $schemas = []
-    ) {
-        //
-    }
+    public function name(): string;
+    public function slug(): string;
+    public function type(): ProgramType;
+    public function duration(): CarbonInterval;
+    /**
+     * @return array<Schema>
+     */
+    public function schemas(OneRepMax $squatMax, OneRepMax $benchMax, OneRepMax $deadliftMax): array;
 }

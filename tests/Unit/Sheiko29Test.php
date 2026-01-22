@@ -3,15 +3,16 @@
 use App\Training\Exercise;
 use App\Training\OneRepMax;
 use App\Training\ProgramFactory;
+use App\Training\Sheiko29;
 
 test('sheiko29 day 1 week 1 weights', function () {
     $squatMax = new OneRepMax(160);
     $benchMax = new OneRepMax(140);
     $deadliftMax = new OneRepMax(220);
 
-    $program = ProgramFactory::sheiko29($squatMax, $benchMax, $deadliftMax);
+    $program = new Sheiko29();
 
-    $day1Week1 = $program->schemas[0];
+    $day1Week1 = $program->schemas($squatMax, $benchMax, $deadliftMax)[0];
 
     expect($day1Week1)->not->toBeNull();
     expect($day1Week1->blocks)->toHaveCount(3);

@@ -1,8 +1,9 @@
+import { cn } from '@/lib/utils';
 import AppLogoIcon from './app-logo-icon';
 
-export default function AppLogo() {
+export default function AppLogo({ className }: React.ComponentProps<'div'>) {
     return (
-        <div className="flex items-center gap-2">
+        <div className={cn("flex items-center gap-2", className)}>
             <div className="flex items-center justify-center p-1 rounded-lg">
                 <AppLogoIcon className="size-8" />
             </div>

@@ -8,8 +8,12 @@ enum Exercise: string
     case BENCH = 'Bench';
     case DEADLIFT = 'Deadlift';
 
-    public function perscribe()
+    public function label(): string
     {
-        
+        return match ($this) {
+            self::SQUAT => 'Squat',
+            self::BENCH => 'Bench Press',
+            self::DEADLIFT => 'Deadlift',
+        };
     }
 }

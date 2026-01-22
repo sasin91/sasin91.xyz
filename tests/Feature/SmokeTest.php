@@ -9,6 +9,8 @@ describe('Smoke tests', function () {
             '/blog/trongate/mx-transition',
             '/login',
             '/register',
+            '/training',
+            '/training/sheiko-29',
         ])->assertNoSmoke();
     });
 

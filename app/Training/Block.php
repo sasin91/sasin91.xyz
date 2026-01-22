@@ -11,6 +11,17 @@ class Block
         public array $lifts,
         ?string $label = null
     ) {
-        $this->label = $label ?? sprintf('%d x %s', count($lifts), $exercise->name);
+        if ($label === null) 
+        {
+            $totalLifts = 0;
+
+            foreach ($this->lifts as $lift) {
+                $totalLifts += $lift->sets;
+            }
+
+            $label = sprintf('%d x %s', $totalLifts, $exercise->label());
+        }
+
+        $this->label = $label;
     }
 }
