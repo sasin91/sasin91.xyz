@@ -12,7 +12,8 @@ interface Program extends Arrayable
     public function type(): ProgramType;
     public function duration(): CarbonInterval;
     /**
+     * @param array<OneRepMax> $maxes
      * @return array<Schema>
      */
-    public function schemas(OneRepMax $squatMax, OneRepMax $benchMax, OneRepMax $deadliftMax): array;
+    public function schemas(array $maxes): array;
 }

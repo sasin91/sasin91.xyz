@@ -26,8 +26,14 @@ class Sheiko29 implements Program
         return CarbonInterval::weeks(3);
     }
 
-    public function schemas(OneRepMax $squatMax, OneRepMax $benchMax, OneRepMax $deadliftMax): array
+    public function schemas(array $maxes): array
     {
+        [
+            'squat' => $squatMax, 
+            'bench' => $benchMax, 
+            'deadlift' => $deadliftMax
+        ] = $maxes;
+
         return [
             new Schema(
                 day: 1,

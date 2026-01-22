@@ -29,24 +29,18 @@ export default function Program({ program, maxes, schemas }: { program: Program;
     const { auth } = usePage().props;
 
     // Local state for inputs to allow typing
-    const [localMaxes, setLocalMaxes] = useState(maxes);
+    const [localMaxes, setLocalMaxes] = useState(() => maxes);
 
-    // Update local state if props change (e.g. initial load or external update)
-    useEffect(() => {
-        setLocalMaxes(maxes);
-    }, [maxes]);
 
     const updateMaxes = () => {
-        router.get(
-            // Reconstruct current URL to keep the program slug
-            window.location.pathname,
-            { ...localMaxes },
-            {
-                preserveState: true,
-                preserveScroll: true,
-                replace: true
-            }
-        );
+        const params = new URLSearchParams(window.location.search);
+        params.set('squat', localMaxes.squat.toString());
+        params.set('bench', localMaxes.bench.toString());
+        params.set('deadlift', localMaxes.deadlift.toString());
+
+        router.reload({
+            data: Object.fromEntries(params.entries())
+        });
     };
 
     const breadcrumbs: BreadcrumbItem[] = [

@@ -22,25 +22,28 @@ class TrainingController extends Controller
         TrainingProgramRequest $request,
         Sheiko29 $program
     ) {
-        $schemas = $program->schemas(
-            squatMax: new OneRepMax($request->squat),
-            benchMax: new OneRepMax($request->bench),
-            deadliftMax: new OneRepMax($request->deadlift)
-        );
+        $maxes = [
+            'squat' => new OneRepMax($request->squat),
+            'bench' => new OneRepMax($request->bench),
+            'deadlift' => new OneRepMax($request->deadlift)
+        ];
+
+        $schemas = $program->schemas($maxes);
 
         return inertia('training/program', [
             'program' => $program,
             'schemas' => $schemas,
+            'maxes' => $maxes
         ]);
     }
 
-    public function session(Request $request)
+    public function session(Request $request, Sheiko29 $program)
     {
-        $squat = new OneRepMax($request->squat);
-        $bench = new OneRepMax($request->bench);
-        $deadlift = new OneRepMax($request->deadlift);
-
-        $program = app(Sheiko29::class);
+        $maxes = [
+            'squat' => new OneRepMax($request->integer('squat')),
+            'bench' => new OneRepMax($request->integer('bench')),
+            'deadlift' => new OneRepMax($request->integer('deadlift')),
+        ];
 
         // Determine next session based on history
         $lastWorkout = $request->user()->workouts()
@@ -56,22 +59,16 @@ class TrainingController extends Controller
             $nextWeek = $lastWorkout->week;
         }
 
-        // Generate schema for this usage
-        $schemas = $program->schemas($squat, $bench, $deadlift);
+        $schemas = $program->schemas($maxes);
 
-        // Find the specific schema for this day/week from the program
-        $schema = collect($schemas)->first(function ($s) use ($nextDay, $nextWeek) {
-            return $s->day === $nextDay && $s->week === $nextWeek;
-        });
-
-        // Fallback to first if not found (or completed all?)
-        if (!$schema) {
-            $schema = $schemas[0];
-        }
+        $schema = collect($schemas)->first(
+            fn ($s) => $s->day === $nextDay && $s->week === $nextWeek
+        ) ?? $schemas[0];
 
         return inertia('training/session', [
             'program' => $program,
             'schema' => $schema,
+            'maxes' => $maxes,
         ]);
     }
 
@@ -79,19 +76,23 @@ class TrainingController extends Controller
     {
         $validated = $request->validate([
             'program_name' => 'required|string',
-            'day' => 'required|integer',
             'week' => 'required|integer',
-            'content' => 'required|array',
-            'duration_seconds' => 'nullable|integer',
+            'day' => 'required|integer',
+            'sets' => 'required|array',
+            'sets.*.exercise' => 'required|string',
+            'sets.*.weight' => 'required|numeric',
+            'sets.*.reps' => 'required|integer',
+            'sets.*.completed' => 'required|boolean',
         ]);
 
-        $request->user()->workouts()->create([
+        $workout = $request->user()->workouts()->create([
             'program_name' => $validated['program_name'],
-            'day' => $validated['day'],
             'week' => $validated['week'],
-            'content' => $validated['content'],
+            'day' => $validated['day'],
             'completed_at' => now(),
         ]);
+
+        $workout->sets()->createMany($validated['sets']);
 
         return to_route('dashboard');
     }
