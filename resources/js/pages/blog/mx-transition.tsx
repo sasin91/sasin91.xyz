@@ -10,7 +10,7 @@ import { Underline } from "@/components/ui/underline";
 import { useViewTransition } from "@/hooks/use-view-transition";
 import AppLayout from '@/layouts/app-layout';
 
-import { TrongateLogo } from "../trongate";
+import { TrongateLogo } from "./trongate";
 
 const transitionOptions = [
   "push",

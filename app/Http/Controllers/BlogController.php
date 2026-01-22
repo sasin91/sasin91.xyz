@@ -19,6 +19,6 @@ class BlogController extends Controller
 
     public function mxTransition()
     {
-        return inertia('blog/trongate/mx-transition');
+        return inertia('blog/mx-transition');
     }
 }
