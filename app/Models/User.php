@@ -3,8 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Training\Exercise;
-use App\Training\OneRepMax;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -76,7 +74,7 @@ class User extends Authenticatable
     /**
      * Get all current maxes from the lifts view.
      *
-     * @return array<string, OneRepMax>
+     * @return array<string, int>
      */
     public function currentMaxes(): array
     {
@@ -85,17 +83,6 @@ class User extends Authenticatable
             ->selectRaw('type, MAX(estimated_1rm) as max_weight')
             ->groupBy('type')
             ->pluck('max_weight', 'type')
-            ->map(fn ($weight) => new OneRepMax($weight))
             ->all();
-    }
-
-    /**
-     * Get the current max for a specific exercise.
-     */
-    public function maxFor(Exercise $exercise): ?OneRepMax
-    {
-        $driverName = app(\App\Training\ExerciseRegistry::class)->resolveKey($exercise);
-
-        return $this->currentMaxes()[$driverName] ?? null;
     }
 }

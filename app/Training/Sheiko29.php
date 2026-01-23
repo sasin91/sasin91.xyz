@@ -26,7 +26,7 @@ class Sheiko29 implements Program
 
     public function slug(): string
     {
-        return 'sheiko29';
+        return 'sheiko-29';
     }
 
     public function type(): ProgramType
@@ -40,16 +40,14 @@ class Sheiko29 implements Program
     }
 
     /**
-     * @param  array<string, OneRepMax>  $maxes
+     * @param  array<string, int|float|OneRepMax>  $maxes
      * @return Schema[]
      */
     public function schemas(array $maxes): array
     {
-        [
-            'squat' => $squatMax,
-            'bench' => $benchMax,
-            'deadlift' => $deadliftMax
-        ] = $maxes;
+        $squatMax = OneRepMax::from($maxes['squat'] ?? 0);
+        $benchMax = OneRepMax::from($maxes['bench'] ?? 0);
+        $deadliftMax = OneRepMax::from($maxes['deadlift'] ?? 0);
 
         return [
             new Schema(
@@ -708,7 +706,7 @@ class Sheiko29 implements Program
             'name' => $this->name(),
             'slug' => $this->slug(),
             'type' => $this->type(),
-            'duration' => $this->duration(),
+            'duration' => $this->duration()->totalSeconds,
         ];
     }
 }

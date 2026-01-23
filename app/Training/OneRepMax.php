@@ -4,6 +4,15 @@ namespace App\Training;
 
 class OneRepMax
 {
+    public static function from($value): static
+    {
+        if ($value instanceof OneRepMax) {
+            return $value;
+        }
+
+        return new static($value);
+    }
+
     public function __construct(
         public int|float $weight
     ) {}

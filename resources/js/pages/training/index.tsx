@@ -1,17 +1,39 @@
 import { Head, Link } from '@inertiajs/react';
 import { Dumbbell, ChevronRight } from 'lucide-react';
 
-import AppLayout from '@/layouts/app-layout';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Underline } from '@/components/ui/underline';
+import AppLayout from '@/layouts/app-layout';
 
 interface ProgramSummary {
     slug: string;
     name: string;
     type: string;
-    duration: any;
+    duration: number;
 }
+
+const WEEK_SECONDS = 7 * 24 * 60 * 60;
+const DAY_SECONDS = 24 * 60 * 60;
+const HOUR_SECONDS = 60 * 60;
+
+const formatDuration = (seconds: number) => {
+    if (!Number.isFinite(seconds) || seconds <= 0) {
+        return 'Duration unknown';
+    }
+
+    if (seconds >= WEEK_SECONDS) {
+        const weeks = Math.round(seconds / WEEK_SECONDS);
+        return `${weeks} Week${weeks === 1 ? '' : 's'}`;
+    }
+
+    if (seconds >= DAY_SECONDS) {
+        const days = Math.round(seconds / DAY_SECONDS);
+        return `${days} Day${days === 1 ? '' : 's'}`;
+    }
+
+    const hours = Math.max(1, Math.round(seconds / HOUR_SECONDS));
+    return `${hours} Hour${hours === 1 ? '' : 's'}`;
+};
 
 export default function Index({ programs }: { programs: ProgramSummary[] }) {
     return (
@@ -26,33 +48,32 @@ export default function Index({ programs }: { programs: ProgramSummary[] }) {
                     </p>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-4 w-full">
+                <ul role="list" className="divide-y divide-border/60 rounded-lg border border-border/60">
                     {programs.map((program) => (
-                        <Card key={program.slug} className="hover:border-primary/50 transition-colors w-full max-w-sm">
-                            <CardHeader>
-                                <div className="flex items-start justify-between">
-                                    <div>
-                                        <CardTitle className="text-xl">{program.name}</CardTitle>
-                                        <CardDescription className="mt-1">{program.type}</CardDescription>
+                        <li key={program.slug}>
+                            <Link
+                                href={`/training/${program.slug}`}
+                                className="group flex items-center justify-between gap-4 p-4 hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >
+                                <div className="flex min-w-0 items-center gap-4">
+                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+                                        <Dumbbell className="h-5 w-5 text-muted-foreground" />
                                     </div>
-                                    <Dumbbell className="h-5 w-5 text-muted-foreground" />
+                                    <div className="min-w-0">
+                                        <p className="truncate text-sm font-semibold">
+                                            <Underline>{program.name}</Underline>
+                                        </p>
+                                        <p className="mt-1 truncate text-xs text-muted-foreground">{program.type}</p>
+                                    </div>
                                 </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="flex items-center justify-between mt-2">
-                                    <Badge variant="secondary">
-                                        4 Weeks
-                                    </Badge>
-                                    <Button asChild variant="ghost" size="sm" className="-mr-2">
-                                        <Link href={`/training/sheiko-29`}>
-                                            View Program <ChevronRight className="ml-2 h-4 w-4" />
-                                        </Link>
-                                    </Button>
+                                <div className="flex shrink-0 items-center gap-3">
+                                    <Badge variant="secondary">{formatDuration(program.duration)}</Badge>
+                                    <ChevronRight className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
                                 </div>
-                            </CardContent>
-                        </Card>
+                            </Link>
+                        </li>
                     ))}
-                </div>
+                </ul>
             </div>
         </AppLayout>
     );

@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Training\Exercises\Bench;
-use App\Training\Exercises\Deadlift;
-use App\Training\Exercises\Squat;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TrainingProgramRequest extends FormRequest
@@ -17,14 +14,23 @@ class TrainingProgramRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation()
+    public function prepareForValidation(): void
     {
-        $user = $this->user();
+        $maxes = [
+            // barbell weight
+            'squat' => 25,
+            'bench' => 25,
+            'deadlift' => 25,
+        ];
+
+        if ($user = $this->user()) {
+            $maxes = $user->currentMaxes();
+        }
 
         $this->merge([
-            'squat' => $this->integer('squat', $this->input('squat', $user?->maxFor(new Squat)?->weight ?? session('squat_max', 0))),
-            'bench' => $this->integer('bench', $this->input('bench', $user?->maxFor(new Bench)?->weight ?? session('bench_max', 0))),
-            'deadlift' => $this->integer('deadlift', $this->input('deadlift', $user?->maxFor(new Deadlift)?->weight ?? session('deadlift_max', 0))),
+            'squat' => $this->integer('squat', $maxes['squat'] ?? 0),
+            'bench' => $this->integer('bench', $maxes['bench'] ?? 0),
+            'deadlift' => $this->integer('deadlift', $maxes['deadlift'] ?? 0),
         ]);
     }
 

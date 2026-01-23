@@ -94,8 +94,8 @@ test('completed workouts populate user maxes via lifts view', function () {
     $maxes = $user->currentMaxes();
 
     // 100kg x 1 = 100kg (no formula applied for singles)
-    expect($maxes['Squat']->weight)->toBe(100)
+    expect($maxes['squat'])->toBe(100)
         // 70kg x 3 → Epley: 70 * (1 + 3/30) * 0.97 ≈ 74.69
-        ->and($maxes['Bench']->weight)->toBeGreaterThan(74)
-        ->and($maxes['Bench']->weight)->toBeLessThan(75);
+        ->and($maxes['bench'])->toBeGreaterThan(74)
+        ->and($maxes['bench'])->toBeLessThan(75);
 });

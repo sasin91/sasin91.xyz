@@ -2,21 +2,21 @@ import { Head, Link, usePage, router } from '@inertiajs/react';
 import { Play } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
-import AppLayout from '@/layouts/app-layout';
+import { WorkoutSchema, type Schema } from '@/components/training/workout-schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { WorkoutSchema, type Schema } from '@/components/training/workout-schema';
+import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-
 import training from '@/wayfinder/routes/training';
+import { login } from '@/wayfinder/routes';
 
 // Simplified types matching the PHP structure
 interface Program {
     name: string;
     type: string;
-    duration: any;
+    duration: number; // seconds
 }
 
 interface Maxes {
@@ -31,15 +31,16 @@ export default function Program({ program, maxes, schemas }: { program: Program;
     // Local state for inputs to allow typing
     const [localMaxes, setLocalMaxes] = useState(() => maxes);
 
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('squat', localMaxes.squat.toString());
+    searchParams.set('bench', localMaxes.bench.toString());
+    searchParams.set('deadlift', localMaxes.deadlift.toString());
+
+    const data = Object.fromEntries(searchParams.entries());
 
     const updateMaxes = () => {
-        const params = new URLSearchParams(window.location.search);
-        params.set('squat', localMaxes.squat.toString());
-        params.set('bench', localMaxes.bench.toString());
-        params.set('deadlift', localMaxes.deadlift.toString());
-
         router.reload({
-            data: Object.fromEntries(params.entries())
+            data
         });
     };
 
@@ -52,10 +53,12 @@ export default function Program({ program, maxes, schemas }: { program: Program;
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={program.name} />
 
-            <div className="flex h-full flex-1 flex-col gap-6 p-4 max-w-4xl mx-auto w-full">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="mx-auto flex h-full w-full max-w-4xl flex-1 flex-col gap-6 p-4">
+                <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">{program.name}</h1>
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            {program.name}
+                        </h1>
                         <p className="text-muted-foreground">
                             {program.type} • {schemas.length} Workouts
                         </p>
@@ -65,17 +68,26 @@ export default function Program({ program, maxes, schemas }: { program: Program;
                 <Card>
                     <CardHeader>
                         <CardTitle>One Rep Maxes</CardTitle>
-                        <CardDescription>Enter your current maxes to calculate training weights.</CardDescription>
+                        <CardDescription>
+                            Enter your current maxes to calculate training
+                            weights.
+                        </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                             <div className="grid gap-2">
                                 <Label htmlFor="squat">Squat (kg)</Label>
                                 <Input
                                     id="squat"
                                     type="number"
                                     value={localMaxes.squat}
-                                    onChange={e => setLocalMaxes({ ...localMaxes, squat: parseFloat(e.target.value) || 0 })}
+                                    onChange={(e) =>
+                                        setLocalMaxes({
+                                            ...localMaxes,
+                                            squat:
+                                                parseFloat(e.target.value) || 0,
+                                        })
+                                    }
                                     onBlur={updateMaxes}
                                 />
                             </div>
@@ -85,7 +97,13 @@ export default function Program({ program, maxes, schemas }: { program: Program;
                                     id="bench"
                                     type="number"
                                     value={localMaxes.bench}
-                                    onChange={e => setLocalMaxes({ ...localMaxes, bench: parseFloat(e.target.value) || 0 })}
+                                    onChange={(e) =>
+                                        setLocalMaxes({
+                                            ...localMaxes,
+                                            bench:
+                                                parseFloat(e.target.value) || 0,
+                                        })
+                                    }
                                     onBlur={updateMaxes}
                                 />
                             </div>
@@ -95,7 +113,13 @@ export default function Program({ program, maxes, schemas }: { program: Program;
                                     id="deadlift"
                                     type="number"
                                     value={localMaxes.deadlift}
-                                    onChange={e => setLocalMaxes({ ...localMaxes, deadlift: parseFloat(e.target.value) || 0 })}
+                                    onChange={(e) =>
+                                        setLocalMaxes({
+                                            ...localMaxes,
+                                            deadlift:
+                                                parseFloat(e.target.value) || 0,
+                                        })
+                                    }
                                     onBlur={updateMaxes}
                                 />
                             </div>
@@ -104,12 +128,19 @@ export default function Program({ program, maxes, schemas }: { program: Program;
                 </Card>
 
                 <div className="flex justify-end">
-                    {/* @ts-ignore */}
-                    {auth.user && (
+                    {auth?.user ? (
                         <Button asChild size="lg" className="w-full md:w-auto">
-                            <Link href={training.session.url('sheiko-29')}>
+                            <Link
+                                href={training.session.url('sheiko-29', {
+                                    query: data,
+                                })}
+                            >
                                 <Play className="mr-2 h-4 w-4" /> Start Training
                             </Link>
+                        </Button>
+                    ) : (
+                        <Button asChild size="lg" className="w-full md:w-auto">
+                            <Link href={login()}>Login to start workout</Link>
                         </Button>
                     )}
                 </div>
@@ -118,7 +149,9 @@ export default function Program({ program, maxes, schemas }: { program: Program;
                     <Card>
                         <CardHeader>
                             <CardTitle>Program Preview</CardTitle>
-                            <CardDescription>Sample workout structure (Day 1 Week 1)</CardDescription>
+                            <CardDescription>
+                                {program.name}
+                            </CardDescription>
                         </CardHeader>
                         <CardContent>
                             {schemas.length > 0 && (
