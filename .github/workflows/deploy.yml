@@ -25,6 +25,7 @@ jobs:
       - name: Sync to server
         run: |
           rsync -az --delete \
+            -e "ssh -o StrictHostKeyChecking=no" \
             --exclude .git \
             --exclude .env \
             --exclude node_modules \
