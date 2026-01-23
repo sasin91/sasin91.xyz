@@ -4,26 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TrainingProgramRequest;
 use App\Models\Workout;
-use App\Training\Sheiko29;
+use App\Training\Program;
 use Illuminate\Http\Request;
 
 class TrainingController extends Controller
 {
     public function index()
     {
+        $registry = app('training.programs');
+
         return inertia('training/index', [
-            'programs' => [
-                app(Sheiko29::class)->toArray(),
-            ],
+            'programs' => $registry->all(),
         ]);
     }
 
-    public function sheiko29(
+    public function show(
         TrainingProgramRequest $request,
-        Sheiko29 $program
+        string $program
     ) {
         $maxes = $request->validated();
-        $schemas = $program->schemas($maxes);
+        $schemas = $this->program($program)->schemas($maxes);
 
         return inertia('training/program', [
             'program' => $program,
@@ -32,9 +32,10 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function session(TrainingProgramRequest $request, Sheiko29 $program)
+    public function session(TrainingProgramRequest $request, string $program)
     {
         $maxes = $request->validated();
+        $program = $this->program($program);
 
         // Determine the next session based on history
         $lastWorkout = $request->user()->workouts()
@@ -91,5 +92,16 @@ class TrainingController extends Controller
         }
 
         return to_route('dashboard');
+    }
+
+    public function program(string $program): Program
+    {
+        $registry = app('training.programs');
+
+        if (! $registry->has($program)) {
+            abort(404, 'Program not found');
+        }
+
+        return $registry->get($program);
     }
 }

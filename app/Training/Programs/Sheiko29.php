@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Training;
+namespace App\Training\Programs;
 
 use App\Training\Exercises\Bench;
 use App\Training\Exercises\Deadlift;

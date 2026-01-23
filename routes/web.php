@@ -22,7 +22,9 @@ Route::controller(App\Http\Controllers\BlogController::class)->prefix('blog')->n
 });
 
 Route::get('training', [TrainingController::class, 'index'])->name('training.index');
-Route::get('training/sheiko-29', [TrainingController::class, 'sheiko29'])->name('training.sheiko29');
+Route::get('training/{program}', [TrainingController::class, 'show'])->name('training.show');
+Route::get('training/{program}/session', [TrainingController::class, 'session'])->name('training.session');
+Route::post('training/{program}/session', [TrainingController::class, 'store'])->name('training.store');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
@@ -38,9 +40,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ],
         ]);
     })->name('dashboard');
-
-    Route::get('training/{program}/session', [TrainingController::class, 'session'])->name('training.session');
-    Route::post('training/{program}/session', [TrainingController::class, 'store'])->name('training.store');
 });
 
 require __DIR__.'/settings.php';
