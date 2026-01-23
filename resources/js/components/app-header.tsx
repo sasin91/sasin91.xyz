@@ -53,19 +53,19 @@ const getNavItems = (auth: boolean): NavItem[] => [
         href: blog.index(),
         icon: BookOpen,
     },
+    {
+        title: 'Training',
+        href: training.index(),
+        icon: Dumbbell,
+    },
     ...(auth
         ? [
-            {
-                title: 'Dashboard',
-                href: dashboard(),
-                icon: LayoutGrid,
-            },
-            {
-                title: 'Training',
-                href: training.index(),
-                icon: Dumbbell,
-            },
-        ]
+              {
+                  title: 'Dashboard',
+                  href: dashboard(),
+                  icon: LayoutGrid,
+              },
+          ]
         : []),
 ];
 
