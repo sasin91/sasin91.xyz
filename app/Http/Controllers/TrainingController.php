@@ -82,7 +82,6 @@ class TrainingController extends Controller
             'sets.*.exercise' => 'required|string',
             'sets.*.weight' => 'required|numeric',
             'sets.*.reps' => 'required|integer',
-            'sets.*.completed' => 'required|boolean',
         ]);
 
         $workout = $request->user()->workouts()->create([

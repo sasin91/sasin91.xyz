@@ -2,7 +2,9 @@
 
 namespace App\Training;
 
-class Schema
+use Illuminate\Contracts\Support\Arrayable;
+
+class Schema implements Arrayable
 {
     public function __construct(
         public int $day,
@@ -13,4 +15,14 @@ class Schema
          */
         public array $blocks = []
     ) {}
+
+    public function toArray(): array
+    {
+        return [
+            'day' => $this->day,
+            'week' => $this->week,
+            'focus' => $this->focus,
+            'blocks' => array_map(fn($block) => $block->toArray(), $this->blocks),
+        ];
+    }
 }

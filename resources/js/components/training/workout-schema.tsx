@@ -1,4 +1,4 @@
-import { CheckCircle2, ChevronDown, ChevronRight, Circle } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ChevronRight, Circle, Info } from 'lucide-react';
 import { useState } from 'react';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
@@ -16,9 +16,9 @@ export interface Lift {
 }
 
 export interface Block {
-    label: string;
-    exercise: string; // Serialized Enum value
+    exercise: string;
     lifts: Lift[];
+    cues: string[];
 }
 
 export interface Schema {
@@ -83,6 +83,9 @@ function WorkoutBlock({ block, blockIndex, readOnly }: { block: Block; blockInde
 
     const isComplete = allSets.every(key => completedSets.includes(key));
 
+    // Calculate block label (total sets)
+    const totalSets = block.lifts.reduce((sum, lift) => sum + lift.sets, 0);
+
     // Helper to calculate the Display Set Number (sequential across all lifts)
     let currentSetCount = 0;
 
@@ -92,7 +95,7 @@ function WorkoutBlock({ block, blockIndex, readOnly }: { block: Block; blockInde
                 <CollapsibleTrigger asChild>
                     <Button variant="ghost" size="sm" className="p-0 hover:bg-transparent -ml-2">
                         {isOpen ? <ChevronDown className="h-4 w-4 mr-2" /> : <ChevronRight className="h-4 w-4 mr-2" />}
-                        <span className="font-semibold text-lg">{block.exercise} <span className="text-muted-foreground text-sm ml-2 font-normal">({block.label})</span></span>
+                        <span className="font-semibold text-lg">{block.exercise} <span className="text-muted-foreground text-sm ml-2 font-normal">× {totalSets}</span></span>
                     </Button>
                 </CollapsibleTrigger>
                 <div className="flex items-center gap-2">
@@ -103,6 +106,21 @@ function WorkoutBlock({ block, blockIndex, readOnly }: { block: Block; blockInde
             <CollapsibleContent>
                 <div className="px-4 pb-4 pt-0">
                     <Separator className="mb-4" />
+                    {block.cues && block.cues.length > 0 && (
+                        <div className="mb-4 p-3 bg-muted/50 rounded-md">
+                            <div className="flex items-start gap-2">
+                                <Info className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
+                                <div className="text-sm space-y-1">
+                                    <div className="font-medium text-muted-foreground">Form cues:</div>
+                                    <ul className="list-disc list-inside space-y-0.5 text-muted-foreground">
+                                        {block.cues.map((cue, idx) => (
+                                            <li key={idx}>{cue}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className="grid gap-2">
                         {block.lifts.map((lift, liftIndex) => {
                             // Render N rows for this lift

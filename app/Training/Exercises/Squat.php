@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Training\Exercises;
+
+use App\Training\Exercise;
+
+class Squat implements Exercise
+{
+    public function label(): string
+    {
+        return 'Squat';
+    }
+
+    public function cues(): array
+    {
+        return [
+            'Bar on upper back',
+            'Feet shoulder width',
+            'Brace core',
+            'Break at hips and knees',
+            'Depth to parallel or below',
+            'Drive up through heels',
+        ];
+    }
+}

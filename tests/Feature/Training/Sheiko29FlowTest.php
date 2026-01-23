@@ -51,9 +51,9 @@ test('it can complete workout session', function () {
             'week' => 1,
             'day' => 1,
             'sets' => [
-                ['exercise' => 'Bench', 'weight' => 50, 'reps' => 5],
-                ['exercise' => 'Bench', 'weight' => 60, 'reps' => 4],
-                ['exercise' => 'Squat', 'weight' => 75, 'reps' => 5],
+                ['exercise' => 'bench', 'weight' => 50, 'reps' => 5],
+                ['exercise' => 'bench', 'weight' => 60, 'reps' => 4],
+                ['exercise' => 'squat', 'weight' => 75, 'reps' => 5],
             ],
         ])
         ->assertRedirect(route('dashboard'));
@@ -66,7 +66,7 @@ test('it can complete workout session', function () {
     ]);
 
     assertDatabaseHas('workout_sets', [
-        'exercise' => 'Squat',
+        'exercise' => 'squat',
         'weight' => 75,
         'reps' => 5,
     ]);

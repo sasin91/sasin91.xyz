@@ -27,7 +27,7 @@ return new class extends Migration
         Schema::create('workout_sets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('workout_id')->constrained()->cascadeOnDelete();
-            $table->string('exercise'); // squat, bench, deadlift
+            $table->string('exercise'); // Exercise driver name (e.g., deadlift, bench, deadliftToKnees)
             $table->decimal('weight', 6, 2);
             $table->unsignedTinyInteger('reps');
             $table->timestamps();

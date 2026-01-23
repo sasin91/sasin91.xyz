@@ -25,7 +25,6 @@ return new class extends Migration
             FROM workouts w
             JOIN workout_sets ws ON ws.workout_id = w.id
             WHERE w.completed_at IS NOT NULL
-              AND ws.completed = 1
         ");
     }
 

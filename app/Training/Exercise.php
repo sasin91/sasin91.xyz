@@ -2,18 +2,9 @@
 
 namespace App\Training;
 
-enum Exercise: string
+interface Exercise
 {
-    case SQUAT = 'Squat';
-    case BENCH = 'Bench';
-    case DEADLIFT = 'Deadlift';
+    public function label(): string;
 
-    public function label(): string
-    {
-        return match ($this) {
-            self::SQUAT => 'Squat',
-            self::BENCH => 'Bench Press',
-            self::DEADLIFT => 'Deadlift',
-        };
-    }
+    public function cues(): array;
 }

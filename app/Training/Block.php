@@ -2,26 +2,21 @@
 
 namespace App\Training;
 
-class Block
-{
-    public string $label;
+use Illuminate\Contracts\Support\Arrayable;
 
+class Block implements Arrayable
+{
     public function __construct(
         public Exercise $exercise,
         public array $lifts,
-        ?string $label = null
-    ) {
-        if ($label === null) 
-        {
-            $totalLifts = 0;
+    ) {}
 
-            foreach ($this->lifts as $lift) {
-                $totalLifts += $lift->sets;
-            }
-
-            $label = sprintf('%d x %s', $totalLifts, $exercise->label());
-        }
-
-        $this->label = $label;
+    public function toArray(): array
+    {
+        return [
+            'exercise' => $this->exercise->label(),
+            'lifts' => array_map(fn($lift) => $lift->toArray(), $this->lifts),
+            'cues' => $this->exercise->cues(),
+        ];
     }
 }
