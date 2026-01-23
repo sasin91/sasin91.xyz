@@ -1,0 +1,41 @@
+name: deploy
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Sync to server
+        run: |
+          rsync -az --delete \
+            --exclude .git \
+            --exclude .env \
+            --exclude node_modules \
+            --exclude vendor \
+            ./ ${{ secrets.SSH_USER }}@46.224.4.62:/root/sasin91.xyz/
+
+      - name: Deploy with Compose
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<'EOF'
+          set -e
+          cd /root/sasin91.xyz
+          docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+          docker exec laravel-octane-frankenphp php artisan migrate --force
+          EOF
