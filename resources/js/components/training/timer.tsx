@@ -2,17 +2,25 @@ import { useEffect, useState } from 'react';
 
 import { Card } from '@/components/ui/card';
 
-export function Timer({ startTime, className }: { startTime?: Date; className?: string }) {
+interface TimerProps {
+    startTime?: Date;
+    className?: string;
+    onTick?: (seconds: number) => void;
+}
+
+export function Timer({ startTime, className, onTick }: TimerProps) {
     const [seconds, setSeconds] = useState(0);
 
     useEffect(() => {
         const start = startTime ? startTime.getTime() : Date.now();
         const interval = setInterval(() => {
-            setSeconds(Math.floor((Date.now() - start) / 1000));
+            const elapsed = Math.floor((Date.now() - start) / 1000);
+            setSeconds(elapsed);
+            onTick?.(elapsed);
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [startTime]);
+    }, [startTime, onTick]);
 
     const format = (totalSeconds: number) => {
         const h = Math.floor(totalSeconds / 3600);

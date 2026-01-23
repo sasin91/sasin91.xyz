@@ -40,8 +40,8 @@ test('exercise registry can get driver name from instance', function () {
         ->and($registry->resolveKey($squat))->toBe('squat');
 });
 
-test('exercise registry throws exception for unknown driver', function () {
+test('exercise registry returns null for unknown driver', function () {
     $registry = app(ExerciseRegistry::class);
 
-    $registry->get('unknownExercise');
-})->throws(InvalidArgumentException::class, "Exercise driver 'unknownExercise' not found.");
+    expect($registry->get('unknownExercise'))->toBeNull();
+});

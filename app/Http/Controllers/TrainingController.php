@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\TrainingProgramRequest;
-use App\Training\OneRepMax;
+use App\Models\Workout;
 use App\Training\Sheiko29;
 use Illuminate\Http\Request;
 
@@ -22,12 +22,7 @@ class TrainingController extends Controller
         TrainingProgramRequest $request,
         Sheiko29 $program
     ) {
-        $maxes = [
-            'squat' => new OneRepMax($request->squat),
-            'bench' => new OneRepMax($request->bench),
-            'deadlift' => new OneRepMax($request->deadlift),
-        ];
-
+        $maxes = $request->validated();
         $schemas = $program->schemas($maxes);
 
         return inertia('training/program', [
@@ -37,15 +32,11 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function session(Request $request, Sheiko29 $program)
+    public function session(TrainingProgramRequest $request, Sheiko29 $program)
     {
-        $maxes = [
-            'squat' => new OneRepMax($request->integer('squat')),
-            'bench' => new OneRepMax($request->integer('bench')),
-            'deadlift' => new OneRepMax($request->integer('deadlift')),
-        ];
+        $maxes = $request->validated();
 
-        // Determine next session based on history
+        // Determine the next session based on history
         $lastWorkout = $request->user()->workouts()
             ->where('program_name', $program->name())
             ->latest('completed_at')
@@ -78,20 +69,26 @@ class TrainingController extends Controller
             'program_name' => 'required|string',
             'week' => 'required|integer',
             'day' => 'required|integer',
-            'sets' => 'required|array',
+            'duration_seconds' => 'nullable|integer',
+            'sets' => 'nullable|array',
             'sets.*.exercise' => 'required|string',
             'sets.*.weight' => 'required|numeric',
             'sets.*.reps' => 'required|integer',
         ]);
 
-        $workout = $request->user()->workouts()->create([
+        $workout = new Workout([
             'program_name' => $validated['program_name'],
             'week' => $validated['week'],
             'day' => $validated['day'],
+            'duration_seconds' => $validated['duration_seconds'] ?? null,
             'completed_at' => now(),
         ]);
 
-        $workout->sets()->createMany($validated['sets']);
+        $request->user()->workouts()->save($workout);
+
+        if (! empty($validated['sets'])) {
+            $workout->sets()->createMany($validated['sets']);
+        }
 
         return to_route('dashboard');
     }

@@ -29,14 +29,12 @@ export interface Schema {
 
 interface WorkoutSchemaProps {
     schema: Schema;
-    onBlockComplete?: (blockIndex: number, completed: boolean) => void;
+    completedSets?: string[];
+    onSetToggle?: (key: string) => void;
     readOnly?: boolean;
 }
 
-export function WorkoutSchema({ schema, onBlockComplete, readOnly = false }: WorkoutSchemaProps) {
-    // We can track open states here if we want to allow multiple open
-    // Default to all open for overview?
-
+export function WorkoutSchema({ schema, completedSets = [], onSetToggle, readOnly = false }: WorkoutSchemaProps) {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -51,6 +49,8 @@ export function WorkoutSchema({ schema, onBlockComplete, readOnly = false }: Wor
                         key={index}
                         block={block}
                         blockIndex={index}
+                        completedSets={completedSets}
+                        onSetToggle={onSetToggle}
                         readOnly={readOnly}
                     />
                 ))}
@@ -59,25 +59,29 @@ export function WorkoutSchema({ schema, onBlockComplete, readOnly = false }: Wor
     );
 }
 
-function WorkoutBlock({ block, blockIndex, readOnly }: { block: Block; blockIndex: number; readOnly: boolean }) {
+interface WorkoutBlockProps {
+    block: Block;
+    blockIndex: number;
+    completedSets: string[];
+    onSetToggle?: (key: string) => void;
+    readOnly: boolean;
+}
+
+function WorkoutBlock({ block, blockIndex, completedSets, onSetToggle, readOnly }: WorkoutBlockProps) {
     const [isOpen, setIsOpen] = useState(true);
-    const [completedSets, setCompletedSets] = useState<string[]>([]); // Using composite key "liftIdx-setIdx"
+
+    const makeKey = (liftIndex: number, setIndex: number) => `${blockIndex}-${liftIndex}-${setIndex}`;
 
     const toggleSet = (liftIndex: number, setIndex: number) => {
-        if (readOnly) return;
-        const key = `${liftIndex}-${setIndex}`;
-        setCompletedSets(prev =>
-            prev.includes(key)
-                ? prev.filter(k => k !== key)
-                : [...prev, key]
-        );
+        if (readOnly || !onSetToggle) return;
+        onSetToggle(makeKey(liftIndex, setIndex));
     };
 
     // Calculate total sets to check completion
     const allSets: string[] = [];
     block.lifts.forEach((lift, liftIndex) => {
         for (let i = 0; i < lift.sets; i++) {
-            allSets.push(`${liftIndex}-${i}`);
+            allSets.push(makeKey(liftIndex, i));
         }
     });
 
@@ -127,7 +131,7 @@ function WorkoutBlock({ block, blockIndex, readOnly }: { block: Block; blockInde
                             const rows = [];
                             for (let i = 0; i < lift.sets; i++) {
                                 currentSetCount++;
-                                const key = `${liftIndex}-${i}`;
+                                const key = makeKey(liftIndex, i);
                                 rows.push(
                                     <div key={key} className={cn("grid grid-cols-4 md:grid-cols-5 items-center py-2 text-center md:text-left rounded-md transition-colors", completedSets.includes(key) ? "bg-muted/50" : "")}>
                                         <div className="font-mono text-sm">Set {currentSetCount}</div>

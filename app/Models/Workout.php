@@ -13,6 +13,7 @@ class Workout extends Model
         'program_name',
         'week',
         'day',
+        'duration_seconds',
         'started_at',
         'completed_at',
     ];

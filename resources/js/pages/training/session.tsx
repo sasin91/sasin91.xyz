@@ -1,15 +1,13 @@
-import { Head, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { Head, router } from '@inertiajs/react';
 import { Save } from 'lucide-react';
+import { FormEventHandler, useCallback, useRef, useState } from 'react';
 
-import AppLayout from '@/layouts/app-layout';
+import { Timer } from '@/components/training/timer';
+import { WorkoutSchema, type Schema } from '@/components/training/workout-schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { WorkoutSchema, type Schema, type Block } from '@/components/training/workout-schema';
-import { Timer } from '@/components/training/timer';
+import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import { Separator } from '@/components/ui/separator';
-
 import training from '@/wayfinder/routes/training';
 
 interface Program {
@@ -27,20 +25,48 @@ export default function Session({ program, schema }: SessionProps) {
         { title: 'Session', href: '' },
     ];
 
-    const { data, setData, post, processing, errors } = useForm({
-        program_name: program.name,
-        day: schema.day,
-        week: schema.week,
-        content: schema.blocks, // Initial state, currently assuming full completion implies saving this structure. 
-        // Ideally we map completions, but for MVP saving the schema structure is redundant but acceptable as 'snapshot'.
-        // A real app would track actual inputs (reps/weight performed). 
-        // We'll just save the 'prescribed' content for now as the 'content' json.
-        duration_seconds: 0
-    });
+    const [completedSets, setCompletedSets] = useState<string[]>([]);
+    const [processing, setProcessing] = useState(false);
+    const durationRef = useRef(0);
+
+    const handleSetToggle = useCallback((key: string) => {
+        setCompletedSets(prev =>
+            prev.includes(key)
+                ? prev.filter(k => k !== key)
+                : [...prev, key]
+        );
+    }, []);
+
+    const handleTick = useCallback((seconds: number) => {
+        durationRef.current = seconds;
+    }, []);
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
-        post(training.store.url('sheiko-29'));
+
+        // Transform completedSets keys into actual set data
+        // Key format: "blockIndex-liftIndex-setIndex"
+        const sets = completedSets.map(key => {
+            const [blockIndex, liftIndex] = key.split('-').map(Number);
+            const block = schema.blocks[blockIndex];
+            const lift = block.lifts[liftIndex];
+            return {
+                exercise: block.exercise,
+                weight: lift.weight,
+                reps: lift.reps,
+            };
+        });
+
+        setProcessing(true);
+        router.post(training.store.url('sheiko-29'), {
+            program_name: program.name,
+            week: schema.week,
+            day: schema.day,
+            duration_seconds: durationRef.current,
+            sets,
+        }, {
+            onFinish: () => setProcessing(false),
+        });
     };
 
     return (
@@ -54,7 +80,7 @@ export default function Session({ program, schema }: SessionProps) {
                         <h2 className="font-semibold">{program.name}</h2>
                         <p className="text-sm text-muted-foreground">Week {schema.week} Day {schema.day}</p>
                     </div>
-                    <Timer />
+                    <Timer onTick={handleTick} />
                 </div>
 
                 <form onSubmit={submit} className="space-y-6 pb-20">
@@ -62,7 +88,8 @@ export default function Session({ program, schema }: SessionProps) {
                         <CardContent className="pt-6">
                             <WorkoutSchema
                                 schema={schema}
-                            // In a real app we'd bind state here to `data.content` to track actuals
+                                completedSets={completedSets}
+                                onSetToggle={handleSetToggle}
                             />
                         </CardContent>
                     </Card>

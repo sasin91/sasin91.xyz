@@ -36,7 +36,7 @@ class ExerciseCast implements CastsAttributes
         }
 
         if (is_string($value)) {
-            return $value;
+            return strtolower($value);
         }
 
         if ($value instanceof Exercise) {
