@@ -26,8 +26,16 @@ Route::get('training/sheiko-29', [TrainingController::class, 'sheiko29'])->name(
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
+        $user = request()->user();
+        $lastWorkout = $user->workouts()->latest('completed_at')->first();
+        $nextProgramSlug = $lastWorkout?->program_name ? \Illuminate\Support\Str::slug($lastWorkout->program_name) : 'sheiko-29';
+
         return Inertia::render('dashboard', [
-            'workouts' => request()->user()->workouts()->latest('completed_at')->take(5)->get(),
+            'workouts' => $user->workouts()->latest('completed_at')->take(5)->get(),
+            'nextWorkout' => [
+                'program_slug' => $nextProgramSlug,
+                'maxes' => $user->currentMaxes(),
+            ],
         ]);
     })->name('dashboard');
 
