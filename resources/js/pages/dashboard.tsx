@@ -7,7 +7,6 @@ import { type BreadcrumbItem } from '@/types';
 import { dashboard } from '@/wayfinder/routes';
 import training from '@/wayfinder/routes/training';
 import { App } from '@/wayfinder/types';
-import Workout = App.Models.Workout;
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -16,7 +15,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-export default function Dashboard({ workouts = [], nextWorkout }: { workouts?: Workout[], nextWorkout: { program_slug: string, maxes: Record<string, number> } }) {
+export default function Dashboard({ workouts = [], nextWorkout }: { workouts?: App.Models.Workout[], nextWorkout: { program_slug: string, maxes: Record<string, number> } }) {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
