@@ -32,3 +32,6 @@ services:
       - "traefik.http.routers.laravel.entrypoints=websecure"
       - "traefik.http.routers.laravel.tls.certresolver=le"
       - "traefik.http.services.laravel.loadbalancer.server.port=8000"
+
+volumes:
+  traefik_letsencrypt:
