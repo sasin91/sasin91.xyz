@@ -1,8 +1,9 @@
 <?php
 
 use App\Models\User;
-use App\Training\Exercise;
+use App\Models\Workout;
 use Inertia\Testing\AssertableInertia as Assert;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
 
@@ -15,7 +16,7 @@ test('it can view sheiko29 program page', function () {
         ->get(route('training.sheiko29'))
         ->assertStatus(200)
         ->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('training/program')
                 ->has('program')
                 ->has('schemas')
@@ -26,7 +27,6 @@ test('it can view session page', function () {
     $user = User::factory()->create();
 
     actingAs($user)
-        ->withoutExceptionHandling()
         ->get(route('training.session', [
             'program' => 'sheiko-29',
             'squat' => 150,
@@ -35,7 +35,7 @@ test('it can view session page', function () {
         ]))
         ->assertStatus(200)
         ->assertInertia(
-            fn(Assert $page) => $page
+            fn (Assert $page) => $page
                 ->component('training/session')
                 ->has('program')
                 ->has('schema')
@@ -77,12 +77,14 @@ test('completed workouts populate user maxes via lifts view', function () {
     $user = User::factory()->create();
 
     // Complete a workout with a 100kg squat single
-    $workout = $user->workouts()->create([
+    $workout = new Workout([
         'program_name' => 'Sheiko 29',
         'week' => 1,
         'day' => 1,
         'completed_at' => now(),
     ]);
+
+    $user->workouts()->save($workout);
 
     $workout->sets()->createMany([
         ['exercise' => 'Squat', 'weight' => 100, 'reps' => 1, 'completed' => true],
@@ -93,9 +95,8 @@ test('completed workouts populate user maxes via lifts view', function () {
     $maxes = $user->currentMaxes();
 
     // 100kg x 1 = 100kg (no formula applied for singles)
-    expect($maxes['Squat']->weight)->toBe(100.0);
-
-    // 70kg x 3 → Epley: 70 * (1 + 3/30) * 0.97 ≈ 74.69
-    expect($maxes['Bench']->weight)->toBeGreaterThan(74);
-    expect($maxes['Bench']->weight)->toBeLessThan(75);
+    expect($maxes['Squat']->weight)->toBe(100)
+        // 70kg x 3 → Epley: 70 * (1 + 3/30) * 0.97 ≈ 74.69
+        ->and($maxes['Bench']->weight)->toBeGreaterThan(74)
+        ->and($maxes['Bench']->weight)->toBeLessThan(75);
 });

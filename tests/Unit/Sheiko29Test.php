@@ -2,7 +2,6 @@
 
 use App\Training\Exercise;
 use App\Training\OneRepMax;
-use App\Training\ProgramFactory;
 use App\Training\Sheiko29;
 
 test('sheiko29 day 1 week 1 weights', function () {
@@ -10,32 +9,36 @@ test('sheiko29 day 1 week 1 weights', function () {
     $benchMax = new OneRepMax(140);
     $deadliftMax = new OneRepMax(220);
 
-    $program = new Sheiko29();
+    $program = new Sheiko29;
 
-    $day1Week1 = $program->schemas($squatMax, $benchMax, $deadliftMax)[0];
+    $day1Week1 = $program->schemas([
+        'squat' => $squatMax,
+        'bench' => $benchMax,
+        'deadlift' => $deadliftMax,
+    ])[0];
 
-    expect($day1Week1)->not->toBeNull();
-    expect($day1Week1->blocks)->toHaveCount(3);
+    expect($day1Week1)->not->toBeNull()
+        ->and($day1Week1->blocks)->toHaveCount(3);
 
     // Bench Block 1
     $benchBlock1 = $day1Week1->blocks[0];
-    expect($benchBlock1->exercise)->toBe(Exercise::BENCH);
-    expect($benchBlock1->lifts[0]->weight)->toBe(70.0);
-    expect($benchBlock1->lifts[1]->weight)->toBe(84.0);
-    expect($benchBlock1->lifts[2]->weight)->toBe(98.0);
-    expect($benchBlock1->lifts[3]->weight)->toBe(105.0);
+    expect($benchBlock1->exercise)->toBe(Exercise::BENCH)
+        ->and($benchBlock1->lifts[0]->weight)->toBe(70.0)
+        ->and($benchBlock1->lifts[1]->weight)->toBe(84.0)
+        ->and($benchBlock1->lifts[2]->weight)->toBe(98.0)
+        ->and($benchBlock1->lifts[3]->weight)->toBe(105.0);
 
     // Squat Block
     $squatBlock = $day1Week1->blocks[1];
-    expect($squatBlock->exercise)->toBe(Exercise::SQUAT);
-    expect($squatBlock->lifts[0]->weight)->toBe(80.0);
-    expect($squatBlock->lifts[1]->weight)->toBe(96.0);
-    expect($squatBlock->lifts[2]->weight)->toBe(112.0);
+    expect($squatBlock->exercise)->toBe(Exercise::SQUAT)
+        ->and($squatBlock->lifts[0]->weight)->toBe(80.0)
+        ->and($squatBlock->lifts[1]->weight)->toBe(96.0)
+        ->and($squatBlock->lifts[2]->weight)->toBe(112.0);
 
     // Bench Block 2
     $benchBlock2 = $day1Week1->blocks[2];
-    expect($benchBlock2->exercise)->toBe(Exercise::BENCH);
-    expect($benchBlock2->lifts[0]->weight)->toBe(70.0);
-    expect($benchBlock2->lifts[1]->weight)->toBe(84.0);
-    expect($benchBlock2->lifts[2]->weight)->toBe(98.0);
+    expect($benchBlock2->exercise)->toBe(Exercise::BENCH)
+        ->and($benchBlock2->lifts[0]->weight)->toBe(70.0)
+        ->and($benchBlock2->lifts[1]->weight)->toBe(84.0)
+        ->and($benchBlock2->lifts[2]->weight)->toBe(98.0);
 });
