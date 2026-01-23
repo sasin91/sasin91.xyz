@@ -1,0 +1,34 @@
+services:
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.le.acme.tlschallenge=true"
+      - "--certificatesresolvers.le.acme.email=jonas.kerwin.hansen@gmail.com"
+      - "--certificatesresolvers.le.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik_letsencrypt:/letsencrypt
+    networks:
+      - sasin91_net
+  app:
+    ports: []
+    environment:
+      - APP_URL=https://sasin91.xyz
+      - TRUSTED_PROXIES=*
+      - OCTANE_HTTPS=false
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.laravel.rule=Host(`sasin91.xyz`)"
+      - "traefik.http.routers.laravel.entrypoints=websecure"
+      - "traefik.http.routers.laravel.tls.certresolver=le"
+      - "traefik.http.services.laravel.loadbalancer.server.port=8000"

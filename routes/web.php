@@ -11,6 +11,10 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});
+
 Route::controller(App\Http\Controllers\BlogController::class)->prefix('blog')->name('blog.')->group(function () {
     Route::get('/', 'index')->name('index');
     Route::get('/trongate', 'trongate')->name('trongate');
