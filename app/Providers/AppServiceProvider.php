@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Training\ExerciseRegistry;
+
 use App\Training\Registry;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\Repository;

@@ -13,7 +13,9 @@ interface Program extends Arrayable
 
     public function type(): ProgramType;
 
-    public function duration(): CarbonInterval;
+    public function days(): int;
+
+    public function weeks(): int;
 
     /**
      * @param  array<OneRepMax>  $maxes

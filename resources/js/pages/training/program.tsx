@@ -1,22 +1,40 @@
-import { Head, Link, usePage, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Play } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import { WorkoutSchema, type Schema } from '@/components/training/workout-schema';
+import {
+    WorkoutSchema,
+    type Schema,
+} from '@/components/training/workout-schema';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import training from '@/wayfinder/routes/training';
 import { login } from '@/wayfinder/routes';
+import training from '@/wayfinder/routes/training';
 
 // Simplified types matching the PHP structure
 interface Program {
     name: string;
     type: string;
-    duration: number; // seconds
+    days: number;
+    weeks: number;
 }
 
 interface Maxes {
@@ -25,8 +43,37 @@ interface Maxes {
     deadlift: number;
 }
 
-export default function Program({ program, maxes, schemas }: { program: Program; maxes: Maxes; schemas: Schema[] }) {
+export default function Program({
+    program,
+    maxes,
+    schemas,
+    nextDay,
+    nextWeek,
+    programComplete,
+}: {
+    program: Program;
+    maxes: Maxes;
+    schemas: Schema[];
+    nextDay: number;
+    nextWeek: number;
+    programComplete: boolean;
+}) {
     const { auth } = usePage().props;
+    const [showRestartDialog, setShowRestartDialog] = useState(false);
+
+    useEffect(() => {
+        if (programComplete) {
+            setShowRestartDialog(true);
+        }
+    }, [programComplete]);
+
+    const handleConfirmRestart = () => {
+        setShowRestartDialog(false);
+    };
+
+    const handleCancelRestart = () => {
+        router.visit(training.index.url());
+    };
 
     // Local state for inputs to allow typing
     const [localMaxes, setLocalMaxes] = useState(() => maxes);
@@ -35,12 +82,14 @@ export default function Program({ program, maxes, schemas }: { program: Program;
     searchParams.set('squat', localMaxes.squat.toString());
     searchParams.set('bench', localMaxes.bench.toString());
     searchParams.set('deadlift', localMaxes.deadlift.toString());
+    searchParams.set('day', String(nextDay));
+    searchParams.set('week', String(nextWeek));
 
     const data = Object.fromEntries(searchParams.entries());
 
     const updateMaxes = () => {
         router.reload({
-            data
+            data,
         });
     };
 
@@ -131,7 +180,7 @@ export default function Program({ program, maxes, schemas }: { program: Program;
                     {auth?.user ? (
                         <Button asChild size="lg" className="w-full md:w-auto">
                             <Link
-                                href={training.session.url('sheiko-29', {
+                                href={training.session.url(program.slug, {
                                     query: data,
                                 })}
                             >
@@ -149,9 +198,7 @@ export default function Program({ program, maxes, schemas }: { program: Program;
                     <Card>
                         <CardHeader>
                             <CardTitle>Program Preview</CardTitle>
-                            <CardDescription>
-                                {program.name}
-                            </CardDescription>
+                            <CardDescription>{program.name}</CardDescription>
                         </CardHeader>
                         <CardContent>
                             {schemas.length > 0 && (
@@ -161,6 +208,34 @@ export default function Program({ program, maxes, schemas }: { program: Program;
                     </Card>
                 </div>
             </div>
+
+            <Dialog
+                open={showRestartDialog}
+                onOpenChange={(open) => {
+                    if (!open) handleCancelRestart();
+                }}
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Program Completed</DialogTitle>
+                        <DialogDescription>
+                            You have already completed this program. Do you want
+                            to restart it?
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="secondary"
+                            onClick={handleCancelRestart}
+                        >
+                            No, go back
+                        </Button>
+                        <Button onClick={handleConfirmRestart}>
+                            Yes, restart
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }

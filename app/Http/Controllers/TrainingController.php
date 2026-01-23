@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TrainingProgramRequest;
 use App\Models\Workout;
 use App\Training\Program;
+use App\Training\ProgramProgress;
 use Illuminate\Http\Request;
 
 class TrainingController extends Controller
@@ -14,7 +15,7 @@ class TrainingController extends Controller
         $registry = app('training.programs');
 
         return inertia('training/index', [
-            'programs' => $registry->all(),
+            'programs' => array_values($registry->instances()),
         ]);
     }
 
@@ -23,12 +24,17 @@ class TrainingController extends Controller
         string $program
     ) {
         $maxes = $request->validated();
-        $schemas = $this->program($program)->schemas($maxes);
+        $program = $this->program($program);
+
+        $progress = new ProgramProgress($program, $request->user());
 
         return inertia('training/program', [
             'program' => $program,
-            'schemas' => $schemas,
+            'schemas' => $program->schemas($maxes),
             'maxes' => $maxes,
+            'nextDay' => $progress->nextDay,
+            'nextWeek' => $progress->nextWeek,
+            'programComplete' => $progress->programComplete,
         ]);
     }
 
@@ -37,29 +43,26 @@ class TrainingController extends Controller
         $maxes = $request->validated();
         $program = $this->program($program);
 
-        // Determine the next session based on history
-        $lastWorkout = $request->user()->workouts()
-            ->where('program_name', $program->name())
-            ->latest('completed_at')
-            ->first();
-
-        $nextDay = 1;
-        $nextWeek = 1;
-
-        if ($lastWorkout) {
-            $nextDay = $lastWorkout->day + 1;
-            $nextWeek = $lastWorkout->week;
-        }
+        $progress = new ProgramProgress($program, $request->user());
 
         $schemas = $program->schemas($maxes);
 
-        $schema = collect($schemas)->first(
-            fn ($s) => $s->day === $nextDay && $s->week === $nextWeek
-        ) ?? $schemas[0];
+        $found = null;
+
+        foreach ($schemas as $schema) {
+            if ($schema->day === $progress->nextDay && $schema->week === $progress->nextWeek) {
+                $found = $schema;
+                break;
+            }
+        }
+
+        if ($found === null) {
+            return abort(404, "Invalid day or week.");
+        }
 
         return inertia('training/session', [
             'program' => $program,
-            'schema' => $schema,
+            'schema' => $found,
             'maxes' => $maxes,
         ]);
     }
