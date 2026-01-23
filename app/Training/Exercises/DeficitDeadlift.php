@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Training\Exercises;
+
+use App\Training\Exercise;
+
+class DeficitDeadlift implements Exercise
+{
+    public function label(): string
+    {
+        return 'Deficit Deadlift';
+    }
+
+    public function cues(): array
+    {
+        return [
+            'Stand on platform/plate',
+            'Hips lower than normal',
+            'Chest up',
+            'Push floor away',
+        ];
+    }
+}
