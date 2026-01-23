@@ -23,9 +23,16 @@ services:
   app:
     ports: []
     environment:
-      - APP_URL=https://sasin91.xyz
-      - TRUSTED_PROXIES=*
-      - OCTANE_HTTPS=false
+      APP_URL: https://sasin91.xyz
+      TRUSTED_PROXIES: "*"
+      OCTANE_HTTPS: "true"
+      APP_NAME: "Jonas Hansen :: Web Developer"
+      APP_ENV: "production"
+      APP_DEBUG: false
+      QUEUE_CONNECTION: "redis"
+      CACHE_STORE: "redis"
+      SESSION_DRIVER: "redis"
+      REDIS_HOST: "redis"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.laravel.rule=Host(`sasin91.xyz`)"

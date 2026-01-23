@@ -33,9 +33,10 @@ jobs:
 
       - name: Deploy with Compose
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} <<'EOF'
+          IMAGE_TAG="${GITHUB_SHA::7}"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@46.224.4.62 <<EOF
           set -e
           cd /root/sasin91.xyz
-          docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+          IMAGE_TAG="${IMAGE_TAG}" docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
           docker exec laravel-octane-frankenphp php artisan migrate --force
           EOF

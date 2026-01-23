@@ -1,8 +1,7 @@
-version: '3.8'
-
 services:
   app:
     build: .
+    image: sasin91xyz-app:${IMAGE_TAG:-latest}
     container_name: laravel-octane-frankenphp
     restart: unless-stopped
     ports:

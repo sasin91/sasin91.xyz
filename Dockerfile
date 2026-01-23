@@ -1,3 +1,18 @@
+FROM node:22-alpine AS assets
+
+WORKDIR /app
+
+ENV WAYFINDER_COMMAND=true
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY resources ./resources
+COPY public ./public
+COPY components.json vite.config.ts tsconfig.json ./
+
+RUN npm run build
+
 FROM dunglas/frankenphp:latest
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -24,6 +39,8 @@ RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts
 
 # Copy the rest of the app
 COPY . .
+
+COPY --from=assets /app/public/build /app/public/build
 
 RUN composer dump-autoload --optimize \
     && php artisan package:discover --ansi
