@@ -51,9 +51,9 @@ test('it can complete workout session', function () {
             'week' => 1,
             'day' => 1,
             'sets' => [
-                ['exercise' => 'Bench', 'weight' => 50, 'reps' => 5, 'completed' => true],
-                ['exercise' => 'Bench', 'weight' => 60, 'reps' => 4, 'completed' => true],
-                ['exercise' => 'Squat', 'weight' => 75, 'reps' => 5, 'completed' => true],
+                ['exercise' => 'Bench', 'weight' => 50, 'reps' => 5],
+                ['exercise' => 'Bench', 'weight' => 60, 'reps' => 4],
+                ['exercise' => 'Squat', 'weight' => 75, 'reps' => 5],
             ],
         ])
         ->assertRedirect(route('dashboard'));
@@ -69,7 +69,6 @@ test('it can complete workout session', function () {
         'exercise' => 'Squat',
         'weight' => 75,
         'reps' => 5,
-        'completed' => true,
     ]);
 });
 
@@ -87,9 +86,9 @@ test('completed workouts populate user maxes via lifts view', function () {
     $user->workouts()->save($workout);
 
     $workout->sets()->createMany([
-        ['exercise' => 'Squat', 'weight' => 100, 'reps' => 1, 'completed' => true],
-        ['exercise' => 'Squat', 'weight' => 80, 'reps' => 5, 'completed' => true],
-        ['exercise' => 'Bench', 'weight' => 70, 'reps' => 3, 'completed' => true],
+        ['exercise' => 'Squat', 'weight' => 100, 'reps' => 1],
+        ['exercise' => 'Squat', 'weight' => 80, 'reps' => 5],
+        ['exercise' => 'Bench', 'weight' => 70, 'reps' => 3],
     ]);
 
     $maxes = $user->currentMaxes();

@@ -30,7 +30,6 @@ return new class extends Migration
             $table->string('exercise'); // squat, bench, deadlift
             $table->decimal('weight', 6, 2);
             $table->unsignedTinyInteger('reps');
-            $table->boolean('completed')->default(false);
             $table->timestamps();
 
             $table->index(['workout_id', 'exercise']);

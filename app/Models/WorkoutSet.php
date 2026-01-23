@@ -13,7 +13,6 @@ class WorkoutSet extends Model
         'exercise',
         'weight',
         'reps',
-        'completed',
     ];
 
     protected function casts(): array
@@ -22,7 +21,6 @@ class WorkoutSet extends Model
             'exercise' => Exercise::class,
             'weight' => 'decimal:2',
             'reps' => 'integer',
-            'completed' => 'boolean',
         ];
     }
 
