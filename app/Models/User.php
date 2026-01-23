@@ -95,6 +95,7 @@ class User extends Authenticatable
     public function maxFor(Exercise $exercise): ?OneRepMax
     {
         $driverName = app(\App\Training\ExerciseRegistry::class)->resolveKey($exercise);
+
         return $this->currentMaxes()[$driverName] ?? null;
     }
 }

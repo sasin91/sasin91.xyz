@@ -3,18 +3,18 @@
 namespace App\Training;
 
 use App\Training\Exercises\Bench;
+use App\Training\Exercises\Deadlift;
 use App\Training\Exercises\DeadliftOnBoxes;
 use App\Training\Exercises\DeadliftToKnees;
+use App\Training\Exercises\DeficitDeadlift;
 use App\Training\Exercises\DumbbellSquat;
 use App\Training\Exercises\DumbbellTricepExtension;
+use App\Training\Exercises\FrontSquat;
 use App\Training\Exercises\HangingLegRaise;
 use App\Training\Exercises\InclineDumbbellPress;
+use App\Training\Exercises\MilitaryPress;
 use App\Training\Exercises\RomanianDeadlift;
 use App\Training\Exercises\Squat;
-use App\Training\Exercises\FrontSquat;
-use App\Training\Exercises\Deadlift;
-use App\Training\Exercises\DeficitDeadlift;
-use App\Training\Exercises\MilitaryPress;
 use Carbon\CarbonInterval;
 
 class Sheiko29 implements Program

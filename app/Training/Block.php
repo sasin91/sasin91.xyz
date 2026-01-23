@@ -15,7 +15,7 @@ class Block implements Arrayable
     {
         return [
             'exercise' => $this->exercise->label(),
-            'lifts' => array_map(fn($lift) => $lift->toArray(), $this->lifts),
+            'lifts' => array_map(fn ($lift) => $lift->toArray(), $this->lifts),
             'cues' => $this->exercise->cues(),
         ];
     }

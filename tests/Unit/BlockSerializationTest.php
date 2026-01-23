@@ -58,7 +58,7 @@ test('schema serializes to array correctly', function () {
             new Block(
                 exercise: new Bench,
                 lifts: [new Lift(sets: 5, reps: 5, weight: 100.0)]
-            )
+            ),
         ]
     );
 
@@ -89,7 +89,7 @@ test('json encoding of schema produces valid json', function () {
                     new Lift(sets: 5, reps: 5, weight: 100.0),
                     new Lift(sets: 3, reps: 3, weight: 120.0),
                 ]
-            )
+            ),
         ]
     );
 

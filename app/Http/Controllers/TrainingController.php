@@ -13,8 +13,8 @@ class TrainingController extends Controller
     {
         return inertia('training/index', [
             'programs' => [
-                app(Sheiko29::class)->toArray()
-            ]
+                app(Sheiko29::class)->toArray(),
+            ],
         ]);
     }
 
@@ -25,7 +25,7 @@ class TrainingController extends Controller
         $maxes = [
             'squat' => new OneRepMax($request->squat),
             'bench' => new OneRepMax($request->bench),
-            'deadlift' => new OneRepMax($request->deadlift)
+            'deadlift' => new OneRepMax($request->deadlift),
         ];
 
         $schemas = $program->schemas($maxes);
@@ -33,7 +33,7 @@ class TrainingController extends Controller
         return inertia('training/program', [
             'program' => $program,
             'schemas' => $schemas,
-            'maxes' => $maxes
+            'maxes' => $maxes,
         ]);
     }
 

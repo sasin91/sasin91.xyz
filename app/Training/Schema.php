@@ -22,7 +22,7 @@ class Schema implements Arrayable
             'day' => $this->day,
             'week' => $this->week,
             'focus' => $this->focus,
-            'blocks' => array_map(fn($block) => $block->toArray(), $this->blocks),
+            'blocks' => array_map(fn ($block) => $block->toArray(), $this->blocks),
         ];
     }
 }

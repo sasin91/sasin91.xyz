@@ -19,7 +19,7 @@ class ClearExerciseManifest extends Command
 
         // Show discovered exercises
         $exercises = $registry->all();
-        $this->info('Discovered ' . count($exercises) . ' exercises:');
+        $this->info('Discovered '.count($exercises).' exercises:');
 
         foreach ($exercises as $key => $class) {
             $this->line("  • {$key} → {$class}");

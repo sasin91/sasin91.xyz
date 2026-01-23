@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Casts\ExerciseCast;
-use App\Training\Exercise;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

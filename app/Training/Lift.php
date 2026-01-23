@@ -13,8 +13,7 @@ class Lift implements Arrayable
         public int $reps,
         public float $weight,
         ?string $label = null,
-    )
-    {
+    ) {
         $this->label = $label ?? sprintf('%d x %d @ %.1fkg', $sets, $reps, $weight);
     }
 

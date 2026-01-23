@@ -23,7 +23,7 @@ Route::get('training/sheiko-29', [TrainingController::class, 'sheiko29'])->name(
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard', [
-            'workouts' => request()->user()->workouts()->latest('completed_at')->take(5)->get()
+            'workouts' => request()->user()->workouts()->latest('completed_at')->take(5)->get(),
         ]);
     })->name('dashboard');
 
@@ -31,4 +31,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('training/{program}/session', [TrainingController::class, 'store'])->name('training.store');
 });
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

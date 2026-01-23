@@ -10,7 +10,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("
+        DB::statement('
             CREATE VIEW lifts AS
             SELECT
                 w.user_id,
@@ -25,7 +25,7 @@ return new class extends Migration
             FROM workouts w
             JOIN workout_sets ws ON ws.workout_id = w.id
             WHERE w.completed_at IS NOT NULL
-        ");
+        ');
     }
 
     /**
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("DROP VIEW IF EXISTS lifts");
+        DB::statement('DROP VIEW IF EXISTS lifts');
     }
 };

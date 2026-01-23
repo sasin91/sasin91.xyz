@@ -17,7 +17,7 @@ describe('Smoke tests', function () {
     test('authenticated smoke tests', function () {
         visit([
             '/dashboard',
-            '/settings'
+            '/settings',
         ])->assertNoSmoke();
     });
 });
