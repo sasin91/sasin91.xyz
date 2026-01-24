@@ -7,13 +7,14 @@ use App\Models\Workout;
 use App\Rules\ValidTrainingProgram;
 use App\Training\Program;
 use App\Training\ProgramProgress;
+use App\Training\TrainingRegistry;
 use Illuminate\Http\Request;
 
 class TrainingController extends Controller
 {
     public function index()
     {
-        $registry = app('training.programs');
+        $registry = app(TrainingRegistry::class);
 
         return inertia('training/index', [
             'programs' => array_values($registry->instances()),
@@ -95,7 +96,7 @@ class TrainingController extends Controller
 
     public function program(string $program): Program
     {
-        $registry = app('training.programs');
+        $registry = app(TrainingRegistry::class);
 
         if (! $registry->has($program)) {
             abort(404, 'Program not found');

@@ -7,7 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 
 use function app;
 
-class Registry
+class Registry implements TrainingRegistry, ExerciseRegistry
 {
     private array $items = [];
 

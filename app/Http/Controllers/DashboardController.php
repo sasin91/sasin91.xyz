@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Training\ProgramProgress;
+use App\Training\TrainingRegistry;
 use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,7 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
-            $programRegistry = app('training.programs');
+            $programRegistry = app(TrainingRegistry::class);
 
             $program = $programRegistry->get($latestWorkouts->first()->program_name);
             $progress = new ProgramProgress($program, $user);

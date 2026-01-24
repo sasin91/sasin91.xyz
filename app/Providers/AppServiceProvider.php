@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 
+use App\Training\ExerciseRegistry;
 use App\Training\Registry;
+use App\Training\TrainingRegistry;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\Repository;
 use Illuminate\Filesystem\Filesystem;
@@ -19,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton('training.programs', fn ($app) => new Registry(
+        $this->app->singleton(TrainingRegistry::class, fn ($app) => new Registry(
             namespace: 'App\\Training\\Programs',
             path: 'Training/Programs',
             cacheKey: 'training.program_manifest',
@@ -27,13 +29,17 @@ class AppServiceProvider extends ServiceProvider
             cache: $app->make(Repository::class)
         ));
 
-        $this->app->singleton('training.exercises', fn ($app) => new Registry(
+        $this->app->alias(TrainingRegistry::class, 'training.programs');
+
+        $this->app->singleton(ExerciseRegistry::class, fn ($app) => new Registry(
             namespace: 'App\\Training\\Exercises',
             path: 'Training/Exercises',
             cacheKey: 'training.exercise_manifest',
             files: $app->make(Filesystem::class),
             cache: $app->make(Repository::class)
         ));
+
+        $this->app->alias(ExerciseRegistry::class, 'training.exercises');
     }
 
     /**

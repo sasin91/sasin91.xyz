@@ -3,6 +3,7 @@
 namespace App\Casts;
 
 use App\Training\Exercise;
+use App\Training\ExerciseRegistry;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ class ExerciseCast implements CastsAttributes
             return null;
         }
 
-        return app('training.exercises')->get($value);
+        return app(ExerciseRegistry::class)->get($value);
     }
 
     /**
@@ -40,7 +41,7 @@ class ExerciseCast implements CastsAttributes
         }
 
         if ($value instanceof Exercise) {
-            return app('training.exercises')->resolveKey($value);
+            return app(ExerciseRegistry::class)->resolveKey($value);
         }
 
         throw new InvalidArgumentException('The given value is not a valid exercise.');
