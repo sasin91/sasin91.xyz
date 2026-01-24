@@ -75,8 +75,8 @@ class TrainingController extends Controller
             'program_name' => ['required', 'string', new ValidTrainingProgram],
             'week' => 'required|integer',
             'day' => 'required|integer',
-            'duration_seconds' => 'nullable|integer',
-            'sets' => 'nullable|array',
+            'duration_seconds' => 'required|integer',
+            'sets' => 'required|array',
             'sets.*.exercise' => 'required|string',
             'sets.*.weight' => 'required|numeric',
             'sets.*.reps' => 'required|integer',
@@ -86,10 +86,7 @@ class TrainingController extends Controller
         $workout->completed_at = now();
 
         $request->user()->workouts()->save($workout);
-
-        if (! empty($validated['sets'])) {
-            $workout->sets()->createMany($validated['sets']);
-        }
+        $workout->sets()->createMany($validated['sets']);
 
         return to_route('dashboard');
     }

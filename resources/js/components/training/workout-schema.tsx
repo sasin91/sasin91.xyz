@@ -1,12 +1,9 @@
-import { CheckCircle2, ChevronDown, ChevronRight, Circle, Info } from 'lucide-react';
+import { ChevronDown, ChevronRight, Info } from 'lucide-react';
 import { useState } from 'react';
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
 
 export interface Lift {
     sets: number;
@@ -29,12 +26,9 @@ export interface Schema {
 
 interface WorkoutSchemaProps {
     schema: Schema;
-    completedSets?: string[];
-    onSetChange?: (key: string) => void;
-    readOnly?: boolean;
 }
 
-export function WorkoutSchema({ schema, completedSets = [], onSetChange, readOnly = false }: WorkoutSchemaProps) {
+export function WorkoutSchema({ schema }: WorkoutSchemaProps) {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -48,10 +42,6 @@ export function WorkoutSchema({ schema, completedSets = [], onSetChange, readOnl
                     <WorkoutBlock
                         key={index}
                         block={block}
-                        blockIndex={index}
-                        completedSets={completedSets}
-                        onSetChange={onSetChange}
-                        readOnly={readOnly}
                     />
                 ))}
             </div>
@@ -61,31 +51,10 @@ export function WorkoutSchema({ schema, completedSets = [], onSetChange, readOnl
 
 interface WorkoutBlockProps {
     block: Block;
-    blockIndex: number;
-    completedSets: string[];
-    onSetChange?: (key: string) => void;
-    readOnly: boolean;
 }
 
-function WorkoutBlock({ block, blockIndex, completedSets, onSetChange, readOnly }: WorkoutBlockProps) {
+function WorkoutBlock({ block }: WorkoutBlockProps) {
     const [isOpen, setIsOpen] = useState(true);
-
-    const makeKey = (liftIndex: number, setIndex: number) => `${blockIndex}-${liftIndex}-${setIndex}`;
-
-    const handleSetChange = (liftIndex: number, setIndex: number) => {
-        if (readOnly || !onSetChange) return;
-        onSetChange(makeKey(liftIndex, setIndex));
-    };
-
-    // Calculate total sets to check completion
-    const allSets: string[] = [];
-    block.lifts.forEach((lift, liftIndex) => {
-        for (let i = 0; i < lift.sets; i++) {
-            allSets.push(makeKey(liftIndex, i));
-        }
-    });
-
-    const isComplete = allSets.every(key => completedSets.includes(key));
 
     // Calculate block label (total sets)
     const totalSets = block.lifts.reduce((sum, lift) => sum + lift.sets, 0);
@@ -102,10 +71,6 @@ function WorkoutBlock({ block, blockIndex, completedSets, onSetChange, readOnly 
                         <span className="font-semibold text-lg">{block.exercise} <span className="text-muted-foreground text-sm ml-2 font-normal">× {totalSets}</span></span>
                     </Button>
                 </CollapsibleTrigger>
-                <div className="flex items-center gap-2">
-                    {/* Status indicator */}
-                    {isComplete ? <CheckCircle2 className="h-5 w-5 text-green-500" /> : <Circle className="h-5 w-5 text-muted-foreground" />}
-                </div>
             </div>
             <CollapsibleContent>
                 <div className="px-4 pb-4 pt-0">
@@ -131,21 +96,11 @@ function WorkoutBlock({ block, blockIndex, completedSets, onSetChange, readOnly 
                             const rows = [];
                             for (let i = 0; i < lift.sets; i++) {
                                 currentSetCount++;
-                                const key = makeKey(liftIndex, i);
                                 rows.push(
-                                    <div key={key} className={cn("grid grid-cols-4 md:grid-cols-5 items-center py-2 text-center md:text-left rounded-md transition-colors", completedSets.includes(key) ? "bg-muted/50" : "")}>
+                                    <div key={`${liftIndex}-${i}`} className="grid grid-cols-3 items-center py-2 text-center md:text-left rounded-md">
                                         <div className="font-mono text-sm">Set {currentSetCount}</div>
                                         <div className="font-mono text-sm">{lift.reps}</div>
                                         <div className="font-mono text-sm">{Math.round(lift.weight)} kg</div>
-                                        <div className="flex justify-center md:justify-start">
-                                            <Checkbox
-                                                id={`block-${blockIndex}-lift-${liftIndex}-set-${i}`}
-                                                checked={completedSets.includes(key)}
-                                                onCheckedChange={() => handleSetChange(liftIndex, i)}
-                                                disabled={readOnly}
-                                                className="h-5 w-5"
-                                            />
-                                        </div>
                                     </div>
                                 );
                             }
@@ -158,11 +113,10 @@ function WorkoutBlock({ block, blockIndex, completedSets, onSetChange, readOnly 
                                         <span>{lift.label}</span>
                                     </summary>
                                     <div className="pl-6 grid gap-2">
-                                        <div className="grid grid-cols-4 md:grid-cols-5 text-xs font-medium text-muted-foreground mb-1 text-center md:text-left uppercase tracking-wider">
-                                            <div className="col-span-1">Set</div>
-                                            <div className="col-span-1">Reps</div>
-                                            <div className="col-span-1">Weight</div>
-                                            <div className="col-span-1">Done</div>
+                                        <div className="grid grid-cols-3 text-xs font-medium text-muted-foreground mb-1 text-center md:text-left uppercase tracking-wider">
+                                            <div>Set</div>
+                                            <div>Reps</div>
+                                            <div>Weight</div>
                                         </div>
                                         {rows}
                                     </div>

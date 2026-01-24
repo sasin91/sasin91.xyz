@@ -1,6 +1,6 @@
 import { Form, Head, router } from '@inertiajs/react';
 import { Save } from 'lucide-react';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
 
 import InputError from '@/components/input-error';
 import MaxesComponent from '@/components/training/maxes';
@@ -38,35 +38,28 @@ export default function Session({ program, schema, maxes }: {
         });
     };
 
-    const [completedSets, setCompletedSets] = useState<string[]>([]);
     const durationRef = useRef(0);
-
-    const handleSetChange = useCallback((key: string) => {
-        setCompletedSets(prev =>
-            prev.includes(key)
-                ? prev.filter(k => k !== key)
-                : [...prev, key]
-        );
-    }, []);
 
     const handleTick = useCallback((seconds: number) => {
         durationRef.current = seconds;
     }, []);
 
     const buildSets = useCallback(() => {
-        // Transform completedSets keys into actual set data
-        // Key format: "blockIndex-liftIndex-setIndex"
-        return completedSets.map(key => {
-            const [blockIndex, liftIndex] = key.split('-').map(Number);
-            const block = schema.blocks[blockIndex];
-            const lift = block.lifts[liftIndex];
-            return {
-                exercise: block.exercise,
-                weight: lift.weight,
-                reps: lift.reps,
-            };
+        // Build all sets from the schema
+        const sets: { exercise: string; weight: number; reps: number }[] = [];
+        schema.blocks.forEach(block => {
+            block.lifts.forEach(lift => {
+                for (let i = 0; i < lift.sets; i++) {
+                    sets.push({
+                        exercise: block.exercise,
+                        weight: lift.weight,
+                        reps: lift.reps,
+                    });
+                }
+            });
         });
-    }, [completedSets, schema.blocks]);
+        return sets;
+    }, [schema.blocks]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -101,11 +94,7 @@ export default function Session({ program, schema, maxes }: {
                             <InputError message={errors.program_name} />
                             <Card>
                                 <CardContent className="pt-6">
-                                    <WorkoutSchema
-                                        schema={schema}
-                                        completedSets={completedSets}
-                                        onSetChange={handleSetChange}
-                                    />
+                                    <WorkoutSchema schema={schema} />
                                 </CardContent>
                             </Card>
 
