@@ -17,7 +17,7 @@ class ValidTrainingProgram implements ValidationRule
         $registry = app('training.programs');
 
         if (! $registry->has($value)) {
-            $fail("Training program '{$value}' does not exist.");
+            $fail("Training program '{$value}' does not exist. Perhaps you passed `program.name` and not `program.slug`?");
         }
     }
 }

@@ -30,11 +30,11 @@ export interface Schema {
 interface WorkoutSchemaProps {
     schema: Schema;
     completedSets?: string[];
-    onSetToggle?: (key: string) => void;
+    onSetChange?: (key: string) => void;
     readOnly?: boolean;
 }
 
-export function WorkoutSchema({ schema, completedSets = [], onSetToggle, readOnly = false }: WorkoutSchemaProps) {
+export function WorkoutSchema({ schema, completedSets = [], onSetChange, readOnly = false }: WorkoutSchemaProps) {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -50,7 +50,7 @@ export function WorkoutSchema({ schema, completedSets = [], onSetToggle, readOnl
                         block={block}
                         blockIndex={index}
                         completedSets={completedSets}
-                        onSetToggle={onSetToggle}
+                        onSetChange={onSetChange}
                         readOnly={readOnly}
                     />
                 ))}
@@ -63,18 +63,18 @@ interface WorkoutBlockProps {
     block: Block;
     blockIndex: number;
     completedSets: string[];
-    onSetToggle?: (key: string) => void;
+    onSetChange?: (key: string) => void;
     readOnly: boolean;
 }
 
-function WorkoutBlock({ block, blockIndex, completedSets, onSetToggle, readOnly }: WorkoutBlockProps) {
+function WorkoutBlock({ block, blockIndex, completedSets, onSetChange, readOnly }: WorkoutBlockProps) {
     const [isOpen, setIsOpen] = useState(true);
 
     const makeKey = (liftIndex: number, setIndex: number) => `${blockIndex}-${liftIndex}-${setIndex}`;
 
-    const toggleSet = (liftIndex: number, setIndex: number) => {
-        if (readOnly || !onSetToggle) return;
-        onSetToggle(makeKey(liftIndex, setIndex));
+    const handleSetChange = (liftIndex: number, setIndex: number) => {
+        if (readOnly || !onSetChange) return;
+        onSetChange(makeKey(liftIndex, setIndex));
     };
 
     // Calculate total sets to check completion
@@ -141,7 +141,7 @@ function WorkoutBlock({ block, blockIndex, completedSets, onSetToggle, readOnly 
                                             <Checkbox
                                                 id={`block-${blockIndex}-lift-${liftIndex}-set-${i}`}
                                                 checked={completedSets.includes(key)}
-                                                onCheckedChange={() => toggleSet(liftIndex, i)}
+                                                onCheckedChange={() => handleSetChange(liftIndex, i)}
                                                 disabled={readOnly}
                                                 className="h-5 w-5"
                                             />

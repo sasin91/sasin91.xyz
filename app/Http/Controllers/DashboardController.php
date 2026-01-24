@@ -14,26 +14,23 @@ class DashboardController extends Controller
      */
     public function __invoke(#[CurrentUser] User $user)
     {
-        $workouts = collect();
+        $latestWorkouts = collect();
         $program = 'sheiko-29';
         $params = ['program' => $program];
 
         if ($user->workouts()->exists()) {
-            $workouts = $user->workouts()
+            $latestWorkouts = $user->workouts()
                 ->latest('completed_at')
                 ->take(5)
                 ->get();
 
             $programRegistry = app('training.programs');
 
-            $program = $programRegistry->get($workouts->last()->program_name);
-            if (!$program) {
-                dd($workouts->last());
-            }
+            $program = $programRegistry->get($latestWorkouts->first()->program_name);
             $progress = new ProgramProgress($program, $user);
 
             $params = [
-                'program' => $program,
+                'program' => $program->slug(),
                 'day' => $progress->nextDay,
                 'week' => $progress->nextWeek,
                 ...$user->currentMaxes(),
@@ -43,7 +40,7 @@ class DashboardController extends Controller
         $startTrainingUrl = route('training.session', $params);
 
         return inertia('dashboard', [
-            'workouts' => $workouts,
+            'workouts' => $latestWorkouts,
             'startTrainingUrl' => $startTrainingUrl,
         ]);
     }

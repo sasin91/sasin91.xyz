@@ -1,7 +1,8 @@
-import { Head, router } from '@inertiajs/react';
+import { Form, Head, router } from '@inertiajs/react';
 import { Save } from 'lucide-react';
-import { FormEventHandler, useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
+import InputError from '@/components/input-error';
 import MaxesComponent from '@/components/training/maxes';
 import { Timer } from '@/components/training/timer';
 import { WorkoutSchema, type Schema } from '@/components/training/workout-schema';
@@ -38,10 +39,9 @@ export default function Session({ program, schema, maxes }: {
     };
 
     const [completedSets, setCompletedSets] = useState<string[]>([]);
-    const [processing, setProcessing] = useState(false);
     const durationRef = useRef(0);
 
-    const handleSetToggle = useCallback((key: string) => {
+    const handleSetChange = useCallback((key: string) => {
         setCompletedSets(prev =>
             prev.includes(key)
                 ? prev.filter(k => k !== key)
@@ -53,12 +53,10 @@ export default function Session({ program, schema, maxes }: {
         durationRef.current = seconds;
     }, []);
 
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-
+    const buildSets = useCallback(() => {
         // Transform completedSets keys into actual set data
         // Key format: "blockIndex-liftIndex-setIndex"
-        const sets = completedSets.map(key => {
+        return completedSets.map(key => {
             const [blockIndex, liftIndex] = key.split('-').map(Number);
             const block = schema.blocks[blockIndex];
             const lift = block.lifts[liftIndex];
@@ -68,18 +66,7 @@ export default function Session({ program, schema, maxes }: {
                 reps: lift.reps,
             };
         });
-
-        setProcessing(true);
-        router.post(training.store.url('sheiko-29'), {
-            program_name: program.slug,
-            week: schema.week,
-            day: schema.day,
-            duration_seconds: durationRef.current,
-            sets,
-        }, {
-            onFinish: () => setProcessing(false),
-        });
-    };
+    }, [completedSets, schema.blocks]);
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -97,24 +84,40 @@ export default function Session({ program, schema, maxes }: {
 
                 <MaxesComponent maxes={maxes} updateMaxes={updateMaxes} />
 
-                <form onSubmit={submit} className="space-y-6 pb-20">
-                    <Card>
-                        <CardContent className="pt-6">
-                            <WorkoutSchema
-                                schema={schema}
-                                completedSets={completedSets}
-                                onSetToggle={handleSetToggle}
-                            />
-                        </CardContent>
-                    </Card>
+                <Form
+                    {...training.store.form(program.slug)}
+                    transform={(data) => ({
+                        ...data,
+                        program_name: program.slug,
+                        week: schema.week,
+                        day: schema.day,
+                        duration_seconds: durationRef.current,
+                        sets: buildSets(),
+                    })}
+                    className="space-y-6 pb-20"
+                >
+                    {({ errors, processing }) => (
+                        <>
+                            <InputError message={errors.program_name} />
+                            <Card>
+                                <CardContent className="pt-6">
+                                    <WorkoutSchema
+                                        schema={schema}
+                                        completedSets={completedSets}
+                                        onSetChange={handleSetChange}
+                                    />
+                                </CardContent>
+                            </Card>
 
-                    <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t flex justify-center md:static md:bg-transparent md:border-none md:p-0 md:justify-end">
-                        <Button type="submit" size="lg" disabled={processing} className="w-full md:w-auto shadow-lg">
-                            <Save className="mr-2 h-4 w-4" />
-                            Complete Workout
-                        </Button>
-                    </div>
-                </form>
+                            <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t flex justify-center md:static md:bg-transparent md:border-none md:p-0 md:justify-end">
+                                <Button type="submit" size="lg" disabled={processing} className="w-full md:w-auto shadow-lg">
+                                    <Save className="mr-2 h-4 w-4" />
+                                    Complete Workout
+                                </Button>
+                            </div>
+                        </>
+                    )}
+                </Form>
             </div>
         </AppLayout>
     );
