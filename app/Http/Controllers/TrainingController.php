@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TrainingProgramRequest;
 use App\Models\Workout;
+use App\Rules\ValidTrainingProgram;
 use App\Training\Program;
 use App\Training\ProgramProgress;
 use Illuminate\Http\Request;
@@ -70,7 +71,7 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'program_name' => 'required|string',
+            'program_name' => ['required', 'string', new ValidTrainingProgram],
             'week' => 'required|integer',
             'day' => 'required|integer',
             'duration_seconds' => 'nullable|integer',
@@ -80,13 +81,8 @@ class TrainingController extends Controller
             'sets.*.reps' => 'required|integer',
         ]);
 
-        $workout = new Workout([
-            'program_name' => $validated['program_name'],
-            'week' => $validated['week'],
-            'day' => $validated['day'],
-            'duration_seconds' => $validated['duration_seconds'] ?? null,
-            'completed_at' => now(),
-        ]);
+        $workout = new Workout($validated);
+        $workout->completed_at = now();
 
         $request->user()->workouts()->save($workout);
 

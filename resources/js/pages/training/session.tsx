@@ -2,28 +2,40 @@ import { Head, router } from '@inertiajs/react';
 import { Save } from 'lucide-react';
 import { FormEventHandler, useCallback, useRef, useState } from 'react';
 
+import MaxesComponent from '@/components/training/maxes';
 import { Timer } from '@/components/training/timer';
 import { WorkoutSchema, type Schema } from '@/components/training/workout-schema';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
+import type { Maxes, Program } from '@/types/training';
 import training from '@/wayfinder/routes/training';
 
-interface Program {
-    name: string;
-}
-
-interface SessionProps {
-    program: Program;
-    schema: Schema;
-}
-
-export default function Session({ program, schema }: SessionProps) {
+export default function Session({ program, schema, maxes }: {
+    program: Program
+    schema: Schema
+    maxes: Maxes
+}) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Training', href: training.index.url() },
+        { title: program.name, href: '' },
         { title: 'Session', href: '' },
     ];
+
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set('day', String(schema.day));
+    searchParams.set('week', String(schema.week));
+
+    const updateMaxes = (maxes: Maxes) => {
+        for (const key of Object.keys(maxes)) {
+            searchParams.set(key, maxes[key].toString());
+        }
+
+        router.reload({
+            data: Object.fromEntries(searchParams.entries())
+        });
+    };
 
     const [completedSets, setCompletedSets] = useState<string[]>([]);
     const [processing, setProcessing] = useState(false);
@@ -59,7 +71,7 @@ export default function Session({ program, schema }: SessionProps) {
 
         setProcessing(true);
         router.post(training.store.url('sheiko-29'), {
-            program_name: program.name,
+            program_name: program.slug,
             week: schema.week,
             day: schema.day,
             duration_seconds: durationRef.current,
@@ -82,6 +94,8 @@ export default function Session({ program, schema }: SessionProps) {
                     </div>
                     <Timer onTick={handleTick} />
                 </div>
+
+                <MaxesComponent maxes={maxes} updateMaxes={updateMaxes} />
 
                 <form onSubmit={submit} className="space-y-6 pb-20">
                     <Card>

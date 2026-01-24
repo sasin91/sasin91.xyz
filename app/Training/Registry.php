@@ -4,7 +4,8 @@ namespace App\Training;
 
 use Illuminate\Cache\Repository;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
+
+use function app;
 
 class Registry
 {
@@ -22,8 +23,7 @@ class Registry
 
     private function getManifest(): array
     {
-        return $this->discover();
-        return $this->cache->rememberForever($this->cacheKey, fn() => $this->discover());
+        return $this->cache->rememberForever($this->cacheKey, fn () => $this->discover());
     }
 
     private function namespaced(string $class): string
@@ -80,7 +80,7 @@ class Registry
             }
         }
 
-        throw new \InvalidArgumentException('Unknown type: ' . $class);
+        throw new \InvalidArgumentException('Unknown type: '.$class);
     }
 
     public function clearManifest(): void

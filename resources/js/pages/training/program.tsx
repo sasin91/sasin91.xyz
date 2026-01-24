@@ -1,7 +1,8 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { Play } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
+import MaxesComponent from '@/components/training/maxes';
 import {
     WorkoutSchema,
     type Schema,
@@ -22,26 +23,11 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
+import type { Maxes, Program } from '@/types/training';
 import { login } from '@/wayfinder/routes';
 import training from '@/wayfinder/routes/training';
-
-// Simplified types matching the PHP structure
-interface Program {
-    name: string;
-    type: string;
-    days: number;
-    weeks: number;
-}
-
-interface Maxes {
-    squat: number;
-    bench: number;
-    deadlift: number;
-}
 
 export default function Program({
     program,
@@ -51,21 +37,15 @@ export default function Program({
     nextWeek,
     programComplete,
 }: {
-    program: Program;
-    maxes: Maxes;
-    schemas: Schema[];
-    nextDay: number;
-    nextWeek: number;
-    programComplete: boolean;
+    program: Program
+    maxes: Maxes
+    schemas: Schema[]
+    nextDay: number
+    nextWeek: number
+    programComplete: boolean
 }) {
     const { auth } = usePage().props;
-    const [showRestartDialog, setShowRestartDialog] = useState(false);
-
-    useEffect(() => {
-        if (programComplete) {
-            setShowRestartDialog(true);
-        }
-    }, [programComplete]);
+    const [showRestartDialog, setShowRestartDialog] = useState(() => programComplete);
 
     const handleConfirmRestart = () => {
         setShowRestartDialog(false);
@@ -75,21 +55,19 @@ export default function Program({
         router.visit(training.index.url());
     };
 
-    // Local state for inputs to allow typing
-    const [localMaxes, setLocalMaxes] = useState(() => maxes);
-
     const searchParams = new URLSearchParams(window.location.search);
-    searchParams.set('squat', localMaxes.squat.toString());
-    searchParams.set('bench', localMaxes.bench.toString());
-    searchParams.set('deadlift', localMaxes.deadlift.toString());
     searchParams.set('day', String(nextDay));
     searchParams.set('week', String(nextWeek));
 
     const data = Object.fromEntries(searchParams.entries());
 
-    const updateMaxes = () => {
+    const updateMaxes = (maxes: Maxes) => {
+        for (const key of Object.keys(maxes)) {
+            searchParams.set(key, maxes[key].toString());
+        }
+
         router.reload({
-            data,
+            data: Object.fromEntries(searchParams.entries()),
         });
     };
 
@@ -114,67 +92,7 @@ export default function Program({
                     </div>
                 </div>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>One Rep Maxes</CardTitle>
-                        <CardDescription>
-                            Enter your current maxes to calculate training
-                            weights.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                            <div className="grid gap-2">
-                                <Label htmlFor="squat">Squat (kg)</Label>
-                                <Input
-                                    id="squat"
-                                    type="number"
-                                    value={localMaxes.squat}
-                                    onChange={(e) =>
-                                        setLocalMaxes({
-                                            ...localMaxes,
-                                            squat:
-                                                parseFloat(e.target.value) || 0,
-                                        })
-                                    }
-                                    onBlur={updateMaxes}
-                                />
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="bench">Bench Press (kg)</Label>
-                                <Input
-                                    id="bench"
-                                    type="number"
-                                    value={localMaxes.bench}
-                                    onChange={(e) =>
-                                        setLocalMaxes({
-                                            ...localMaxes,
-                                            bench:
-                                                parseFloat(e.target.value) || 0,
-                                        })
-                                    }
-                                    onBlur={updateMaxes}
-                                />
-                            </div>
-                            <div className="grid gap-2">
-                                <Label htmlFor="deadlift">Deadlift (kg)</Label>
-                                <Input
-                                    id="deadlift"
-                                    type="number"
-                                    value={localMaxes.deadlift}
-                                    onChange={(e) =>
-                                        setLocalMaxes({
-                                            ...localMaxes,
-                                            deadlift:
-                                                parseFloat(e.target.value) || 0,
-                                        })
-                                    }
-                                    onBlur={updateMaxes}
-                                />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                <MaxesComponent maxes={maxes} updateMaxes={updateMaxes} />
 
                 <div className="flex justify-end">
                     {auth?.user ? (
