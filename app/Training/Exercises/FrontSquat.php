@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class FrontSquat implements Exercise
 {
+    public function slug(): string
+    {
+        return 'front-squat';
+    }
+
     public function label(): string
     {
         return 'Front Squat';

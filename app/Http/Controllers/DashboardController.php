@@ -34,8 +34,11 @@ class DashboardController extends Controller
                 'program' => $program->slug(),
                 'day' => $progress->nextDay,
                 'week' => $progress->nextWeek,
-                ...$user->currentMaxes(),
             ];
+
+            foreach ($user->currentMaxes() as $exercise => $max) {
+                $params[$exercise] = round($max);
+            }
         }
 
         $startTrainingUrl = route('training.session', $params);

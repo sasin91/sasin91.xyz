@@ -4,6 +4,11 @@ namespace App\Training\Exercises;
 
 class DeadliftOnBoxes extends Deadlift
 {
+    public function slug(): string
+    {
+        return 'deadlift-on-boxes';
+    }
+
     public function label(): string
     {
         return 'Deadlift - On boxes';

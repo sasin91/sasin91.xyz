@@ -5,10 +5,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import type { Maxes } from "@/types/training";
 
+const exerciseLabels: Record<string, string> = {
+    squat: 'Squat',
+    bench: 'Bench Press',
+    deadlift: 'Deadlift',
+};
+
+function formatLabel(slug: string): string {
+    return exerciseLabels[slug] ?? slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
 export default function Maxes({ maxes, updateMaxes }: { maxes: Maxes, updateMaxes: (maxes: Maxes) => void }) {
     const [localMaxes, setLocalMaxes] = useState(() => maxes);
 
     const submit = () => updateMaxes(localMaxes);
+
+    const exercises = Object.keys(maxes);
 
     return (
         <Card>
@@ -21,57 +33,25 @@ export default function Maxes({ maxes, updateMaxes }: { maxes: Maxes, updateMaxe
             </CardHeader>
             <CardContent>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                    <div className="grid gap-2">
-                        {}
-                        <Label htmlFor="squat">Squat (kg)</Label>
-                        <Input
-                            id="squat"
-                            type="number"
-                            value={localMaxes.squat}
-                            onChange={(e) =>
-                                setLocalMaxes({
-                                    ...localMaxes,
-                                    squat:
-                                        parseFloat(e.target.value) || 0,
-                                })
-                            }
-                            onBlur={submit}
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="bench">Bench Press (kg)</Label>
-                        <Input
-                            id="bench"
-                            type="number"
-                            value={localMaxes.bench}
-                            onChange={(e) =>
-                                setLocalMaxes({
-                                    ...localMaxes,
-                                    bench:
-                                        parseFloat(e.target.value) || 0,
-                                })
-                            }
-                            onBlur={submit}
-                        />
-                    </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="deadlift">Deadlift (kg)</Label>
-                        <Input
-                            id="deadlift"
-                            type="number"
-                            value={localMaxes.deadlift}
-                            onChange={(e) =>
-                                setLocalMaxes({
-                                    ...localMaxes,
-                                    deadlift:
-                                        parseFloat(e.target.value) || 0,
-                                })
-                            }
-                            onBlur={submit}
-                        />
-                    </div>
+                    {exercises.map((exercise) => (
+                        <div key={exercise} className="grid gap-2">
+                            <Label htmlFor={exercise}>{formatLabel(exercise)} (kg)</Label>
+                            <Input
+                                id={exercise}
+                                type="number"
+                                value={localMaxes[exercise] ?? 0}
+                                onChange={(e) =>
+                                    setLocalMaxes({
+                                        ...localMaxes,
+                                        [exercise]: parseFloat(e.target.value) || 0,
+                                    })
+                                }
+                                onBlur={submit}
+                            />
+                        </div>
+                    ))}
                 </div>
             </CardContent>
         </Card>
-    )
+    );
 }

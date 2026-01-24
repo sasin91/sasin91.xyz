@@ -120,7 +120,7 @@ export default function Program({
                         </CardHeader>
                         <CardContent>
                             {schemas.length > 0 && (
-                                <WorkoutSchema schema={schemas[0]} readOnly />
+                                <WorkoutSchema schema={schemas[0]} />
                             )}
                         </CardContent>
                     </Card>

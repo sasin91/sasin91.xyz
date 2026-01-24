@@ -14,6 +14,7 @@ export interface Lift {
 
 export interface Block {
     exercise: string;
+    exerciseLabel: string;
     lifts: Lift[];
     cues: string[];
 }
@@ -68,7 +69,7 @@ function WorkoutBlock({ block }: WorkoutBlockProps) {
                 <CollapsibleTrigger asChild>
                     <Button variant="ghost" size="sm" className="p-0 hover:bg-transparent -ml-2">
                         {isOpen ? <ChevronDown className="h-4 w-4 mr-2" /> : <ChevronRight className="h-4 w-4 mr-2" />}
-                        <span className="font-semibold text-lg">{block.exercise} <span className="text-muted-foreground text-sm ml-2 font-normal">× {totalSets}</span></span>
+                        <span className="font-semibold text-lg">{block.exerciseLabel} <span className="text-muted-foreground text-sm ml-2 font-normal">× {totalSets}</span></span>
                     </Button>
                 </CollapsibleTrigger>
             </div>

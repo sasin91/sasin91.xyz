@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class InclineDumbbellPress implements Exercise
 {
+    public function slug(): string
+    {
+        return 'incline-dumbbell-press';
+    }
+
     public function label(): string
     {
         return 'Dumbbell Press';

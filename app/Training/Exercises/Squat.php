@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class Squat implements Exercise
 {
+    public function slug(): string
+    {
+        return 'squat';
+    }
+
     public function label(): string
     {
         return 'Squat';

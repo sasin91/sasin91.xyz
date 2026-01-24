@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class DeficitDeadlift implements Exercise
 {
+    public function slug(): string
+    {
+        return 'deficit-deadlift';
+    }
+
     public function label(): string
     {
         return 'Deficit Deadlift';

@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class DumbbellSquat implements Exercise
 {
+    public function slug(): string
+    {
+        return 'dumbbell-squat';
+    }
+
     public function label(): string
     {
         return 'Dumbbell Squat';
