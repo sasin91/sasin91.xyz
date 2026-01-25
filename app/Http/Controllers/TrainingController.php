@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Training\CreateNewWorkout;
 use App\Http\Requests\TrainingProgramRequest;
 use App\Models\Workout;
 use App\Rules\ValidRegistryKey;
@@ -9,7 +10,10 @@ use App\Training\Program;
 use App\Training\ProgramProgress;
 use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
+use App\Training\TemporaryWorkout;
 use Illuminate\Http\Request;
+use function inertia;
+use function redirect;
 
 class TrainingController extends Controller
 {
@@ -83,11 +87,14 @@ class TrainingController extends Controller
             'sets.*.reps' => 'required|integer',
         ]);
 
-        $workout = new Workout($validated);
-        $workout->completed_at = now();
+        if ($request->user() === null) {
+            TemporaryWorkout::save($validated);
 
-        $request->user()->workouts()->save($workout);
-        $workout->sets()->createMany($validated['sets']);
+            inertia()->flash('success', 'Workout saved. Please login to complete.');
+            return redirect()->route('login');
+        }
+
+        app(CreateNewWorkout::class)->create($validated, $request->user());
 
         return to_route('dashboard');
     }

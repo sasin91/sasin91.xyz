@@ -4,6 +4,8 @@ namespace App\Registry;
 
 use function app_path;
 use function class_exists;
+use function storage_path;
+use function var_export;
 
 trait AutoDiscovery
 {
@@ -32,8 +34,36 @@ trait AutoDiscovery
         return $items;
     }
 
+    protected function manifestPath(): string
+    {
+        return storage_path("registries/{$this->cacheKey}.php");
+    }
+
     protected function getManifest(): array
     {
-        return $this->cache->rememberForever($this->cacheKey, fn () => $this->discover());
+        $path = $this->manifestPath();
+
+        if ($this->files->exists($path)) {
+            return require $path;
+        }
+
+        $items = $this->discover();
+        $this->writeManifest($items);
+
+        return $items;
+    }
+
+    protected function writeManifest(array $items): void
+    {
+        $dir = storage_path('registries');
+
+        if (! $this->files->isDirectory($dir)) {
+            $this->files->makeDirectory($dir, 0755, true);
+        }
+
+        $this->files->put(
+            $this->manifestPath(),
+            '<?php return '.var_export($items, true).';'
+        );
     }
 }

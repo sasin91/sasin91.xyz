@@ -2,7 +2,6 @@
 
 namespace App\Registry;
 
-use Illuminate\Cache\Repository;
 use Illuminate\Filesystem\Filesystem;
 
 use function app;
@@ -18,8 +17,7 @@ class ClassRegistry implements RegistryInterface
         private readonly string $namespace,
         private readonly string $path,
         private readonly string $cacheKey,
-        private readonly Filesystem $files,
-        private readonly Repository $cache
+        private readonly Filesystem $files
     ) {
         $this->items = $this->getManifest();
     }
@@ -58,7 +56,7 @@ class ClassRegistry implements RegistryInterface
 
     public function clearManifest(): void
     {
-        $this->cache->forget($this->cacheKey);
+        $this->files->delete($this->manifestPath());
     }
 
     public function all(): array

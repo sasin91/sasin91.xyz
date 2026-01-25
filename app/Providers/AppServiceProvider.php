@@ -2,17 +2,18 @@
 
 namespace App\Providers;
 
-
+use App\Actions\Training\CreateNewWorkout;
 use App\Registry\ClassRegistry;
 use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
+use App\Training\TemporaryWorkout;
 use Carbon\CarbonImmutable;
-use Illuminate\Cache\Repository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Fortify\Fortify;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,16 +26,14 @@ class AppServiceProvider extends ServiceProvider
             namespace: 'App\\Training\\Programs',
             path: 'Training/Programs',
             cacheKey: 'training.program_manifest',
-            files: $app->make(Filesystem::class),
-            cache: $app->make(Repository::class)
+            files: $app->make(Filesystem::class)
         ));
 
         $this->app->singleton(ExerciseRegistry::class, fn ($app) => new ClassRegistry(
             namespace: 'App\\Training\\Exercises',
             path: 'Training/Exercises',
             cacheKey: 'training.exercise_manifest',
-            files: $app->make(Filesystem::class),
-            cache: $app->make(Repository::class)
+            files: $app->make(Filesystem::class)
         ));
     }
 
@@ -44,6 +43,15 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+
+        Fortify::authenticateThrough(static function ($request) {
+            if (TemporaryWorkout::exists()) {
+                app(CreateNewWorkout::class)->create(
+                    TemporaryWorkout::pull(),
+                    $request->user()
+                );
+            }
+        });
     }
 
     protected function configureDefaults(): void
