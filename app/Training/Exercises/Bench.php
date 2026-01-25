@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class Bench implements Exercise
 {
+    public function slug(): string
+    {
+        return 'bench';
+    }
+
     public function label(): string
     {
         return 'Bench Press';

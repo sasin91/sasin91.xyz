@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class Deadlift implements Exercise
 {
+    public function slug(): string
+    {
+        return 'deadlift';
+    }
+
     public function label(): string
     {
         return 'Deadlift';

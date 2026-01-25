@@ -3,7 +3,7 @@
 use App\Training\Exercises\Bench;
 use App\Training\Exercises\Squat;
 use App\Training\OneRepMax;
-use App\Training\Sheiko29;
+use App\Training\Programs\Sheiko29;
 
 test('sheiko29 day 1 week 1 weights', function () {
     $squatMax = new OneRepMax(160);

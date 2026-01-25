@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class DumbbellTricepExtension implements Exercise
 {
+    public function slug(): string
+    {
+        return 'dumbbell-tricep-extension';
+    }
+
     public function label(): string
     {
         return 'Dumbbell Tricep Extension';

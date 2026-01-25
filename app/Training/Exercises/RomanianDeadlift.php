@@ -4,6 +4,11 @@ namespace App\Training\Exercises;
 
 class RomanianDeadlift extends Deadlift
 {
+    public function slug(): string
+    {
+        return 'romanian-deadlift';
+    }
+
     public function label(): string
     {
         return 'Romanian deadlift';

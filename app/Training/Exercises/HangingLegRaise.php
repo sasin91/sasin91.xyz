@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class HangingLegRaise implements Exercise
 {
+    public function slug(): string
+    {
+        return 'hanging-leg-raise';
+    }
+
     public function label(): string
     {
         return 'Hanging leg raise';

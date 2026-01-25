@@ -6,6 +6,11 @@ use App\Training\Exercise;
 
 class MilitaryPress implements Exercise
 {
+    public function slug(): string
+    {
+        return 'military-press';
+    }
+
     public function label(): string
     {
         return 'Military Press';

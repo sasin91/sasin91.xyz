@@ -13,7 +13,7 @@ test('it can view sheiko29 program page', function () {
     $user = User::factory()->create();
 
     actingAs($user)
-        ->get(route('training.sheiko29'))
+        ->get(route('training.show', ['program' => 'sheiko-29']))
         ->assertStatus(200)
         ->assertInertia(
             fn (Assert $page) => $page
@@ -42,25 +42,31 @@ test('it can view session page', function () {
         );
 });
 
+function validCompleteWorkoutParams(array $overrides = []): array
+{
+    return array_merge([
+        'program_name' => 'sheiko-29',
+        'week' => 1,
+        'day' => 1,
+        'sets' => [
+            ['exercise' => 'bench', 'weight' => 50, 'reps' => 5],
+            ['exercise' => 'bench', 'weight' => 60, 'reps' => 4],
+            ['exercise' => 'squat', 'weight' => 75, 'reps' => 5],
+        ],
+        'duration_seconds' => 2860,
+    ], $overrides);
+}
+
 test('it can complete workout session', function () {
     $user = User::factory()->create();
 
     actingAs($user)
-        ->post(route('training.store', 'sheiko-29'), [
-            'program_name' => 'Sheiko 29',
-            'week' => 1,
-            'day' => 1,
-            'sets' => [
-                ['exercise' => 'bench', 'weight' => 50, 'reps' => 5],
-                ['exercise' => 'bench', 'weight' => 60, 'reps' => 4],
-                ['exercise' => 'squat', 'weight' => 75, 'reps' => 5],
-            ],
-        ])
+        ->post(route('training.store', 'sheiko-29'), validCompleteWorkoutParams())
         ->assertRedirect(route('dashboard'));
 
     assertDatabaseHas('workouts', [
         'user_id' => $user->id,
-        'program_name' => 'Sheiko 29',
+        'program_name' => 'sheiko-29',
         'week' => 1,
         'day' => 1,
     ]);
@@ -72,12 +78,20 @@ test('it can complete workout session', function () {
     ]);
 });
 
+test('validation fails if provided an invalid program name', function () {
+    $user = User::factory()->create();
+
+    actingAs($user)
+        ->post(route('training.store', 'sheiko-29'), validCompleteWorkoutParams(['program_name' => 'Sheiko 29']))
+        ->assertInvalid(['program_name']);
+});
+
 test('completed workouts populate user maxes via lifts view', function () {
     $user = User::factory()->create();
 
     // Complete a workout with a 100kg squat single
     $workout = new Workout([
-        'program_name' => 'Sheiko 29',
+        'program_name' => 'sheiko-29',
         'week' => 1,
         'day' => 1,
         'completed_at' => now(),
