@@ -1,14 +1,17 @@
 <?php
 
-namespace App\Training;
+namespace App\Registry;
 
 use Illuminate\Cache\Repository;
 use Illuminate\Filesystem\Filesystem;
 
 use function app;
+use function get_class;
 
-class Registry implements TrainingRegistry, ExerciseRegistry
+class ClassRegistry implements RegistryInterface
 {
+    use AutoDiscovery;
+
     private array $items = [];
 
     public function __construct(
@@ -21,39 +24,9 @@ class Registry implements TrainingRegistry, ExerciseRegistry
         $this->items = $this->getManifest();
     }
 
-    private function getManifest(): array
-    {
-        return $this->cache->rememberForever($this->cacheKey, fn () => $this->discover());
-    }
-
     private function namespaced(string $class): string
     {
         return "{$this->namespace}\\{$class}";
-    }
-
-    private function discover(): array
-    {
-        $items = [];
-        $fullPath = app_path($this->path);
-
-        if (! $this->files->exists($fullPath)) {
-            return $items;
-        }
-
-        foreach ($this->files->allFiles($fullPath) as $file) {
-            $class = $this->namespaced($shortName = $file->getFilenameWithoutExtension());
-
-            if (! class_exists($class)) {
-                continue;
-            }
-
-            $instance = app($class);
-            $key = $instance->slug();
-
-            $items[$key] = $class;
-        }
-
-        return $items;
     }
 
     public function has(string $key): bool

@@ -1,11 +1,10 @@
 <?php
 
-use App\Training\Registry;
-use Illuminate\Cache\Repository;
-use Illuminate\Filesystem\Filesystem;
+use App\Training\Registries\ExerciseRegistry;
+use App\Training\Registries\ProgramRegistry;
 
 it('discovers exercises', function () {
-    $registry = app('training.exercises');
+    $registry = app(ExerciseRegistry::class);
 
     $items = $registry->all();
 
@@ -16,7 +15,7 @@ it('discovers exercises', function () {
 });
 
 it('discovers programs', function () {
-    $registry = app('training.programs');
+    $registry = app(ProgramRegistry::class);
 
     $items = $registry->all();
 

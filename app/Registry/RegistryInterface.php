@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Training;
+namespace App\Registry;
 
 /**
  * @template T of object
+ *
  * @psalm-template T of object
+ *
  * @phpstan-template T of object
  */
 interface RegistryInterface
@@ -13,8 +15,10 @@ interface RegistryInterface
 
     /**
      * @return T|null
-     * @psalm-return T|null
+     *
      * @phpstan-return T|null
+     *
+     * @psalm-return T|null
      */
     public function get(string $key): ?object;
 
@@ -29,8 +33,10 @@ interface RegistryInterface
 
     /**
      * @return array<string, T>
-     * @psalm-return array<string, T>
+     *
      * @phpstan-return array<string, T>
+     *
+     * @psalm-return array<string, T>
      */
     public function instances(): array;
 }

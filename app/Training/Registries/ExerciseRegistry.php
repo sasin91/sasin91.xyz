@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Training;
+namespace App\Training\Registries;
+
+use App\Registry\RegistryInterface;
+use App\Training\Exercise;
 
 /**
  * @extends RegistryInterface<Exercise>

@@ -4,17 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TrainingProgramRequest;
 use App\Models\Workout;
-use App\Rules\ValidTrainingProgram;
+use App\Rules\ValidRegistryKey;
 use App\Training\Program;
 use App\Training\ProgramProgress;
-use App\Training\TrainingRegistry;
+use App\Training\Registries\ExerciseRegistry;
+use App\Training\Registries\ProgramRegistry;
 use Illuminate\Http\Request;
 
 class TrainingController extends Controller
 {
     public function index()
     {
-        $registry = app(TrainingRegistry::class);
+        $registry = app(ProgramRegistry::class);
 
         return inertia('training/index', [
             'programs' => array_values($registry->instances()),
@@ -72,12 +73,12 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'program_name' => ['required', 'string', new ValidTrainingProgram],
+            'program_name' => ['required', 'string', new ValidRegistryKey(ProgramRegistry::class)],
             'week' => 'required|integer',
             'day' => 'required|integer',
             'duration_seconds' => 'required|integer',
             'sets' => 'required|array',
-            'sets.*.exercise' => 'required|string',
+            'sets.*.exercise' => ['required', 'string', new ValidRegistryKey(ExerciseRegistry::class)],
             'sets.*.weight' => 'required|numeric',
             'sets.*.reps' => 'required|integer',
         ]);
@@ -93,7 +94,7 @@ class TrainingController extends Controller
 
     public function program(string $program): Program
     {
-        $registry = app(TrainingRegistry::class);
+        $registry = app(ProgramRegistry::class);
 
         if (! $registry->has($program)) {
             abort(404, 'Program not found');

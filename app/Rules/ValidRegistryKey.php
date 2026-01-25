@@ -2,12 +2,17 @@
 
 namespace App\Rules;
 
+use App\Registry\RegistryInterface;
 use Closure;
-use App\Training\TrainingRegistry;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class ValidTrainingProgram implements ValidationRule
+class ValidRegistryKey implements ValidationRule
 {
+    public function __construct(public RegistryInterface|string $registry)
+    {
+        //
+    }
+
     /**
      * Run the validation rule.
      *
@@ -15,10 +20,10 @@ class ValidTrainingProgram implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $registry = app(TrainingRegistry::class);
+        $registry = app($this->registry);
 
         if (! $registry->has($value)) {
-            $fail("Training program '{$value}' does not exist. Perhaps you passed `program.name` and not `program.slug`?");
+            $fail(sprintf('The key [%s] is not valid, perhaps you passed a name or a label instead of a key?', $value));
         }
     }
 }
