@@ -1,7 +1,7 @@
 import { Head } from '@inertiajs/react';
 
-import { Footer } from '@/components/home/footer';
 import { FeatureSection } from '@/components/home/feature-section';
+import { Footer } from '@/components/home/footer';
 import HeroSection from '@/components/home/hero-section';
 import TimelineSection from '@/components/home/timeline-section';
 import AppLayout from '@/layouts/app-layout';

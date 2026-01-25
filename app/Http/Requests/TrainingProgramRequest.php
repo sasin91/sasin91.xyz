@@ -48,7 +48,7 @@ class TrainingProgramRequest extends FormRequest
             'bench' => 'integer',
             'deadlift' => 'integer',
             'day' => 'integer',
-            'week' => 'integer'
+            'week' => 'integer',
         ];
     }
 }

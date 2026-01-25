@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Actions\Training\CreateNewWorkout;
 use App\Http\Requests\TrainingProgramRequest;
-use App\Models\Workout;
 use App\Rules\ValidRegistryKey;
 use App\Training\Program;
 use App\Training\ProgramProgress;
@@ -12,6 +11,7 @@ use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
 use App\Training\TemporaryWorkout;
 use Illuminate\Http\Request;
+
 use function inertia;
 use function redirect;
 
@@ -64,7 +64,7 @@ class TrainingController extends Controller
         }
 
         if ($found === null) {
-            return abort(404, "Invalid day or week.");
+            return abort(404, 'Invalid day or week.');
         }
 
         return inertia('training/session', [
@@ -91,6 +91,7 @@ class TrainingController extends Controller
             TemporaryWorkout::save($validated);
 
             inertia()->flash('success', 'Workout saved. Please login to complete.');
+
             return redirect()->route('login');
         }
 

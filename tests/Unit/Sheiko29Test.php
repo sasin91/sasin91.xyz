@@ -10,7 +10,7 @@ test('sheiko29 day 1 week 1 weights', function () {
     $benchMax = new OneRepMax(140);
     $deadliftMax = new OneRepMax(220);
 
-    $program = new Sheiko29();
+    $program = new Sheiko29;
 
     $day1Week1 = $program->schemas([
         'squat' => $squatMax,

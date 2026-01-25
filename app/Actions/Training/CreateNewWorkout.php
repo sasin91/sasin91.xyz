@@ -5,6 +5,7 @@ namespace App\Actions\Training;
 use App\Models\User;
 use App\Models\Workout;
 use Illuminate\Contracts\Auth\Authenticatable;
+
 use function now;
 
 class CreateNewWorkout

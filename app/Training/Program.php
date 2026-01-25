@@ -2,7 +2,6 @@
 
 namespace App\Training;
 
-use Carbon\CarbonInterval;
 use Illuminate\Contracts\Support\Arrayable;
 
 interface Program extends Arrayable

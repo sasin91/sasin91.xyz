@@ -2,6 +2,7 @@
 
 namespace App\Training\Programs;
 
+use App\Training\Block;
 use App\Training\Exercises\Bench;
 use App\Training\Exercises\Deadlift;
 use App\Training\Exercises\DeadliftOnBoxes;
@@ -15,12 +16,11 @@ use App\Training\Exercises\InclineDumbbellPress;
 use App\Training\Exercises\MilitaryPress;
 use App\Training\Exercises\RomanianDeadlift;
 use App\Training\Exercises\Squat;
+use App\Training\Lift;
+use App\Training\OneRepMax;
 use App\Training\Program;
 use App\Training\ProgramType;
 use App\Training\Schema;
-use App\Training\OneRepMax;
-use App\Training\Block;
-use App\Training\Lift;
 
 class Sheiko29 implements Program
 {

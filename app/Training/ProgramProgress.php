@@ -3,12 +3,13 @@
 namespace App\Training;
 
 use App\Models\User;
-use App\Training\Program;
 
 class ProgramProgress
 {
     public bool $programComplete = false;
+
     public int $nextDay = 1;
+
     public int $nextWeek = 1;
 
     public function __construct(public Program $program, public ?User $user = null)
