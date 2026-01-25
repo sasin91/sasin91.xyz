@@ -2,7 +2,18 @@
 
 namespace App\Http\Requests;
 
+use App\Training\Exercises\Bench;
+use App\Training\Exercises\Deadlift;
+use App\Training\Exercises\Squat;
+use App\Training\Program;
+use App\Training\ProgramProgress;
+use App\Training\Registries\ExerciseRegistry;
+use App\Training\Registries\ProgramRegistry;
 use Illuminate\Foundation\Http\FormRequest;
+
+use function abort;
+use function app;
+use function once;
 
 class TrainingProgramRequest extends FormRequest
 {
@@ -50,5 +61,39 @@ class TrainingProgramRequest extends FormRequest
             'day' => 'integer',
             'week' => 'integer',
         ];
+    }
+
+    public function program(): Program
+    {
+        return once(function () {
+            $program = $this->route('program');
+            $registry = app(ProgramRegistry::class);
+
+            if (! $registry->has($program)) {
+                abort(404, 'Program not found');
+            }
+
+            return $registry->get($program);
+        });
+    }
+
+    public function progress(): ProgramProgress
+    {
+        return new ProgramProgress($this->program(), $this->user());
+    }
+
+    public function exercisesAndMaxes(): array
+    {
+        $validated = $this->validated();
+
+        $exercises = [new Bench, new Squat, new Deadlift];
+        $maxes = [];
+        foreach ($exercises as $exercise) {
+            $key = $exercise->slug();
+
+            $maxes[$key] = $validated[$key] ?? 0;
+        }
+
+        return [$exercises, $maxes];
     }
 }

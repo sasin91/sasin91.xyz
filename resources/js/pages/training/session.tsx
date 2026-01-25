@@ -13,17 +13,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
-import type { Maxes, Program } from '@/types/training';
+import type { Exercise, Maxes, Program } from '@/types/training';
 import training from '@/wayfinder/routes/training';
 
 export default function Session({
     program,
     schema,
     maxes,
+    exercises
 }: {
     program: Program;
     schema: Schema;
     maxes: Maxes;
+    exercises: Exercise[];
 }) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Training', href: training.index.url() },
@@ -84,7 +86,7 @@ export default function Session({
                     <Timer onTick={handleTick} />
                 </div>
 
-                <MaxesComponent maxes={maxes} updateMaxes={updateMaxes} />
+                <MaxesComponent exercises={exercises} maxes={maxes} updateMaxes={updateMaxes} />
 
                 <Form
                     {...training.store.form(program.slug)}

@@ -25,4 +25,20 @@ class InclineDumbbellPress implements Exercise
             'drive hands up towards the ceiling',
         ];
     }
+
+    public function isPrimary(): bool
+    {
+        return false;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'slug' => $this->slug(),
+            'label' => $this->label(),
+            'cues' => $this->cues(),
+            'isPrimary' => $this->isPrimary(),
+        ];
+    }
+
 }

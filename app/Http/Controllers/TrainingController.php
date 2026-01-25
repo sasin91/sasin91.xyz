@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Actions\Training\CreateNewWorkout;
 use App\Http\Requests\TrainingProgramRequest;
 use App\Rules\ValidRegistryKey;
-use App\Training\Program;
-use App\Training\ProgramProgress;
 use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
 use App\Training\TemporaryWorkout;
@@ -27,35 +25,32 @@ class TrainingController extends Controller
     }
 
     public function show(
-        TrainingProgramRequest $request,
-        string $program
+        TrainingProgramRequest $request
     ) {
-        $maxes = $request->validated();
-        $program = $this->program($program);
-
-        $progress = new ProgramProgress($program, $request->user());
+        [$exercises, $maxes] = $request->exercisesAndMaxes();
+        $program = $request->program();
+        $progress = $request->progress();
 
         return inertia('training/program', [
             'program' => $program,
             'schemas' => $program->schemas($maxes),
             'maxes' => $maxes,
+            'exercises' => $exercises,
             'nextDay' => $progress->nextDay,
             'nextWeek' => $progress->nextWeek,
             'programComplete' => $progress->programComplete,
         ]);
     }
 
-    public function session(TrainingProgramRequest $request, string $program)
+    public function session(TrainingProgramRequest $request)
     {
-        $maxes = $request->validated();
-        $program = $this->program($program);
+        [$exercises, $maxes] = $request->exercisesAndMaxes();
 
-        $progress = new ProgramProgress($program, $request->user());
-
+        $program = $request->program();
         $schemas = $program->schemas($maxes);
 
+        $progress = $request->progress();
         $found = null;
-
         foreach ($schemas as $schema) {
             if ($schema->day === $progress->nextDay && $schema->week === $progress->nextWeek) {
                 $found = $schema;
@@ -64,13 +59,14 @@ class TrainingController extends Controller
         }
 
         if ($found === null) {
-            return abort(404, 'Invalid day or week.');
+            abort(404, 'Invalid day or week.');
         }
 
         return inertia('training/session', [
             'program' => $program,
             'schema' => $found,
             'maxes' => $maxes,
+            'exercises' => $exercises,
         ]);
     }
 
@@ -98,16 +94,5 @@ class TrainingController extends Controller
         app(CreateNewWorkout::class)->create($validated, $request->user());
 
         return to_route('dashboard');
-    }
-
-    public function program(string $program): Program
-    {
-        $registry = app(ProgramRegistry::class);
-
-        if (! $registry->has($program)) {
-            abort(404, 'Program not found');
-        }
-
-        return $registry->get($program);
     }
 }
