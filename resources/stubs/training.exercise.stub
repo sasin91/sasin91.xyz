@@ -1,0 +1,40 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Training\Exercise;
+
+class {{ class }} implements Exercise
+{
+    public function slug(): string
+    {
+        return '{{ slug }}';
+    }
+
+    public function label(): string
+    {
+        return '{{ label }}';
+    }
+
+    public function cues(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'slug' => $this->slug(),
+            'label' => $this->label(),
+            'cues' => $this->cues(),
+            'isPrimary' => $this->isPrimary(),
+        ];
+    }
+}

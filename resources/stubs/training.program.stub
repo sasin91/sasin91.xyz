@@ -1,0 +1,53 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Training\Program;
+use App\Training\ProgramType;
+
+class {{ class }} implements Program
+{
+    public function name(): string
+    {
+        return '{{ label }}';
+    }
+
+    public function slug(): string
+    {
+        return '{{ slug }}';
+    }
+
+    public function type(): ProgramType
+    {
+        return ProgramType::POWERLIFTING;
+    }
+
+    public function days(): int
+    {
+        return 0;
+    }
+
+    public function weeks(): int
+    {
+        return 0;
+    }
+
+    public function schemas(array $maxes): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name(),
+            'slug' => $this->slug(),
+            'type' => $this->type(),
+            'days' => $this->days(),
+            'weeks' => $this->weeks(),
+            'exercises' => $this->exercises(),
+        ];
+    }
+}
