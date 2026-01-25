@@ -45,4 +45,12 @@ COPY --from=assets /app/public/build /app/public/build
 RUN composer dump-autoload --optimize \
     && php artisan package:discover --ansi
 
+ARG APP_UID=10001
+ARG APP_GID=10001
+RUN groupadd -g ${APP_GID} app \
+    && useradd -u ${APP_UID} -g app -m -s /bin/bash app \
+    && chown -R app:app /app /app/storage /app/bootstrap/cache
+
+USER app
+
 CMD ["php","artisan","octane:frankenphp","--host=0.0.0.0","--port=8000"]
