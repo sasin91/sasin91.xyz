@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Training;
+namespace App\Training\Programs;
 
+use App\Training\Block;
 use App\Training\Exercises\Bench;
 use App\Training\Exercises\Deadlift;
 use App\Training\Exercises\DeadliftOnBoxes;
@@ -15,7 +16,11 @@ use App\Training\Exercises\InclineDumbbellPress;
 use App\Training\Exercises\MilitaryPress;
 use App\Training\Exercises\RomanianDeadlift;
 use App\Training\Exercises\Squat;
-use Carbon\CarbonInterval;
+use App\Training\Lift;
+use App\Training\OneRepMax;
+use App\Training\Program;
+use App\Training\ProgramType;
+use App\Training\Schema;
 
 class Sheiko29 implements Program
 {
@@ -34,9 +39,14 @@ class Sheiko29 implements Program
         return ProgramType::POWERLIFTING;
     }
 
-    public function duration(): CarbonInterval
+    public function days(): int
     {
-        return CarbonInterval::weeks(4);
+        return 3;
+    }
+
+    public function weeks(): int
+    {
+        return 4;
     }
 
     /**
@@ -706,7 +716,8 @@ class Sheiko29 implements Program
             'name' => $this->name(),
             'slug' => $this->slug(),
             'type' => $this->type(),
-            'duration' => $this->duration()->totalSeconds,
+            'days' => $this->days(),
+            'weeks' => $this->weeks(),
         ];
     }
 }

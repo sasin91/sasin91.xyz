@@ -31,6 +31,8 @@ class TrainingProgramRequest extends FormRequest
             'squat' => $this->integer('squat', $maxes['squat'] ?? 0),
             'bench' => $this->integer('bench', $maxes['bench'] ?? 0),
             'deadlift' => $this->integer('deadlift', $maxes['deadlift'] ?? 0),
+            'day' => $this->integer('day', 1),
+            'week' => $this->integer('week', 1),
         ]);
     }
 
@@ -45,6 +47,8 @@ class TrainingProgramRequest extends FormRequest
             'squat' => 'integer',
             'bench' => 'integer',
             'deadlift' => 'integer',
+            'day' => 'integer',
+            'week' => 'integer',
         ];
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Casts;
 
 use App\Training\Exercise;
-use App\Training\ExerciseRegistry;
+use App\Training\Registries\ExerciseRegistry;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;

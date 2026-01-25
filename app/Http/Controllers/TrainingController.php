@@ -2,63 +2,74 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Training\CreateNewWorkout;
 use App\Http\Requests\TrainingProgramRequest;
-use App\Models\Workout;
-use App\Training\Sheiko29;
+use App\Rules\ValidRegistryKey;
+use App\Training\Program;
+use App\Training\ProgramProgress;
+use App\Training\Registries\ExerciseRegistry;
+use App\Training\Registries\ProgramRegistry;
+use App\Training\TemporaryWorkout;
 use Illuminate\Http\Request;
+
+use function inertia;
+use function redirect;
 
 class TrainingController extends Controller
 {
     public function index()
     {
+        $registry = app(ProgramRegistry::class);
+
         return inertia('training/index', [
-            'programs' => [
-                app(Sheiko29::class)->toArray(),
-            ],
+            'programs' => array_values($registry->instances()),
         ]);
     }
 
-    public function sheiko29(
+    public function show(
         TrainingProgramRequest $request,
-        Sheiko29 $program
+        string $program
     ) {
         $maxes = $request->validated();
-        $schemas = $program->schemas($maxes);
+        $program = $this->program($program);
+
+        $progress = new ProgramProgress($program, $request->user());
 
         return inertia('training/program', [
             'program' => $program,
-            'schemas' => $schemas,
+            'schemas' => $program->schemas($maxes),
             'maxes' => $maxes,
+            'nextDay' => $progress->nextDay,
+            'nextWeek' => $progress->nextWeek,
+            'programComplete' => $progress->programComplete,
         ]);
     }
 
-    public function session(TrainingProgramRequest $request, Sheiko29 $program)
+    public function session(TrainingProgramRequest $request, string $program)
     {
         $maxes = $request->validated();
+        $program = $this->program($program);
 
-        // Determine the next session based on history
-        $lastWorkout = $request->user()->workouts()
-            ->where('program_name', $program->name())
-            ->latest('completed_at')
-            ->first();
-
-        $nextDay = 1;
-        $nextWeek = 1;
-
-        if ($lastWorkout) {
-            $nextDay = $lastWorkout->day + 1;
-            $nextWeek = $lastWorkout->week;
-        }
+        $progress = new ProgramProgress($program, $request->user());
 
         $schemas = $program->schemas($maxes);
 
-        $schema = collect($schemas)->first(
-            fn ($s) => $s->day === $nextDay && $s->week === $nextWeek
-        ) ?? $schemas[0];
+        $found = null;
+
+        foreach ($schemas as $schema) {
+            if ($schema->day === $progress->nextDay && $schema->week === $progress->nextWeek) {
+                $found = $schema;
+                break;
+            }
+        }
+
+        if ($found === null) {
+            return abort(404, 'Invalid day or week.');
+        }
 
         return inertia('training/session', [
             'program' => $program,
-            'schema' => $schema,
+            'schema' => $found,
             'maxes' => $maxes,
         ]);
     }
@@ -66,30 +77,37 @@ class TrainingController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'program_name' => 'required|string',
+            'program_name' => ['required', 'string', new ValidRegistryKey(ProgramRegistry::class)],
             'week' => 'required|integer',
             'day' => 'required|integer',
-            'duration_seconds' => 'nullable|integer',
-            'sets' => 'nullable|array',
-            'sets.*.exercise' => 'required|string',
+            'duration_seconds' => 'required|integer',
+            'sets' => 'required|array',
+            'sets.*.exercise' => ['required', 'string', new ValidRegistryKey(ExerciseRegistry::class)],
             'sets.*.weight' => 'required|numeric',
             'sets.*.reps' => 'required|integer',
         ]);
 
-        $workout = new Workout([
-            'program_name' => $validated['program_name'],
-            'week' => $validated['week'],
-            'day' => $validated['day'],
-            'duration_seconds' => $validated['duration_seconds'] ?? null,
-            'completed_at' => now(),
-        ]);
+        if ($request->user() === null) {
+            TemporaryWorkout::save($validated);
 
-        $request->user()->workouts()->save($workout);
+            inertia()->flash('success', 'Workout saved. Please login to complete.');
 
-        if (! empty($validated['sets'])) {
-            $workout->sets()->createMany($validated['sets']);
+            return redirect()->route('login');
         }
 
+        app(CreateNewWorkout::class)->create($validated, $request->user());
+
         return to_route('dashboard');
+    }
+
+    public function program(string $program): Program
+    {
+        $registry = app(ProgramRegistry::class);
+
+        if (! $registry->has($program)) {
+            abort(404, 'Program not found');
+        }
+
+        return $registry->get($program);
     }
 }
