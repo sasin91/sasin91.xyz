@@ -25,15 +25,18 @@ class DashboardController extends Controller
                 ->get();
 
             $programRegistry = app(ProgramRegistry::class);
+            $programName = $latestWorkouts->first()->program_name;
 
-            $program = $programRegistry->get($latestWorkouts->first()->program_name);
-            $progress = new ProgramProgress($program, $user);
+            if ($programRegistry->has($programName)) {
+                $program = $programRegistry->get($programName);
+                $progress = new ProgramProgress($program, $user);
 
-            $params = [
-                'program' => $program->slug(),
-                'day' => $progress->nextDay,
-                'week' => $progress->nextWeek,
-            ];
+                $params = [
+                    'program' => $program->slug(),
+                    'day' => $progress->nextDay,
+                    'week' => $progress->nextWeek,
+                ];
+            }
 
             foreach ($user->currentMaxes() as $exercise => $max) {
                 $params[$exercise] = round($max);
