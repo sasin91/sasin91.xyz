@@ -1,9 +1,12 @@
 import '../css/app.css';
 
-import { createInertiaApp } from '@inertiajs/react';
+import { createInertiaApp, router } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { toast } from 'sonner';
+
+import { Toaster } from '@/components/ui/sonner';
 
 import { initializeTheme } from './hooks/use-appearance';
 
@@ -22,12 +25,26 @@ createInertiaApp({
         root.render(
             <StrictMode>
                 <App {...props} />
+                <Toaster />
             </StrictMode>,
         );
     },
     progress: {
         color: '#4B5563',
     },
+});
+
+router.on('flash', (event) => {
+    const flash = event.detail.flash as Record<string, string> | undefined;
+
+    if (!flash) return;
+
+    Object.entries(flash).forEach(([type, message]) => {
+        if (message && type in toast && typeof toast[type as keyof typeof toast] === 'function') {
+            const toastFn = toast[type as keyof typeof toast] as (message: string) => void;
+            toastFn(message);
+        }
+    });
 });
 
 // This will set light / dark mode on load...

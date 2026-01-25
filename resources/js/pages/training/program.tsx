@@ -1,11 +1,11 @@
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { Play } from 'lucide-react';
 import { useState } from 'react';
 
 import MaxesComponent from '@/components/training/maxes';
 import {
-    WorkoutSchema,
     type Schema,
+    WorkoutSchema,
 } from '@/components/training/workout-schema';
 import { Button } from '@/components/ui/button';
 import {
@@ -26,7 +26,6 @@ import {
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import type { Maxes, Program } from '@/types/training';
-import { login } from '@/wayfinder/routes';
 import training from '@/wayfinder/routes/training';
 
 export default function Program({
@@ -37,15 +36,16 @@ export default function Program({
     nextWeek,
     programComplete,
 }: {
-    program: Program
-    maxes: Maxes
-    schemas: Schema[]
-    nextDay: number
-    nextWeek: number
-    programComplete: boolean
+    program: Program;
+    maxes: Maxes;
+    schemas: Schema[];
+    nextDay: number;
+    nextWeek: number;
+    programComplete: boolean;
 }) {
-    const { auth } = usePage().props;
-    const [showRestartDialog, setShowRestartDialog] = useState(() => programComplete);
+    const [showRestartDialog, setShowRestartDialog] = useState(
+        () => programComplete,
+    );
 
     const handleConfirmRestart = () => {
         setShowRestartDialog(false);
@@ -95,21 +95,15 @@ export default function Program({
                 <MaxesComponent maxes={maxes} updateMaxes={updateMaxes} />
 
                 <div className="flex justify-end">
-                    {auth?.user ? (
-                        <Button asChild size="lg" className="w-full md:w-auto">
-                            <Link
-                                href={training.session.url(program.slug, {
-                                    query: data,
-                                })}
-                            >
-                                <Play className="mr-2 h-4 w-4" /> Start Training
-                            </Link>
-                        </Button>
-                    ) : (
-                        <Button asChild size="lg" className="w-full md:w-auto">
-                            <Link href={login()}>Login to start workout</Link>
-                        </Button>
-                    )}
+                    <Button asChild size="lg" className="w-full md:w-auto">
+                        <Link
+                            href={training.session.url(program.slug, {
+                                query: data,
+                            })}
+                        >
+                            <Play className="mr-2 h-4 w-4" /> Start Training
+                        </Link>
+                    </Button>
                 </div>
 
                 <div className="grid gap-6">

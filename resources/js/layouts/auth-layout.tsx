@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 import AppHeaderLayout from '@/layouts/app/app-header-layout';
 import { type BreadcrumbItem } from '@/types';
@@ -8,14 +8,14 @@ interface AuthLayoutProps {
     breadcrumbs?: BreadcrumbItem[];
 }
 
-export default ({
-    children,
-    breadcrumbs,
-    ...props
-}: AuthLayoutProps) => {
-    return (
-        <AppHeaderLayout breadcrumbs={breadcrumbs} {...props}>
-            {children}
-        </AppHeaderLayout>
-    );
-};
+export default function AuthLayout({
+  children,
+  breadcrumbs,
+  ...props
+}: AuthLayoutProps) {
+  return (
+    <AppHeaderLayout breadcrumbs={breadcrumbs} {...props}>
+      {children}
+    </AppHeaderLayout>
+  );
+}

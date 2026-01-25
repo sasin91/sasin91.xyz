@@ -1,4 +1,4 @@
-import { Form, Head, router } from '@inertiajs/react';
+import { Form, Head, router, usePage } from '@inertiajs/react';
 import { Save } from 'lucide-react';
 import { useCallback, useRef } from 'react';
 
@@ -18,6 +18,8 @@ export default function Session({ program, schema, maxes }: {
     schema: Schema
     maxes: Maxes
 }) {
+    const page = usePage();
+
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Training', href: training.index.url() },
         { title: program.name, href: '' },

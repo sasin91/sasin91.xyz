@@ -8,12 +8,15 @@ use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
 use App\Training\TemporaryWorkout;
 use Carbon\CarbonImmutable;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
-use Laravel\Fortify\Fortify;
+
+use function app;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,11 +47,11 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        Fortify::authenticateThrough(static function ($request) {
+        Event::listen(Login::class, static function (Login $event) {
             if (TemporaryWorkout::exists()) {
                 app(CreateNewWorkout::class)->create(
                     TemporaryWorkout::pull(),
-                    $request->user()
+                    $event->user
                 );
             }
         });
