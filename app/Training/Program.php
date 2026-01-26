@@ -10,7 +10,7 @@ interface Program extends Arrayable
 
     public function key(): string;
 
-    public function type(): ProgramType;
+    public function style(): ProgramStyle;
 
     public function days(): int;
 
