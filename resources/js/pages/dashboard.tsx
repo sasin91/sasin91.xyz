@@ -1,16 +1,15 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Play } from 'lucide-react';
+import { useState } from 'react';
 
 import MaxesComponent from '@/components/training/maxes';
+import RestartProgramDialog from '@/components/training/restart-program-dialog';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Exercise, Maxes } from '@/types/training';
 import { dashboard } from '@/wayfinder/routes';
 import { App } from '@/wayfinder/types';
-import { useState } from 'react';
-import RestartProgramDialog from '@/components/training/restart-program-dialog';
-import training from '@/wayfinder/routes/training';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -49,7 +48,7 @@ export default function Dashboard({
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-2">
-                    <div className="relative flex aspect-video flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-sidebar-border/70 p-4 text-center dark:border-sidebar-border">
+                    <div className="relative flex flex-col items-center justify-center gap-2 rounded-xl border border-sidebar-border/70 p-4 text-center dark:border-sidebar-border">
                         <h3 className="font-medium text-muted-foreground">
                             Next Workout
                         </h3>
@@ -66,10 +65,9 @@ export default function Dashboard({
                         </Button>
                         <RestartProgramDialog
                             programCompleted={programComplete}
-                            onRestart={() => router.visit(training.index.url())}
                         />
                     </div>
-                    <div className="relative flex aspect-video flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
+                    <div className="relative flex flex-col items-center justify-center gap-2 rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
                         <h3 className="font-medium text-muted-foreground">
                             Recent Activity
                         </h3>
