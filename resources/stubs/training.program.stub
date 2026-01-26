@@ -28,7 +28,7 @@ class {{ class }} implements Program
 
     public function type(): ProgramType
     {
-        return ProgramType::POWERLIFTING;
+        return {{ type }};
     }
 
     public function days(): int
