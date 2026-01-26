@@ -24,13 +24,7 @@ if [ -n "${SSH_KNOWN_HOSTS}" ]; then
   chmod 600 ~/.ssh/known_hosts
 fi
 
-if [ ! -d node_modules ]; then
-  echo "Installing node dependencies..."
-  npm ci
-fi
 
-echo "Building production assets..."
-npm run build
 
 echo "Syncing project to ${SSH_USER}@${SSH_HOST}:${REMOTE_DIR}..."
 rsync -az --delete \
