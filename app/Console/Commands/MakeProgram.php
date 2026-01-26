@@ -58,20 +58,11 @@ class MakeProgram extends GeneratorCommand
 
     protected function addSheikoPatterns(string $stub): string
     {
-        // Add import
-        $stub = str_replace(
-            'use App\Training\SerializesProgram;',
-            "use App\Training\SerializesProgram;\nuse App\Training\Programs\SheikoLiftPatterns;",
-            $stub
-        );
-
-        // Add trait usage
-        $stub = str_replace(
+        // SheikoLiftPatterns is in same namespace, no import needed - just add trait usage
+        return str_replace(
             'use SerializesProgram;',
             "use SerializesProgram;\n    use SheikoLiftPatterns;",
             $stub
         );
-
-        return $stub;
     }
 }
