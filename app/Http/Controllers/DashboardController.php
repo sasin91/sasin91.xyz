@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Training\ExtractOneRepMaxes;
 use App\Models\User;
 use App\Training\ProgramProgress;
 use App\Training\Registries\ProgramRegistry;
@@ -12,11 +13,12 @@ class DashboardController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(#[CurrentUser] User $user)
+    public function __invoke(#[CurrentUser] User $user, ExtractOneRepMaxes $oneRepMaxes)
     {
+        $programRegistry = app(ProgramRegistry::class);
+
         $latestWorkouts = collect();
         $program = 'sheiko-29';
-        $params = ['program' => $program];
 
         if ($user->workouts()->exists()) {
             $latestWorkouts = $user->workouts()
@@ -24,30 +26,27 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
-            $programRegistry = app(ProgramRegistry::class);
-            $programName = $latestWorkouts->first()->program_name;
-
-            if ($programRegistry->has($programName)) {
-                $program = $programRegistry->get($programName);
-                $progress = new ProgramProgress($program, $user);
-
-                $params = [
-                    'program' => $program->slug(),
-                    'day' => $progress->nextDay,
-                    'week' => $progress->nextWeek,
-                ];
-            }
-
-            foreach ($user->currentMaxes() as $exercise => $max) {
-                $params[$exercise] = round($max);
-            }
+            $program = $latestWorkouts->first()->program_name;
         }
 
-        $startTrainingUrl = route('training.session', $params);
+        $program = $programRegistry->get($program);
+        $progress = new ProgramProgress($program, $user);
+
+        $maxes = $oneRepMaxes->extract($user->maxes ?? []);
+
+        $startTrainingUrl = route('training.session', [
+            'program' => $program->slug(),
+            'day' => $progress->nextDay,
+            'week' => $progress->nextWeek,
+            ...$maxes,
+        ]);
 
         return inertia('dashboard', [
             'workouts' => $latestWorkouts,
             'startTrainingUrl' => $startTrainingUrl,
+            'maxes' => $maxes,
+            'exercises' => $oneRepMaxes->exercises(),
+            'programComplete' => $progress->programComplete,
         ]);
     }
 }

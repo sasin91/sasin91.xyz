@@ -8,3 +8,9 @@ export interface Program {
 
 export type Maxes = Record<string, number>;
 
+export interface Exercise {
+    slug: string;
+    label: string;
+    cues: string[];
+    isPrimary: boolean;
+}

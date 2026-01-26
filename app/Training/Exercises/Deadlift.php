@@ -27,4 +27,20 @@ class Deadlift implements Exercise
             'push floor away',
         ];
     }
+
+    public function isPrimary(): bool
+    {
+        return true;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'slug' => $this->slug(),
+            'label' => $this->label(),
+            'cues' => $this->cues(),
+            'isPrimary' => $this->isPrimary(),
+        ];
+    }
+
 }

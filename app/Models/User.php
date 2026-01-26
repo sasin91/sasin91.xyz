@@ -25,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'maxes',
     ];
 
     /**
@@ -50,6 +51,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
+            'maxes' => 'array',
         ];
     }
 
@@ -76,34 +78,13 @@ class User extends Authenticatable
      *
      * @return array<string, int>
      */
-    public function currentMaxes(): array
+    public function estimatedMaxes(): array
     {
-        // Mapping of old labels to slugs for backward compatibility
-        $labelToSlug = [
-            'Squat' => 'squat',
-            'Bench Press' => 'bench',
-            'Deadlift' => 'deadlift',
-        ];
-
-        $maxes = DB::table('lifts')
+        return DB::table('lifts')
             ->where('user_id', $this->id)
             ->selectRaw('type, MAX(estimated_1rm) as max_weight')
             ->groupBy('type')
             ->pluck('max_weight', 'type')
             ->all();
-
-        // Normalize keys: convert labels to slugs if needed
-        $normalized = [];
-        foreach ($maxes as $type => $weight) {
-            $key = $labelToSlug[$type] ?? $type;
-            // If we already have this key (from slug), prefer the higher max
-            if (isset($normalized[$key])) {
-                $normalized[$key] = max($normalized[$key], $weight);
-            } else {
-                $normalized[$key] = $weight;
-            }
-        }
-
-        return $normalized;
     }
 }

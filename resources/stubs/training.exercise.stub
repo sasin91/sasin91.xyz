@@ -1,36 +1,31 @@
 <?php
 
-namespace App\Training\Exercises;
+namespace {{ namespace }};
 
 use App\Training\Exercise;
 
-class Squat implements Exercise
+class {{ class }} implements Exercise
 {
     public function slug(): string
     {
-        return 'squat';
+        return '{{ slug }}';
     }
 
     public function label(): string
     {
-        return 'Squat';
+        return '{{ label }}';
     }
 
     public function cues(): array
     {
         return [
-            'Bar on upper back',
-            'Feet shoulder width',
-            'Brace core',
-            'Break at hips and knees',
-            'Depth to parallel or below',
-            'Drive up through heels',
+            //
         ];
     }
 
     public function isPrimary(): bool
     {
-        return true;
+        return false;
     }
 
     public function toArray(): array
@@ -42,5 +37,4 @@ class Squat implements Exercise
             'isPrimary' => $this->isPrimary(),
         ];
     }
-
 }

@@ -25,4 +25,20 @@ class DumbbellSquat implements Exercise
             'drive heels out, feel tension',
         ];
     }
+
+    public function isPrimary(): bool
+    {
+        return false;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'slug' => $this->slug(),
+            'label' => $this->label(),
+            'cues' => $this->cues(),
+            'isPrimary' => $this->isPrimary(),
+        ];
+    }
+
 }
