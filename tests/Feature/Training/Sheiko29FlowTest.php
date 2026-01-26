@@ -105,7 +105,7 @@ test('completed workouts populate user maxes via lifts view', function () {
         ['exercise' => 'Bench', 'weight' => 70, 'reps' => 3],
     ]);
 
-    $maxes = $user->currentMaxes();
+    $maxes = $user->estimatedMaxes();
 
     // 100kg x 1 = 100kg (no formula applied for singles)
     expect($maxes['squat'])->toBe(100)

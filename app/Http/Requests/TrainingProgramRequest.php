@@ -35,7 +35,7 @@ class TrainingProgramRequest extends FormRequest
         ];
 
         if ($user = $this->user()) {
-            $maxes = $user->currentMaxes();
+            $maxes = $user->estimatedMaxes();
         }
 
         $this->merge([
