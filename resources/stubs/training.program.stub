@@ -2,11 +2,20 @@
 
 namespace {{ namespace }};
 
+use App\Training\CreatesLifts;
+use App\Training\ExtractsPowerliftingMaxes;
+use App\Training\HasRampingLifts;
 use App\Training\Program;
 use App\Training\ProgramType;
+use App\Training\SerializesProgram;
 
 class {{ class }} implements Program
 {
+    use CreatesLifts;
+    use ExtractsPowerliftingMaxes;
+    use HasRampingLifts;
+    use SerializesProgram;
+
     public function name(): string
     {
         return '{{ label }}';
@@ -34,19 +43,10 @@ class {{ class }} implements Program
 
     public function schemas(array $maxes): array
     {
+        ['squat' => $squat, 'bench' => $bench, 'deadlift' => $deadlift] = $this->extractMaxes($maxes);
+
         return [
             //
-        ];
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'name' => $this->name(),
-            'key' => $this->key(),
-            'type' => $this->type(),
-            'days' => $this->days(),
-            'weeks' => $this->weeks(),
         ];
     }
 }

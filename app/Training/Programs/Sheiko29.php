@@ -3,7 +3,9 @@
 namespace App\Training\Programs;
 
 use App\Training\Block;
-use App\Training\BuildsLifts;
+use App\Training\CreatesLifts;
+use App\Training\ExtractsPowerliftingMaxes;
+use App\Training\HasRampingLifts;
 use App\Training\Lift;
 use App\Training\Exercises\Bench;
 use App\Training\Exercises\Deadlift;
@@ -26,7 +28,9 @@ use App\Training\SerializesProgram;
 
 class Sheiko29 implements Program
 {
-    use BuildsLifts;
+    use CreatesLifts;
+    use ExtractsPowerliftingMaxes;
+    use HasRampingLifts;
     use SerializesProgram;
     use SheikoLiftPatterns;
 
