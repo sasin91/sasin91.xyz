@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Training\ProgramType;
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Support\Str;
 
@@ -33,11 +32,11 @@ class MakeProgram extends GeneratorCommand
 
         $label = Str::of(class_basename($name))->headline();
         $key = Str::slug($label);
-        $type = $this->getProgramType();
+        $style = $this->getProgramStyle();
 
         $stub = str_replace(
-            ['{{ key }}', '{{ label }}', '{{ type }}'],
-            [$key, $label, $type],
+            ['{{ key }}', '{{ label }}', '{{ style }}'],
+            [$key, $label, $style],
             $stub
         );
 
@@ -48,12 +47,12 @@ class MakeProgram extends GeneratorCommand
         return $stub;
     }
 
-    protected function getProgramType(): string
+    protected function getProgramStyle(): string
     {
         return match ($this->option('style')) {
-            'bodybuilding' => 'ProgramType::BODYBUILDING',
-            'powerbuilding' => 'ProgramType::POWERBUILDING',
-            default => 'ProgramType::POWERLIFTING',
+            'bodybuilding' => 'ProgramStyle::BODYBUILDING',
+            'powerbuilding' => 'ProgramStyle::POWERBUILDING',
+            default => 'ProgramStyle::POWERLIFTING',
         };
     }
 

@@ -6,7 +6,7 @@ use App\Training\CreatesLifts;
 use App\Training\ExtractsPowerliftingMaxes;
 use App\Training\HasRampingLifts;
 use App\Training\Program;
-use App\Training\ProgramType;
+use App\Training\ProgramStyle;
 use App\Training\SerializesProgram;
 
 class {{ class }} implements Program
@@ -26,9 +26,9 @@ class {{ class }} implements Program
         return '{{ key }}';
     }
 
-    public function type(): ProgramType
+    public function style(): ProgramStyle
     {
-        return {{ type }};
+        return {{ style }};
     }
 
     public function days(): int

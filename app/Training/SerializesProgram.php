@@ -9,7 +9,7 @@ trait SerializesProgram
         return [
             'name' => $this->name(),
             'key' => $this->key(),
-            'type' => $this->type(),
+            'style' => $this->style(),
             'days' => $this->days(),
             'weeks' => $this->weeks(),
         ];

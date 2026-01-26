@@ -22,7 +22,7 @@ use App\Training\Exercises\RomanianDeadlift;
 use App\Training\Exercises\Squat;
 use App\Training\OneRepMax;
 use App\Training\Program;
-use App\Training\ProgramType;
+use App\Training\ProgramStyle;
 use App\Training\Schema;
 use App\Training\SerializesProgram;
 
@@ -44,9 +44,9 @@ class Sheiko29 implements Program
         return 'sheiko-29';
     }
 
-    public function type(): ProgramType
+    public function style(): ProgramStyle
     {
-        return ProgramType::POWERLIFTING;
+        return ProgramStyle::POWERLIFTING;
     }
 
     public function days(): int

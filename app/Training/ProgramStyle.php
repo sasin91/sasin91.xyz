@@ -2,7 +2,7 @@
 
 namespace App\Training;
 
-enum ProgramType: string
+enum ProgramStyle: string
 {
     case POWERLIFTING = 'Powerlifting';
     case BODYBUILDING = 'Bodybuilding';
