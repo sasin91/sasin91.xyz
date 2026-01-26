@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Training\CreateNewWorkout;
 use App\Actions\Training\UpdateMaxes;
 use App\Http\Requests\TrainingProgramRequest;
-use App\Rules\ValidRegistryKey;
-use App\Training\Registries\ExerciseRegistry;
+use App\Training\PendingWorkout;
 use App\Training\Registries\ProgramRegistry;
 use App\Training\TemporaryWorkout;
 use Illuminate\Http\Request;
@@ -73,28 +72,19 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CreateNewWorkout $createWorkout)
     {
-        $validated = $request->validate([
-            'program_name' => ['required', 'string', new ValidRegistryKey(ProgramRegistry::class)],
-            'week' => 'required|integer',
-            'day' => 'required|integer',
-            'duration_seconds' => 'required|integer',
-            'sets' => 'required|array',
-            'sets.*.exercise' => ['required', 'string', new ValidRegistryKey(ExerciseRegistry::class)],
-            'sets.*.weight' => 'required|numeric',
-            'sets.*.reps' => 'required|integer',
-        ]);
+        $pending = PendingWorkout::fromArray($request->all());
 
         if ($request->user() === null) {
-            TemporaryWorkout::save($validated);
+            TemporaryWorkout::save($pending);
 
             inertia()->flash('success', 'Workout saved. Please login to complete.');
 
             return redirect()->route('login');
         }
 
-        app(CreateNewWorkout::class)->create($validated, $request->user());
+        $createWorkout->create($pending, $request->user());
 
         return to_route('dashboard');
     }

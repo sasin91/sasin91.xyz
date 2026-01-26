@@ -29,7 +29,7 @@ class Sheiko29 implements Program
         return 'Sheiko 29';
     }
 
-    public function slug(): string
+    public function key(): string
     {
         return 'sheiko-29';
     }
@@ -297,22 +297,22 @@ class Sheiko29 implements Program
                             new Lift(
                                 sets: 1,
                                 reps: 5,
-                                weight: $benchMax->percentage(50.0)
+                                weight: $squatMax->percentage(50.0)
                             ),
                             new Lift(
                                 sets: 2,
                                 reps: 4,
-                                weight: $benchMax->percentage(60.0)
+                                weight: $squatMax->percentage(60.0)
                             ),
                             new Lift(
                                 sets: 2,
                                 reps: 3,
-                                weight: $benchMax->percentage(70.0)
+                                weight: $squatMax->percentage(70.0)
                             ),
                             new Lift(
                                 sets: 5,
                                 reps: 3,
-                                weight: $benchMax->percentage(75.0)
+                                weight: $squatMax->percentage(75.0)
                             ),
                         ]
                     ),
@@ -714,7 +714,7 @@ class Sheiko29 implements Program
     {
         return [
             'name' => $this->name(),
-            'slug' => $this->slug(),
+            'key' => $this->key(),
             'type' => $this->type(),
             'days' => $this->days(),
             'weeks' => $this->weeks(),

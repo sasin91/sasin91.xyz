@@ -6,7 +6,7 @@ use Illuminate\Contracts\Support\Arrayable;
 
 interface Exercise extends Arrayable
 {
-    public function slug(): string;
+    public function key(): string;
 
     public function label(): string;
 

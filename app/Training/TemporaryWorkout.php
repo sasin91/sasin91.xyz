@@ -2,11 +2,13 @@
 
 namespace App\Training;
 
+use Illuminate\Validation\ValidationException;
+
 class TemporaryWorkout
 {
-    public static function save(array $validated): void
+    public static function save(PendingWorkout $workout): void
     {
-        session()->put('temporary_workout', $validated);
+        session()->put('temporary_workout', $workout->toArray());
     }
 
     public static function exists(): bool
@@ -14,8 +16,17 @@ class TemporaryWorkout
         return session()->has('temporary_workout');
     }
 
-    public static function pull(): array
+    /**
+     * @throws ValidationException
+     */
+    public static function pull(): ?PendingWorkout
     {
-        return session()->pull('temporary_workout', []);
+        $data = session()->pull('temporary_workout');
+
+        if ($data === null) {
+            return null;
+        }
+
+        return PendingWorkout::fromArray($data);
     }
 }

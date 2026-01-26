@@ -49,10 +49,11 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(Login::class, static function (Login $event) {
             if (TemporaryWorkout::exists()) {
-                app(CreateNewWorkout::class)->create(
-                    TemporaryWorkout::pull(),
-                    $event->user
-                );
+                $pending = TemporaryWorkout::pull();
+
+                if ($pending !== null) {
+                    app(CreateNewWorkout::class)->create($pending, $event->user);
+                }
             }
         });
     }

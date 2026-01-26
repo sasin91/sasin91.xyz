@@ -4,7 +4,7 @@ namespace App\Training\Exercises;
 
 class DeadliftOnBoxes extends Deadlift
 {
-    public function slug(): string
+    public function key(): string
     {
         return 'deadlift-on-boxes';
     }
@@ -29,15 +29,4 @@ class DeadliftOnBoxes extends Deadlift
     {
         return false;
     }
-
-    public function toArray(): array
-    {
-        return [
-            'slug' => $this->slug(),
-            'label' => $this->label(),
-            'cues' => $this->cues(),
-            'isPrimary' => $this->isPrimary(),
-        ];
-    }
-
 }
