@@ -3,10 +3,13 @@
 namespace App\Training\Exercises;
 
 use App\Training\Exercise;
+use App\Training\SerializesExercise;
 
 class Deadlift implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'deadlift';
     }
@@ -32,15 +35,4 @@ class Deadlift implements Exercise
     {
         return true;
     }
-
-    public function toArray(): array
-    {
-        return [
-            'slug' => $this->slug(),
-            'label' => $this->label(),
-            'cues' => $this->cues(),
-            'isPrimary' => $this->isPrimary(),
-        ];
-    }
-
 }

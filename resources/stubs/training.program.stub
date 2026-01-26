@@ -12,9 +12,9 @@ class {{ class }} implements Program
         return '{{ label }}';
     }
 
-    public function slug(): string
+    public function key(): string
     {
-        return '{{ slug }}';
+        return '{{ key }}';
     }
 
     public function type(): ProgramType
@@ -43,11 +43,10 @@ class {{ class }} implements Program
     {
         return [
             'name' => $this->name(),
-            'slug' => $this->slug(),
+            'key' => $this->key(),
             'type' => $this->type(),
             'days' => $this->days(),
             'weeks' => $this->weeks(),
-            'exercises' => $this->exercises(),
         ];
     }
 }

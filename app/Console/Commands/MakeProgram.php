@@ -28,11 +28,11 @@ class MakeProgram extends GeneratorCommand
         $stub = parent::buildClass($name);
 
         $label = Str::of(class_basename($name))->headline();
-        $slug = Str::slug($label);
+        $key = Str::slug($label);
 
         return str_replace(
-            ['{{ slug }}', '{{ label }}'],
-            [$slug, $label],
+            ['{{ key }}', '{{ label }}'],
+            [$key, $label],
             $stub
         );
     }

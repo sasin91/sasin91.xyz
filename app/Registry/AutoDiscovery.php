@@ -26,7 +26,7 @@ trait AutoDiscovery
             }
 
             $instance = app($class);
-            $key = $instance->slug();
+            $key = $instance->key();
 
             $items[$key] = $class;
         }
