@@ -10,6 +10,8 @@ use Illuminate\Validation\ValidationException;
 
 class PendingWorkout
 {
+    private const SESSION_KEY = 'pending_workout';
+
     public function __construct(
         public string $program_name,
         public int $week,
@@ -57,5 +59,29 @@ class PendingWorkout
             'duration_seconds' => $this->duration_seconds,
             'sets' => $this->sets,
         ];
+    }
+
+    public function storeInSession(): void
+    {
+        session()->put(self::SESSION_KEY, $this->toArray());
+    }
+
+    public static function existsInSession(): bool
+    {
+        return session()->has(self::SESSION_KEY);
+    }
+
+    /**
+     * @throws ValidationException
+     */
+    public static function pullFromSession(): ?self
+    {
+        $data = session()->pull(self::SESSION_KEY);
+
+        if ($data === null) {
+            return null;
+        }
+
+        return self::fromArray($data);
     }
 }

@@ -6,7 +6,7 @@ use App\Actions\Training\CreateNewWorkout;
 use App\Registry\ClassRegistry;
 use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
-use App\Training\TemporaryWorkout;
+use App\Training\PendingWorkout;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Filesystem\Filesystem;
@@ -48,8 +48,8 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         Event::listen(Login::class, static function (Login $event) {
-            if (TemporaryWorkout::exists()) {
-                $pending = TemporaryWorkout::pull();
+            if (PendingWorkout::existsInSession()) {
+                $pending = PendingWorkout::pullFromSession();
 
                 if ($pending !== null) {
                     app(CreateNewWorkout::class)->create($pending, $event->user);

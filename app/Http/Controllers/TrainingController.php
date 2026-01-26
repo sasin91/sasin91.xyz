@@ -7,7 +7,6 @@ use App\Actions\Training\UpdateMaxes;
 use App\Http\Requests\TrainingProgramRequest;
 use App\Training\PendingWorkout;
 use App\Training\Registries\ProgramRegistry;
-use App\Training\TemporaryWorkout;
 use Illuminate\Http\Request;
 
 use function inertia;
@@ -77,7 +76,7 @@ class TrainingController extends Controller
         $pending = PendingWorkout::fromArray($request->all());
 
         if ($request->user() === null) {
-            TemporaryWorkout::save($pending);
+            $pending->storeInSession();
 
             inertia()->flash('success', 'Workout saved. Please login to complete.');
 
