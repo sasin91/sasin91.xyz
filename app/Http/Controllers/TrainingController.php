@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Actions\Training\CreateNewWorkout;
 use App\Actions\Training\UpdateMaxes;
+use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\TrainingProgramRequest;
-use App\Training\PendingWorkout;
 use App\Training\Registries\ProgramRegistry;
-use Illuminate\Http\Request;
 
 use function inertia;
 use function redirect;
@@ -71,9 +70,9 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function store(Request $request, CreateNewWorkout $createWorkout)
+    public function store(StoreWorkoutRequest $request, CreateNewWorkout $createWorkout)
     {
-        $pending = PendingWorkout::fromArray($request->all());
+        $pending = $request->toPendingWorkout();
 
         if ($request->user() === null) {
             $pending->storeInSession();
