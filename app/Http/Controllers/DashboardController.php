@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Training\ExtractOneRepMaxes;
 use App\Models\User;
 use App\Training\ProgramProgress;
 use App\Training\Registries\ProgramRegistry;
@@ -12,7 +13,7 @@ class DashboardController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(#[CurrentUser] User $user)
+    public function __invoke(#[CurrentUser] User $user, ExtractOneRepMaxes $oneRepMaxes)
     {
         $programRegistry = app(ProgramRegistry::class);
 
@@ -31,18 +32,21 @@ class DashboardController extends Controller
         $program = $programRegistry->get($program);
         $progress = new ProgramProgress($program, $user);
 
+        $maxes = $oneRepMaxes->extract($user->maxes ?? []);
+
         $startTrainingUrl = route('training.session', [
             'program' => $program->slug(),
             'day' => $progress->nextDay,
             'week' => $progress->nextWeek,
-            'squat' => $user->maxes['squat'] ?? 0,
-            'bench' => $user->maxes['bench'] ?? 0,
-            'deadlift' => $user->maxes['deadlift'] ?? 0,
+            ...$maxes,
         ]);
 
         return inertia('dashboard', [
             'workouts' => $latestWorkouts,
             'startTrainingUrl' => $startTrainingUrl,
+            'maxes' => $maxes,
+            'exercises' => $oneRepMaxes->exercises(),
+            'programComplete' => $progress->programComplete,
         ]);
     }
 }

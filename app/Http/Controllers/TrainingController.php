@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Training\CreateNewWorkout;
+use App\Actions\Training\UpdateMaxes;
 use App\Http\Requests\TrainingProgramRequest;
 use App\Rules\ValidRegistryKey;
 use App\Training\Registries\ExerciseRegistry;
@@ -38,11 +39,11 @@ class TrainingController extends Controller
             'exercises' => $exercises,
             'nextDay' => $progress->nextDay,
             'nextWeek' => $progress->nextWeek,
-            'programComplete' => $progress->programComplete,
+            'programComplete' => $request->query->get('restart') === '1' ? false : $progress->programComplete,
         ]);
     }
 
-    public function session(TrainingProgramRequest $request)
+    public function session(TrainingProgramRequest $request, UpdateMaxes $updateMaxes)
     {
         [$exercises, $maxes] = $request->exercisesAndMaxes();
 
@@ -61,6 +62,8 @@ class TrainingController extends Controller
         if ($found === null) {
             abort(404, 'Invalid day or week.');
         }
+
+        $updateMaxes->update($request->user(), $maxes);
 
         return inertia('training/session', [
             'program' => $program,

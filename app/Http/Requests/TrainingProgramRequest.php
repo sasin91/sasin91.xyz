@@ -2,12 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Training\Exercises\Bench;
-use App\Training\Exercises\Deadlift;
-use App\Training\Exercises\Squat;
+use App\Actions\Training\ExtractOneRepMaxes;
 use App\Training\Program;
 use App\Training\ProgramProgress;
-use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,16 +24,14 @@ class TrainingProgramRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $maxes = [
-            // barbell weight
-            'squat' => 25,
-            'bench' => 25,
-            'deadlift' => 25,
-        ];
-
-        if ($user = $this->user()) {
-            $maxes = $user->estimatedMaxes();
-        }
+        $maxes = $this->user() && ! empty($this->user()->maxes)
+            ? $this->user()->maxes
+            : [
+                // barbell weight
+                'squat' => 25,
+                'bench' => 25,
+                'deadlift' => 25,
+            ];
 
         $this->merge([
             'squat' => $this->integer('squat', $maxes['squat'] ?? 0),
@@ -60,6 +55,7 @@ class TrainingProgramRequest extends FormRequest
             'deadlift' => 'integer',
             'day' => 'integer',
             'week' => 'integer',
+            'restart' => 'boolean',
         ];
     }
 
@@ -86,13 +82,10 @@ class TrainingProgramRequest extends FormRequest
     {
         $validated = $this->validated();
 
-        $exercises = [new Bench, new Squat, new Deadlift];
-        $maxes = [];
-        foreach ($exercises as $exercise) {
-            $key = $exercise->slug();
+        $action = app(ExtractOneRepMaxes::class);
 
-            $maxes[$key] = $validated[$key] ?? 0;
-        }
+        $exercises = $action->exercises();
+        $maxes = $action->extract($validated);
 
         return [$exercises, $maxes];
     }

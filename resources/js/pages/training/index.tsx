@@ -14,6 +14,8 @@ interface ProgramSummary {
 }
 
 export default function Index({ programs }: { programs: ProgramSummary[] }) {
+    const searchParams = new URLSearchParams(window.location.search);
+
     return (
         <AppLayout>
             <Head title="Training Programs" />
@@ -35,7 +37,7 @@ export default function Index({ programs }: { programs: ProgramSummary[] }) {
                     {programs.map((program) => (
                         <li key={program.slug}>
                             <Link
-                                href={`/training/${program.slug}`}
+                                href={`/training/${program.slug}?${searchParams.toString()}`}
                                 className="group flex items-center justify-between gap-4 p-4 hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                             >
                                 <div className="flex min-w-0 items-center gap-4">

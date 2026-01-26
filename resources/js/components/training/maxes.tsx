@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ComponentProps, useState } from 'react';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,14 +6,14 @@ import { Label } from "@/components/ui/label";
 import type { Exercise, Maxes } from '@/types/training';
 
 
-export default function Maxes({ maxes, updateMaxes, exercises }: { maxes: Maxes, updateMaxes: (maxes: Maxes) => void, exercises: Exercise[] }) {
+export default function Maxes({ maxes, updateMaxes, exercises, ...props }: ComponentProps<"div"> & { maxes: Maxes, updateMaxes: (maxes: Maxes) => void, exercises: Exercise[] }) {
     const [localMaxes, setLocalMaxes] = useState(() => maxes);
 
     const submit = () => updateMaxes(localMaxes);
     const primaryExercises = exercises.filter((exercise) => exercise.isPrimary);
 
     return (
-        <Card>
+        <Card {...props}>
             <CardHeader>
                 <CardTitle>One Rep Maxes</CardTitle>
                 <CardDescription>
