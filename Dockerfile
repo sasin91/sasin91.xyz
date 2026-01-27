@@ -45,6 +45,9 @@ COPY . .
 
 COPY --from=assets /app/public/build /app/public/build
 
+# Create cache directory and regenerate Laravel caches (excluding dev packages)
+RUN mkdir -p /app/bootstrap/cache \
+    && php artisan package:discover --ansi
 
 ARG APP_UID=10001
 ARG APP_GID=10001
