@@ -28,6 +28,7 @@ import {
     CollapsibleTrigger,
 } from '@/components/ui/collapsible';
 import AppLayout from '@/layouts/app-layout';
+import { cn } from '@/lib/utils';
 import { BreadcrumbItem } from '@/types';
 import type { Exercise, Maxes, Program } from '@/types/training';
 import training from '@/wayfinder/routes/training';
@@ -42,22 +43,17 @@ function SchemaPreview({
 }) {
     const [open, setOpen] = useState(isActive);
     const collapsibleRef = useRef<HTMLDivElement>(null);
-    useEffect(() => {
-        if (isActive && collapsibleRef.current) {
-            const raf = requestAnimationFrame(() => {
-                collapsibleRef.current?.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start',
-                });
-            });
 
-            return () => {
-                cancelAnimationFrame(raf);
-            };
-        }
-    }, [isActive]);
     return (
-        <Collapsible ref={collapsibleRef} open={open} onOpenChange={setOpen}>
+        <Collapsible
+            ref={collapsibleRef}
+            open={open}
+            onOpenChange={setOpen}
+            className={cn(
+                'rounded-lg transition-all',
+                isActive && 'border-2 border-primary shadow-lg'
+            )}
+        >
             <CollapsibleTrigger asChild>
                 <Button
                     variant="ghost"
@@ -124,7 +120,7 @@ export default function Program({
                             {program.name}
                         </h1>
                         <p className="text-muted-foreground">
-                            {program.type} • {schemas.length} Workouts
+                            {program.style} • {schemas.length} Workouts
                         </p>
                     </div>
                 </div>
@@ -151,7 +147,28 @@ export default function Program({
                                             schema.week === nextWeek &&
                                             schema.day === nextDay
                                         }
-                                    />
+                                    >
+                                        <Button
+                                            size="lg"
+                                            className="w-full md:w-auto"
+                                        >
+                                            <Link
+                                                href={training.session.url(
+                                                    program.key,
+                                                    {
+                                                        query: {
+                                                            ...data,
+                                                            day: schema.day,
+                                                            week: schema.week,
+                                                        },
+                                                    },
+                                                )}
+                                            >
+                                                <Play className="mr-2 h-4 w-4" />{' '}
+                                                Start Training
+                                            </Link>
+                                        </Button>
+                                    </SchemaPreview>
                                 ))}
                             </div>
                         </CardContent>
