@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Training;
+namespace App\Training\Programs;
+
+use App\Training\OneRepMax;
 
 /**
  * Provides max extraction for powerlifting programs (squat, bench, deadlift).

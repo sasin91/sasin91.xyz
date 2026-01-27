@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Training;
+namespace App\Training\Programs;
+
+use App\Training\Lift;
+use App\Training\OneRepMax;
 
 /**
  * Provides helpers for creating ramping lift sequences.

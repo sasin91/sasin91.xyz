@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Training;
+namespace App\Training\Programs;
+
+use App\Training\Lift;
 
 /**
  * Provides convenient helpers for creating Lift instances.

@@ -2,20 +2,8 @@
 
 namespace App\Training\Programs;
 
-use App\Training\{
-    Block,
-    CreatesLifts,
-    ExtractsPowerliftingMaxes,
-    HasRampingLifts,
-    Lift,
-    OneRepMax,
-    Program,
-    ProgramStyle,
-    Schema,
-    SerializesProgram,
-};
-use App\Training\Exercises\{
-    Bench,
+use App\Training\{Block, Lift, OneRepMax, Program, ProgramStyle, Schema,};
+use App\Training\Exercises\{Bench,
     Deadlift,
     DeadliftOnBoxes,
     DeadliftToKnees,
@@ -27,8 +15,7 @@ use App\Training\Exercises\{
     InclineDumbbellPress,
     MilitaryPress,
     RomanianDeadlift,
-    Squat,
-};
+    Squat,};
 
 class Sheiko29 implements Program
 {

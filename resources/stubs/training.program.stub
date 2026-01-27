@@ -2,14 +2,8 @@
 
 namespace {{ namespace }};
 
-use App\Training\{
-    CreatesLifts,
-    ExtractsPowerliftingMaxes,
-    HasRampingLifts,
-    Program,
-    ProgramStyle,
-    SerializesProgram,
-};
+use App\Training\Program;
+use App\Training\ProgramStyle;
 
 class {{ class }} implements Program
 {
