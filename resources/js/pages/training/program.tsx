@@ -1,6 +1,12 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Play } from 'lucide-react';
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import {
+    useState,
+    useEffect,
+    useRef,
+    useLayoutEffect,
+    ComponentProps,
+} from 'react';
 
 import MaxesComponent from '@/components/training/maxes';
 import RestartProgramDialog from '@/components/training/restart-program-dialog';
@@ -25,6 +31,49 @@ import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import type { Exercise, Maxes, Program } from '@/types/training';
 import training from '@/wayfinder/routes/training';
+
+function SchemaPreview({
+    schema,
+    isActive,
+    children,
+}: ComponentProps<typeof Collapsible> & {
+    schema: Schema;
+    isActive: boolean;
+}) {
+    const [open, setOpen] = useState(isActive);
+    const collapsibleRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        if (isActive && collapsibleRef.current) {
+            const raf = requestAnimationFrame(() => {
+                collapsibleRef.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                });
+            });
+
+            return () => {
+                cancelAnimationFrame(raf);
+            };
+        }
+    }, [isActive]);
+    return (
+        <Collapsible ref={collapsibleRef} open={open} onOpenChange={setOpen}>
+            <CollapsibleTrigger asChild>
+                <Button
+                    variant="ghost"
+                    className="h-auto w-full justify-start p-4 text-lg font-semibold"
+                >
+                    Week {schema.week} — Day {schema.day}
+                </Button>
+            </CollapsibleTrigger>
+
+            <CollapsibleContent className="space-y-4 p-4 pt-0">
+                {children}
+                <WorkoutSchema schema={schema} />
+            </CollapsibleContent>
+        </Collapsible>
+    );
+}
 
 export default function Program({
     program,
@@ -64,38 +113,6 @@ export default function Program({
         { title: program.name, href: '' },
     ];
 
-    function SchemaPreview({ schema, isActive }: { schema: Schema; isActive: boolean }) {
-        const [open, setOpen] = useState(isActive);
-        const collapsibleRef = useRef<HTMLDivElement>(null);
-        useEffect(() => {
-            if (isActive && collapsibleRef.current) {
-                const raf = requestAnimationFrame(() => {
-                    collapsibleRef.current?.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start',
-                    });
-                })
-
-                return () => {
-                    cancelAnimationFrame(raf)
-                }
-            }
-        }, [isActive]);
-        return (
-            <Collapsible ref={collapsibleRef} open={open} onOpenChange={setOpen}>
-                <CollapsibleTrigger asChild>
-                    <Button variant="ghost" className="w-full justify-start p-4 h-auto text-lg font-semibold">
-                        Week {schema.week} — Day {schema.day}
-                    </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="space-y-4 p-4 pt-0">
-                    <WorkoutSchema schema={schema} />
-                </CollapsibleContent>
-            </Collapsible>
-        );
-    }
-
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={program.name} />
@@ -118,18 +135,6 @@ export default function Program({
                     updateMaxes={updateMaxes}
                 />
 
-                <div className="flex justify-end">
-                    <Button asChild size="lg" className="w-full md:w-auto">
-                        <Link
-                            href={training.session.url(program.key, {
-                                query: data,
-                            })}
-                        >
-                            <Play className="mr-2 h-4 w-4" /> Start Training
-                        </Link>
-                    </Button>
-                </div>
-
                 <div className="grid gap-6">
                     <Card>
                         <CardHeader>
@@ -142,7 +147,10 @@ export default function Program({
                                     <SchemaPreview
                                         key={`week-${schema.week}-day-${schema.day}`}
                                         schema={schema}
-                                        isActive={schema.week === nextWeek && schema.day === nextDay}
+                                        isActive={
+                                            schema.week === nextWeek &&
+                                            schema.day === nextDay
+                                        }
                                     />
                                 ))}
                             </div>
