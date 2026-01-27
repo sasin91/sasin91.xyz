@@ -89,10 +89,10 @@ export default function Session({
                 <MaxesComponent exercises={exercises} maxes={maxes} updateMaxes={updateMaxes} />
 
                 <Form
-                    {...training.store.form(program.slug)}
+                    {...training.store.form(program.key)}
                     transform={(data) => ({
                         ...data,
-                        program_name: program.slug,
+                        program_name: program.key,
                         week: schema.week,
                         day: schema.day,
                         duration_seconds: durationRef.current,

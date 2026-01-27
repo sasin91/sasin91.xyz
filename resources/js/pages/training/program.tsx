@@ -83,7 +83,7 @@ export default function Program({
                 <div className="flex justify-end">
                     <Button asChild size="lg" className="w-full md:w-auto">
                         <Link
-                            href={training.session.url(program.slug, {
+                            href={training.session.url(program.key, {
                                 query: data,
                             })}
                         >

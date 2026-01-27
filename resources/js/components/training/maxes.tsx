@@ -24,16 +24,16 @@ export default function Maxes({ maxes, updateMaxes, exercises, ...props }: Compo
             <CardContent>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                     {primaryExercises.map((exercise) => (
-                        <div key={exercise.slug} className="grid gap-2">
-                            <Label htmlFor={exercise.slug}>{exercise.label} (kg)</Label>
+                        <div key={exercise.key} className="grid gap-2">
+                            <Label htmlFor={exercise.key}>{exercise.label} (kg)</Label>
                             <Input
-                                id={exercise.slug}
+                                id={exercise.key}
                                 type="number"
-                                value={localMaxes[exercise.slug] ?? 0}
+                                value={localMaxes[exercise.key] ?? 0}
                                 onChange={(e) =>
                                     setLocalMaxes({
                                         ...localMaxes,
-                                        [exercise.slug]: parseFloat(e.target.value) || 0,
+                                        [exercise.key]: parseFloat(e.target.value) || 0,
                                     })
                                 }
                                 onBlur={submit}
