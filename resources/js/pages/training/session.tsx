@@ -29,7 +29,7 @@ export default function Session({
 }) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Training', href: training.index.url() },
-        { title: program.name, href: '' },
+        { title: program.name, href: training.show.url({ program: program.key }) },
         { title: 'Session', href: '' },
     ];
 

@@ -1,5 +1,5 @@
 export interface Program {
-    slug: string;
+    key: string;
     name: string;
     type: string;
     days: number;
@@ -9,7 +9,7 @@ export interface Program {
 export type Maxes = Record<string, number>;
 
 export interface Exercise {
-    slug: string;
+    key: string;
     label: string;
     cues: string[];
     isPrimary: boolean;

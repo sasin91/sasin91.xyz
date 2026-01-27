@@ -40,10 +40,7 @@ export function WorkoutSchema({ schema }: WorkoutSchemaProps) {
 
             <div className="space-y-4">
                 {schema.blocks.map((block, index) => (
-                    <WorkoutBlock
-                        key={index}
-                        block={block}
-                    />
+                    <WorkoutBlock key={index} block={block} />
                 ))}
             </div>
         </div>

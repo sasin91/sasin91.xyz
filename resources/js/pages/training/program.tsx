@@ -1,5 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Play } from 'lucide-react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 
 import MaxesComponent from '@/components/training/maxes';
 import RestartProgramDialog from '@/components/training/restart-program-dialog';
@@ -15,6 +16,11 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import AppLayout from '@/layouts/app-layout';
 import { BreadcrumbItem } from '@/types';
 import type { Exercise, Maxes, Program } from '@/types/training';
@@ -58,6 +64,38 @@ export default function Program({
         { title: program.name, href: '' },
     ];
 
+    function SchemaPreview({ schema, isActive }: { schema: Schema; isActive: boolean }) {
+        const [open, setOpen] = useState(isActive);
+        const collapsibleRef = useRef<HTMLDivElement>(null);
+        useEffect(() => {
+            if (isActive && collapsibleRef.current) {
+                const raf = requestAnimationFrame(() => {
+                    collapsibleRef.current?.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                    });
+                })
+
+                return () => {
+                    cancelAnimationFrame(raf)
+                }
+            }
+        }, [isActive]);
+        return (
+            <Collapsible ref={collapsibleRef} open={open} onOpenChange={setOpen}>
+                <CollapsibleTrigger asChild>
+                    <Button variant="ghost" className="w-full justify-start p-4 h-auto text-lg font-semibold">
+                        Week {schema.week} — Day {schema.day}
+                    </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-4 p-4 pt-0">
+                    <WorkoutSchema schema={schema} />
+                </CollapsibleContent>
+            </Collapsible>
+        );
+    }
+
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title={program.name} />
@@ -99,9 +137,15 @@ export default function Program({
                             <CardDescription>{program.name}</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {schemas.length > 0 && (
-                                <WorkoutSchema schema={schemas[0]} />
-                            )}
+                            <div className="space-y-4">
+                                {schemas.map((schema) => (
+                                    <SchemaPreview
+                                        key={`week-${schema.week}-day-${schema.day}`}
+                                        schema={schema}
+                                        isActive={schema.week === nextWeek && schema.day === nextDay}
+                                    />
+                                ))}
+                            </div>
                         </CardContent>
                     </Card>
                 </div>
