@@ -72,7 +72,7 @@ export default function Program({
                 const raf = requestAnimationFrame(() => {
                     collapsibleRef.current?.scrollIntoView({
                         behavior: 'smooth',
-                        block: 'center',
+                        block: 'start',
                     });
                 })
 
