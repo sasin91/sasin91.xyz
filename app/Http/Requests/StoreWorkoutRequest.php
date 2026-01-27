@@ -22,7 +22,7 @@ class StoreWorkoutRequest extends FormRequest
         $validated = $this->validated();
 
         return new PendingWorkout(
-            program_name: $validated['program_name'],
+            program: $validated['program'],
             week: $validated['week'],
             day: $validated['day'],
             duration_seconds: $validated['duration_seconds'],

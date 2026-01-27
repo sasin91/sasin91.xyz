@@ -13,7 +13,7 @@ class PendingWorkout
     private const SESSION_KEY = 'pending_workout';
 
     public function __construct(
-        public string $program_name,
+        public string $program,
         public int $week,
         public int $day,
         public int $duration_seconds,
@@ -23,7 +23,7 @@ class PendingWorkout
     public static function rules(): array
     {
         return [
-            'program_name' => ['required', 'string', new ValidRegistryKey(ProgramRegistry::class)],
+            'program' => ['required', 'string', new ValidRegistryKey(ProgramRegistry::class)],
             'week' => 'required|integer',
             'day' => 'required|integer',
             'duration_seconds' => 'required|integer',
@@ -42,7 +42,7 @@ class PendingWorkout
         $validated = Validator::make($data, self::rules())->validate();
 
         return new self(
-            program_name: $validated['program_name'],
+            program: $validated['program'],
             week: $validated['week'],
             day: $validated['day'],
             duration_seconds: $validated['duration_seconds'],
@@ -53,7 +53,7 @@ class PendingWorkout
     public function toArray(): array
     {
         return [
-            'program_name' => $this->program_name,
+            'program' => $this->program,
             'week' => $this->week,
             'day' => $this->day,
             'duration_seconds' => $this->duration_seconds,

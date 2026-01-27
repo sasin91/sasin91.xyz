@@ -92,7 +92,7 @@ export default function Session({
                     {...training.store.form(program.key)}
                     transform={(data) => ({
                         ...data,
-                        program_name: program.key,
+                        program: program.key,
                         week: schema.week,
                         day: schema.day,
                         duration_seconds: durationRef.current,
@@ -102,7 +102,7 @@ export default function Session({
                 >
                     {({ errors, processing }) => (
                         <>
-                            <InputError message={errors.program_name} />
+                            <InputError message={errors.program} />
                             <Card>
                                 <CardContent className="pt-6">
                                     <WorkoutSchema schema={schema} />

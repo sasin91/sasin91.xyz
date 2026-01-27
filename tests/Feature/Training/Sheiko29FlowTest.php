@@ -45,7 +45,7 @@ test('it can view session page', function () {
 function validCompleteWorkoutParams(array $overrides = []): array
 {
     return array_merge([
-        'program_name' => 'sheiko-29',
+        'program' => 'sheiko-29',
         'week' => 1,
         'day' => 1,
         'sets' => [
@@ -66,7 +66,7 @@ test('it can complete workout session', function () {
 
     assertDatabaseHas('workouts', [
         'user_id' => $user->id,
-        'program_name' => 'sheiko-29',
+        'program' => 'sheiko-29',
         'week' => 1,
         'day' => 1,
     ]);
@@ -82,6 +82,6 @@ test('validation fails if provided an invalid program name', function () {
     $user = User::factory()->create();
 
     actingAs($user)
-        ->post(route('training.store', 'sheiko-29'), validCompleteWorkoutParams(['program_name' => 'Sheiko 29']))
-        ->assertInvalid(['program_name']);
+        ->post(route('training.store', 'sheiko-29'), validCompleteWorkoutParams(['program' => 'Sheiko 29']))
+        ->assertInvalid(['program']);
 });

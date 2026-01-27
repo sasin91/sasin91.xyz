@@ -119,7 +119,7 @@ export default function Dashboard({
                                                             : 'N/A'}
                                                     </td>
                                                     <td className="px-4 py-3 font-medium">
-                                                        {workout.program_name}
+                                                        {workout.program}
                                                     </td>
                                                     <td className="px-4 py-3">
                                                         Week {workout.week} Day{' '}

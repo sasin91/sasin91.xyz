@@ -26,7 +26,7 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
-            $program = $latestWorkouts->first()->program_name;
+            $program = $latestWorkouts->first()->program;
         }
 
         $program = $programRegistry->get($program);
