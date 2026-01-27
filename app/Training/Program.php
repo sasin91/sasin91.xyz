@@ -8,9 +8,9 @@ interface Program extends Arrayable
 {
     public function name(): string;
 
-    public function slug(): string;
+    public function key(): string;
 
-    public function type(): ProgramType;
+    public function style(): ProgramStyle;
 
     public function days(): int;
 

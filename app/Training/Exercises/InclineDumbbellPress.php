@@ -3,10 +3,13 @@
 namespace App\Training\Exercises;
 
 use App\Training\Exercise;
+use App\Training\SerializesExercise;
 
 class InclineDumbbellPress implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'incline-dumbbell-press';
     }
@@ -30,15 +33,4 @@ class InclineDumbbellPress implements Exercise
     {
         return false;
     }
-
-    public function toArray(): array
-    {
-        return [
-            'slug' => $this->slug(),
-            'label' => $this->label(),
-            'cues' => $this->cues(),
-            'isPrimary' => $this->isPrimary(),
-        ];
-    }
-
 }

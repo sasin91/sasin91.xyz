@@ -19,7 +19,7 @@ class ExtractOneRepMaxes
         $result = [];
 
         foreach ($this->exercises() as $exercise) {
-            $result[$exercise->slug()] = $maxes[$exercise->slug()] ?? 0;
+            $result[$exercise->key()] = $maxes[$exercise->key()] ?? 0;
         }
 
         return $result;

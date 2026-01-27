@@ -3,10 +3,13 @@
 namespace App\Training\Exercises;
 
 use App\Training\Exercise;
+use App\Training\SerializesExercise;
 
 class Bench implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'bench';
     }
@@ -32,15 +35,4 @@ class Bench implements Exercise
     {
         return true;
     }
-
-    public function toArray(): array
-    {
-        return [
-            'slug' => $this->slug(),
-            'label' => $this->label(),
-            'cues' => $this->cues(),
-            'isPrimary' => $this->isPrimary(),
-        ];
-    }
-
 }

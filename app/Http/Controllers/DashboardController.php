@@ -35,7 +35,7 @@ class DashboardController extends Controller
         $maxes = $oneRepMaxes->extract($user->maxes ?? []);
 
         $startTrainingUrl = route('training.session', [
-            'program' => $program->slug(),
+            'program' => $program->key(),
             'day' => $progress->nextDay,
             'week' => $progress->nextWeek,
             ...$maxes,
