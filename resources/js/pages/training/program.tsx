@@ -149,6 +149,7 @@ export default function Program({
                                         }
                                     >
                                         <Button
+                                            asChild
                                             size="lg"
                                             className="w-full md:w-auto"
                                         >
