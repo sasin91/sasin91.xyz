@@ -48,9 +48,11 @@ class TrainingController extends Controller
         $schemas = $program->schemas($maxes);
 
         $progress = $request->progress();
+        $week = $request->query('week', $progress->nextWeek);
+        $day = $request->query('day', $progress->nextDay);
         $found = null;
         foreach ($schemas as $schema) {
-            if ($schema->day === $progress->nextDay && $schema->week === $progress->nextWeek) {
+            if ($schema->day === $day && $schema->week === $week) {
                 $found = $schema;
                 break;
             }
