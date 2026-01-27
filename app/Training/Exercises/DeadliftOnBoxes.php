@@ -4,7 +4,7 @@ namespace App\Training\Exercises;
 
 class DeadliftOnBoxes extends Deadlift
 {
-    public function slug(): string
+    public function key(): string
     {
         return 'deadlift-on-boxes';
     }
@@ -23,5 +23,10 @@ class DeadliftOnBoxes extends Deadlift
             'Slower tempo on the way down',
             'Maintain form with added difficulty',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }

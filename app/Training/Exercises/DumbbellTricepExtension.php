@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class DumbbellTricepExtension implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'dumbbell-tricep-extension';
     }
@@ -22,5 +24,10 @@ class DumbbellTricepExtension implements Exercise
             'Lower behind neck',
             'feel tension',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }

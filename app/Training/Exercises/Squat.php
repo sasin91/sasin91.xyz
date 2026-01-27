@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class Squat implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'squat';
     }
@@ -26,5 +28,10 @@ class Squat implements Exercise
             'Depth to parallel or below',
             'Drive up through heels',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return true;
     }
 }

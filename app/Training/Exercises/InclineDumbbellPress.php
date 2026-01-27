@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class InclineDumbbellPress implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'incline-dumbbell-press';
     }
@@ -24,5 +26,10 @@ class InclineDumbbellPress implements Exercise
             'brace core and push back into pad',
             'drive hands up towards the ceiling',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }

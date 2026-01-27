@@ -21,7 +21,7 @@ class ProgramProgress
     {
         if ($this->user) {
             $lastWorkout = $this->user->workouts()
-                ->where('program_name', $this->program->name())
+                ->where('program', $this->program->key())
                 ->latest('completed_at')
                 ->first();
 

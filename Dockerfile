@@ -5,7 +5,9 @@ WORKDIR /app
 ENV WAYFINDER_COMMAND=true
 
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm \
+    --mount=type=cache,target=/root/.cache \
+    npm ci
 
 COPY resources ./resources
 COPY public ./public
@@ -35,14 +37,16 @@ WORKDIR /app
 
 # Copy composer files first for better caching
 COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts
+RUN --mount=type=cache,target=/root/.composer/cache \
+    composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader --no-scripts
 
 # Copy the rest of the app
 COPY . .
 
 COPY --from=assets /app/public/build /app/public/build
 
-RUN composer dump-autoload --optimize \
+# Create cache directory and regenerate Laravel caches (excluding dev packages)
+RUN mkdir -p /app/bootstrap/cache \
     && php artisan package:discover --ansi
 
 ARG APP_UID=10001
@@ -52,5 +56,8 @@ RUN groupadd -g ${APP_GID} app \
     && chown -R app:app /app /app/storage /app/bootstrap/cache
 
 USER app
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD curl -f http://localhost:8000/up || exit 1
 
 CMD ["php","artisan","octane:frankenphp","--host=0.0.0.0","--port=8000"]

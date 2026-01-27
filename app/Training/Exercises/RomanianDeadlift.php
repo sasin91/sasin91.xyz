@@ -4,7 +4,7 @@ namespace App\Training\Exercises;
 
 class RomanianDeadlift extends Deadlift
 {
-    public function slug(): string
+    public function key(): string
     {
         return 'romanian-deadlift';
     }
@@ -21,5 +21,10 @@ class RomanianDeadlift extends Deadlift
             'push bottom back',
             'keep legs straight',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }

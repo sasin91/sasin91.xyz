@@ -2,7 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Actions\Training\ExtractOneRepMaxes;
+use App\Training\Program;
+use App\Training\ProgramProgress;
+use App\Training\Registries\ProgramRegistry;
 use Illuminate\Foundation\Http\FormRequest;
+
+use function abort;
+use function app;
+use function once;
 
 class TrainingProgramRequest extends FormRequest
 {
@@ -16,16 +24,14 @@ class TrainingProgramRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $maxes = [
-            // barbell weight
-            'squat' => 25,
-            'bench' => 25,
-            'deadlift' => 25,
-        ];
-
-        if ($user = $this->user()) {
-            $maxes = $user->currentMaxes();
-        }
+        $maxes = $this->user() && ! empty($this->user()->maxes)
+            ? $this->user()->maxes
+            : [
+                // barbell weight
+                'squat' => 25,
+                'bench' => 25,
+                'deadlift' => 25,
+            ];
 
         $this->merge([
             'squat' => $this->integer('squat', $maxes['squat'] ?? 0),
@@ -49,6 +55,38 @@ class TrainingProgramRequest extends FormRequest
             'deadlift' => 'integer',
             'day' => 'integer',
             'week' => 'integer',
+            'restart' => 'boolean',
         ];
+    }
+
+    public function program(): Program
+    {
+        return once(function () {
+            $program = $this->route('program');
+            $registry = app(ProgramRegistry::class);
+
+            if (! $registry->has($program)) {
+                abort(404, 'Program not found');
+            }
+
+            return $registry->get($program);
+        });
+    }
+
+    public function progress(): ProgramProgress
+    {
+        return new ProgramProgress($this->program(), $this->user());
+    }
+
+    public function exercisesAndMaxes(): array
+    {
+        $validated = $this->validated();
+
+        $action = app(ExtractOneRepMaxes::class);
+
+        $exercises = $action->exercises();
+        $maxes = $action->extract($validated);
+
+        return [$exercises, $maxes];
     }
 }

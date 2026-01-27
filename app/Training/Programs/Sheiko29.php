@@ -19,24 +19,30 @@ use App\Training\Exercises\Squat;
 use App\Training\Lift;
 use App\Training\OneRepMax;
 use App\Training\Program;
-use App\Training\ProgramType;
+use App\Training\ProgramStyle;
 use App\Training\Schema;
 
 class Sheiko29 implements Program
 {
+    use CreatesLifts;
+    use ExtractsPowerliftingMaxes;
+    use HasRampingLifts;
+    use SerializesProgram;
+    use SheikoLiftPatterns;
+
     public function name(): string
     {
         return 'Sheiko 29';
     }
 
-    public function slug(): string
+    public function key(): string
     {
         return 'sheiko-29';
     }
 
-    public function type(): ProgramType
+    public function style(): ProgramStyle
     {
-        return ProgramType::POWERLIFTING;
+        return ProgramStyle::POWERLIFTING;
     }
 
     public function days(): int
@@ -55,669 +61,532 @@ class Sheiko29 implements Program
      */
     public function schemas(array $maxes): array
     {
-        $squatMax = OneRepMax::from($maxes['squat'] ?? 0);
-        $benchMax = OneRepMax::from($maxes['bench'] ?? 0);
-        $deadliftMax = OneRepMax::from($maxes['deadlift'] ?? 0);
+        ['squat' => $squat, 'bench' => $bench, 'deadlift' => $deadlift] = $this->extractMaxes($maxes);
 
         return [
+            // Week 1, Day 1
             new Schema(
                 day: 1,
                 week: 1,
                 blocks: [
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(
-                                sets: 1,
-                                reps: 5,
-                                weight: $benchMax->percentage(50.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 4,
-                                weight: $benchMax->percentage(60.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 3,
-                                weight: $benchMax->percentage(70.0)
-                            ),
-                            new Lift(
-                                sets: 5,
-                                reps: 3,
-                                weight: $benchMax->percentage(75.0)
-                            ),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [60, 2, 4],
+                            [70, 2, 3],
+                            [75, 5, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(
-                                sets: 1,
-                                reps: 5,
-                                weight: $squatMax->percentage(50.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 5,
-                                weight: $squatMax->percentage(60.0)
-                            ),
-                            new Lift(
-                                sets: 5,
-                                reps: 5,
-                                weight: $squatMax->percentage(70.0)
-                            ),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 2, 5],
+                            [70, 5, 5],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(
-                                sets: 1,
-                                reps: 5,
-                                weight: $benchMax->percentage(50.0)
-                            ),
-                            new Lift(
-                                sets: 1,
-                                reps: 5,
-                                weight: $benchMax->percentage(60.0)
-                            ),
-                            new Lift(
-                                sets: 4,
-                                reps: 4,
-                                weight: $benchMax->percentage(70.0)
-                            ),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [60, 1, 5],
+                            [70, 4, 4],
+                        ])
                     ),
                 ]
             ),
+
+            // Week 1, Day 2
             new Schema(
                 day: 2,
                 week: 1,
                 blocks: [
                     new Block(
                         exercise: new DeadliftToKnees,
-                        lifts: [
-                            new Lift(
-                                sets: 1,
-                                reps: 3,
-                                weight: $deadliftMax->percentage(50.0),
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 3,
-                                weight: $deadliftMax->percentage(60.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 3,
-                                weight: $deadliftMax->percentage(70.0)
-                            ),
-                            new Lift(
-                                sets: 4,
-                                reps: 3,
-                                weight: $deadliftMax->percentage(75.0)
-                            ),
-                        ]
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 2, 3],
+                            [70, 2, 3],
+                            [75, 4, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [
-                            new Lift(
-                                sets: 4,
-                                reps: 6,
-                                weight: $benchMax->percentage(30)
-                            ),
-                        ]
+                        lifts: [new Lift(sets: 4, reps: 6, weight: $bench->percentage(30))]
                     ),
                     new Block(
                         exercise: new DumbbellTricepExtension,
-                        lifts: [
-                            new Lift(
-                                sets: 5,
-                                reps: 5,
-                                weight: $benchMax->percentage(25)
-                            ),
-                        ]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new DeadliftOnBoxes,
-                        lifts: [
-                            new Lift(
-                                sets: 1,
-                                reps: 4,
-                                weight: $deadliftMax->percentage(55.0)
-                            ),
-                            new Lift(
-                                sets: 1,
-                                reps: 4,
-                                weight: $deadliftMax->percentage(65.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 4,
-                                weight: $deadliftMax->percentage(75.0)
-                            ),
-                            new Lift(
-                                sets: 4,
-                                reps: 3,
-                                weight: $deadliftMax->percentage(85.0)
-                            ),
-                        ]
+                        lifts: $this->ramp($deadlift, [
+                            [55, 1, 4],
+                            [65, 1, 4],
+                            [75, 2, 4],
+                            [85, 4, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new DumbbellSquat,
-                        lifts: [
-                            new Lift(
-                                sets: 5,
-                                reps: 5,
-                                weight: $squatMax->percentage(27.5)
-                            ),
-                        ]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $squat->percentage(27.5))]
                     ),
                     new Block(
                         exercise: new HangingLegRaise,
-                        lifts: [
-                            new Lift(
-                                sets: 3,
-                                reps: 10,
-                                weight: 0 // bodyweight
-                            ),
-                        ]
+                        lifts: [$this->bodyweight(3, 10)]
                     ),
                 ]
             ),
+
+            // Week 1, Day 3
             new Schema(
                 day: 3,
                 week: 1,
                 blocks: [
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(
-                                sets: 1,
-                                reps: 5,
-                                weight: $benchMax->percentage(50.0)
-                            ),
-                            new Lift(
-                                sets: 1,
-                                reps: 5,
-                                weight: $benchMax->percentage(60.0)
-                            ),
-                            new Lift(
-                                sets: 1,
-                                reps: 4,
-                                weight: $benchMax->percentage(70.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 3,
-                                weight: $benchMax->percentage(75.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 2,
-                                weight: $benchMax->percentage(80.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 3,
-                                weight: $benchMax->percentage(85.0)
-                            ),
-                            new Lift(
-                                sets: 1,
-                                reps: 4,
-                                weight: $benchMax->percentage(70)
-                            ),
-                            new Lift(
-                                sets: 1,
-                                reps: 6,
-                                weight: $benchMax->percentage(60)
-                            ),
-                            new Lift(
-                                sets: 1,
-                                reps: 8,
-                                weight: $benchMax->percentage(50)
-                            ),
-                        ]
+                        lifts: $this->pyramid(
+                            $bench,
+                            up: [
+                                [50, 1, 5],
+                                [60, 1, 5],
+                                [70, 1, 4],
+                                [75, 2, 3],
+                                [80, 2, 2],
+                            ],
+                            peak: [85, 2, 3],
+                            down: [
+                                [70, 1, 4],
+                                [60, 1, 6],
+                                [50, 1, 8],
+                            ]
+                        )
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [
-                            new Lift(
-                                sets: 5,
-                                reps: 10,
-                                weight: $benchMax->percentage(25.0)
-                            ),
-                        ]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(
-                                sets: 1,
-                                reps: 5,
-                                weight: $benchMax->percentage(50.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 4,
-                                weight: $benchMax->percentage(60.0)
-                            ),
-                            new Lift(
-                                sets: 2,
-                                reps: 3,
-                                weight: $benchMax->percentage(70.0)
-                            ),
-                            new Lift(
-                                sets: 5,
-                                reps: 3,
-                                weight: $benchMax->percentage(75.0)
-                            ),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 2, 4],
+                            [70, 2, 3],
+                            [75, 5, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new RomanianDeadlift,
-                        lifts: [
-                            new Lift(
-                                sets: 5,
-                                reps: 5,
-                                weight: $deadliftMax->percentage(55.0)
-                            ),
-                        ]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadlift->percentage(55))]
                     ),
                 ]
             ),
+
+            // Week 2, Day 1
             new Schema(
                 day: 1,
                 week: 2,
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $squatMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $squatMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $squatMax->percentage(70)),
-                            new Lift(sets: 5, reps: 2, weight: $squatMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 5, 2],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(70)),
-                            new Lift(sets: 5, reps: 3, weight: $benchMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 5, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))] // Assumed weight/intensity
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new DumbbellTricepExtension,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new FrontSquat,
-                        lifts: [
-                            new Lift(sets: 2, reps: 3, weight: $squatMax->percentage(45)),
-                            new Lift(sets: 2, reps: 3, weight: $squatMax->percentage(55)),
-                            new Lift(sets: 4, reps: 2, weight: $squatMax->percentage(60)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [45, 2, 3],
+                            [55, 2, 3],
+                            [60, 4, 2],
+                        ])
                     ),
                     new Block(
-                        exercise: new RomanianDeadlift, // Lower Back
-                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadliftMax->percentage(50))]
+                        exercise: new RomanianDeadlift,
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadlift->percentage(50))]
                     ),
                 ]
             ),
+
+            // Week 2, Day 2
             new Schema(
                 day: 2,
                 week: 2,
                 blocks: [
                     new Block(
                         exercise: new DeadliftToKnees,
-                        lifts: [
-                            new Lift(sets: 1, reps: 3, weight: $deadliftMax->percentage(50)),
-                            new Lift(sets: 1, reps: 3, weight: $deadliftMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $deadliftMax->percentage(70)),
-                            new Lift(sets: 4, reps: 2, weight: $deadliftMax->percentage(75)),
-                        ]
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 1, 3],
+                            [70, 2, 3],
+                            [75, 4, 2],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 6, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 2, reps: 6, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 4, reps: 6, weight: $benchMax->percentage(65)),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 6],
+                            [60, 2, 6],
+                            [65, 4, 6],
+                        ])
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new DeadliftOnBoxes,
-                        lifts: [
-                            new Lift(sets: 1, reps: 4, weight: $deadliftMax->percentage(55)),
-                            new Lift(sets: 1, reps: 4, weight: $deadliftMax->percentage(65)),
-                            new Lift(sets: 2, reps: 4, weight: $deadliftMax->percentage(75)),
-                            new Lift(sets: 4, reps: 4, weight: $deadliftMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($deadlift, [
+                            [55, 1, 4],
+                            [65, 1, 4],
+                            [75, 2, 4],
+                            [80, 4, 4],
+                        ])
                     ),
                     new Block(
-                        exercise: new DumbbellSquat, // Squat Assistance
-                        lifts: [new Lift(sets: 5, reps: 5, weight: $squatMax->percentage(30))]
+                        exercise: new DumbbellSquat,
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $squat->percentage(30))]
                     ),
                 ]
             ),
+
+            // Week 2, Day 3
             new Schema(
                 day: 3,
                 week: 2,
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $squatMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $squatMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $squatMax->percentage(70)),
-                            new Lift(sets: 5, reps: 2, weight: $squatMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 5, 2],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(70)),
-                            new Lift(sets: 2, reps: 2, weight: $benchMax->percentage(80)),
-                            new Lift(sets: 1, reps: 3, weight: $benchMax->percentage(75)),
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(65)),
-                            new Lift(sets: 1, reps: 7, weight: $benchMax->percentage(55)),
-                        ]
+                        lifts: $this->pyramid(
+                            $bench,
+                            up: [
+                                [50, 1, 5],
+                                [60, 1, 4],
+                                [70, 2, 3],
+                            ],
+                            peak: [80, 2, 2],
+                            down: [
+                                [75, 1, 3],
+                                [65, 1, 5],
+                                [55, 1, 7],
+                            ]
+                        )
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $squatMax->percentage(50)),
-                            new Lift(sets: 2, reps: 5, weight: $squatMax->percentage(60)),
-                            new Lift(sets: 4, reps: 4, weight: $squatMax->percentage(70)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 2, 5],
+                            [70, 4, 4],
+                        ])
                     ),
                     new Block(
                         exercise: new RomanianDeadlift,
-                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadliftMax->percentage(50))]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadlift->percentage(50))]
                     ),
                 ]
             ),
+
+            // Week 3, Day 1
             new Schema(
                 day: 1,
                 week: 3,
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $squatMax->percentage(55)),
-                            new Lift(sets: 1, reps: 4, weight: $squatMax->percentage(65)),
-                            new Lift(sets: 2, reps: 3, weight: $squatMax->percentage(75)),
-                            new Lift(sets: 4, reps: 2, weight: $squatMax->percentage(85)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [55, 1, 5],
+                            [65, 1, 4],
+                            [75, 2, 3],
+                            [85, 4, 2],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(70)),
-                            new Lift(sets: 6, reps: 3, weight: $benchMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 6, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new DumbbellTricepExtension,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(sets: 1, reps: 3, weight: $squatMax->percentage(50)),
-                            new Lift(sets: 1, reps: 3, weight: $squatMax->percentage(60)),
-                            new Lift(sets: 1, reps: 3, weight: $squatMax->percentage(70)),
-                            new Lift(sets: 4, reps: 3, weight: $squatMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 3],
+                            [60, 1, 3],
+                            [70, 1, 3],
+                            [80, 4, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new RomanianDeadlift,
-                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadliftMax->percentage(50))]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadlift->percentage(50))]
                     ),
                 ]
             ),
 
+            // Week 3, Day 2
             new Schema(
                 day: 2,
                 week: 3,
                 blocks: [
                     new Block(
                         exercise: new DeficitDeadlift,
-                        lifts: [
-                            new Lift(sets: 2, reps: 3, weight: $deadliftMax->percentage(50)),
-                            new Lift(sets: 2, reps: 3, weight: $deadliftMax->percentage(60)),
-                            new Lift(sets: 4, reps: 3, weight: $deadliftMax->percentage(65)),
-                        ]
+                        lifts: $this->ramp($deadlift, [
+                            [50, 2, 3],
+                            [60, 2, 3],
+                            [65, 4, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(70)),
-                            new Lift(sets: 3, reps: 2, weight: $benchMax->percentage(80)),
-                            new Lift(sets: 2, reps: 2, weight: $benchMax->percentage(85)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 3, 2],
+                            [85, 2, 2],
+                            [80, 2, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new DeadliftOnBoxes,
-                        lifts: [
-                            new Lift(sets: 1, reps: 4, weight: $deadliftMax->percentage(60)),
-                            new Lift(sets: 2, reps: 4, weight: $deadliftMax->percentage(70)),
-                            new Lift(sets: 2, reps: 3, weight: $deadliftMax->percentage(80)),
-                            new Lift(sets: 3, reps: 2, weight: $deadliftMax->percentage(90)),
-                        ]
+                        lifts: $this->ramp($deadlift, [
+                            [60, 1, 4],
+                            [70, 2, 4],
+                            [80, 2, 3],
+                            [90, 3, 2],
+                        ])
                     ),
                     new Block(
                         exercise: new DumbbellSquat,
-                        lifts: [new Lift(sets: 5, reps: 5, weight: $squatMax->percentage(30))]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $squat->percentage(30))]
                     ),
                 ]
             ),
 
+            // Week 3, Day 3
             new Schema(
                 day: 3,
                 week: 3,
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $squatMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $squatMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $squatMax->percentage(70)),
-                            new Lift(sets: 6, reps: 3, weight: $squatMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 6, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(70)),
-                            new Lift(sets: 7, reps: 3, weight: $benchMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 7, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new MilitaryPress,
-                        lifts: [new Lift(sets: 5, reps: 4, weight: $benchMax->percentage(40))] // Assumed weight
+                        lifts: [new Lift(sets: 5, reps: 4, weight: $bench->percentage(40))]
                     ),
                     new Block(
                         exercise: new RomanianDeadlift,
-                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadliftMax->percentage(50))]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadlift->percentage(50))]
                     ),
                 ]
             ),
+
+            // Week 4, Day 1
             new Schema(
                 day: 1,
                 week: 4,
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $squatMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $squatMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $squatMax->percentage(70)),
-                            new Lift(sets: 5, reps: 3, weight: $squatMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 5, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(55)),
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(65)),
-                            new Lift(sets: 5, reps: 4, weight: $benchMax->percentage(75)),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [55, 1, 5],
+                            [65, 1, 5],
+                            [75, 5, 4],
+                        ])
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new DumbbellTricepExtension,
-                        lifts: [new Lift(sets: 5, reps: 8, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 8, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new FrontSquat,
-                        lifts: [
-                            new Lift(sets: 2, reps: 5, weight: $squatMax->percentage(40)),
-                            new Lift(sets: 2, reps: 4, weight: $squatMax->percentage(50)),
-                            new Lift(sets: 3, reps: 3, weight: $squatMax->percentage(60)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [40, 2, 5],
+                            [50, 2, 4],
+                            [60, 3, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new RomanianDeadlift,
-                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadliftMax->percentage(50))]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadlift->percentage(50))]
                     ),
                 ]
             ),
+
+            // Week 4, Day 2
             new Schema(
                 day: 2,
                 week: 4,
                 blocks: [
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(70)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(80)),
-                            new Lift(sets: 3, reps: 2, weight: $benchMax->percentage(85)),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 2, 3],
+                            [85, 3, 2],
+                        ])
                     ),
                     new Block(
                         exercise: new Deadlift,
-                        lifts: [
-                            new Lift(sets: 1, reps: 3, weight: $deadliftMax->percentage(50)),
-                            new Lift(sets: 1, reps: 3, weight: $deadliftMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $deadliftMax->percentage(70)),
-                            new Lift(sets: 2, reps: 3, weight: $deadliftMax->percentage(80)),
-                            new Lift(sets: 3, reps: 2, weight: $deadliftMax->percentage(85)),
-                            new Lift(sets: 3, reps: 2, weight: $deadliftMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 1, 3],
+                            [70, 2, 3],
+                            [80, 2, 3],
+                            [85, 3, 2],
+                            [80, 3, 2],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 4, reps: 5, weight: $benchMax->percentage(70)),
-                        ]
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [60, 1, 5],
+                            [70, 4, 5],
+                        ])
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                 ]
             ),
+
+            // Week 4, Day 3
             new Schema(
                 day: 3,
                 week: 4,
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: [
-                            new Lift(sets: 1, reps: 5, weight: $squatMax->percentage(50)),
-                            new Lift(sets: 1, reps: 4, weight: $squatMax->percentage(60)),
-                            new Lift(sets: 2, reps: 3, weight: $squatMax->percentage(70)),
-                            new Lift(sets: 6, reps: 3, weight: $squatMax->percentage(80)),
-                        ]
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 1, 4],
+                            [70, 2, 3],
+                            [80, 6, 3],
+                        ])
                     ),
                     new Block(
                         exercise: new Bench,
-                        lifts: [
-                            new Lift(sets: 1, reps: 6, weight: $benchMax->percentage(50)),
-                            new Lift(sets: 1, reps: 5, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 2, reps: 4, weight: $benchMax->percentage(70)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(80)),
-                            new Lift(sets: 2, reps: 2, weight: $benchMax->percentage(85)),
-                            new Lift(sets: 2, reps: 3, weight: $benchMax->percentage(80)),
-                            new Lift(sets: 1, reps: 4, weight: $benchMax->percentage(70)),
-                            new Lift(sets: 1, reps: 6, weight: $benchMax->percentage(60)),
-                            new Lift(sets: 1, reps: 8, weight: $benchMax->percentage(50)),
-                        ]
+                        lifts: $this->pyramid(
+                            $bench,
+                            up: [
+                                [50, 1, 6],
+                                [60, 1, 5],
+                                [70, 2, 4],
+                                [80, 2, 3],
+                                [85, 2, 2],
+                            ],
+                            peak: [80, 2, 3],
+                            down: [
+                                [70, 1, 4],
+                                [60, 1, 6],
+                                [50, 1, 8],
+                            ]
+                        )
                     ),
                     new Block(
                         exercise: new InclineDumbbellPress,
-                        lifts: [new Lift(sets: 5, reps: 10, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 10, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new DumbbellTricepExtension,
-                        lifts: [new Lift(sets: 5, reps: 8, weight: $benchMax->percentage(25))]
+                        lifts: [new Lift(sets: 5, reps: 8, weight: $bench->percentage(25))]
                     ),
                     new Block(
                         exercise: new RomanianDeadlift,
-                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadliftMax->percentage(50))]
+                        lifts: [new Lift(sets: 5, reps: 5, weight: $deadlift->percentage(50))]
                     ),
                     new Block(
                         exercise: new HangingLegRaise,
-                        lifts: [new Lift(sets: 3, reps: 10, weight: 0)]
+                        lifts: [$this->bodyweight(3, 10)]
                     ),
                 ]
             ),
-        ];
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'name' => $this->name(),
-            'slug' => $this->slug(),
-            'type' => $this->type(),
-            'days' => $this->days(),
-            'weeks' => $this->weeks(),
         ];
     }
 }

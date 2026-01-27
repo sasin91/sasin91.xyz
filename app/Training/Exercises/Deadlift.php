@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class Deadlift implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'deadlift';
     }
@@ -26,5 +28,10 @@ class Deadlift implements Exercise
             'twist hands inwards, feel back tension',
             'push floor away',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return true;
     }
 }

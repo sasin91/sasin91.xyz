@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class Bench implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'bench';
     }
@@ -26,5 +28,10 @@ class Bench implements Exercise
             'Lower with control',
             'Press to lockout',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return true;
     }
 }

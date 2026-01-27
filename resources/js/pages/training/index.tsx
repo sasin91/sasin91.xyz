@@ -4,16 +4,11 @@ import { ChevronRight, Dumbbell } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Underline } from '@/components/ui/underline';
 import AppLayout from '@/layouts/app-layout';
+import { Program } from '@/types/training';
 
-interface ProgramSummary {
-    slug: string;
-    name: string;
-    type: string;
-    days: number;
-    weeks: number;
-}
+export default function Index({ programs }: { programs: Program[] }) {
+    const searchParams = new URLSearchParams(window.location.search);
 
-export default function Index({ programs }: { programs: ProgramSummary[] }) {
     return (
         <AppLayout>
             <Head title="Training Programs" />
@@ -33,9 +28,9 @@ export default function Index({ programs }: { programs: ProgramSummary[] }) {
                     className="divide-y divide-border/60 rounded-lg border border-border/60"
                 >
                     {programs.map((program) => (
-                        <li key={program.slug}>
+                        <li key={program.key}>
                             <Link
-                                href={`/training/${program.slug}`}
+                                href={`/training/${program.key}?${searchParams.toString()}`}
                                 className="group flex items-center justify-between gap-4 p-4 hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                             >
                                 <div className="flex min-w-0 items-center gap-4">
@@ -49,7 +44,7 @@ export default function Index({ programs }: { programs: ProgramSummary[] }) {
                                             </Underline>
                                         </p>
                                         <p className="mt-1 truncate text-xs text-muted-foreground">
-                                            {program.type}
+                                            {program.style}
                                         </p>
                                     </div>
                                 </div>

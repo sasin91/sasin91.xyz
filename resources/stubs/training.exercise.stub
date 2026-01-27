@@ -6,9 +6,11 @@ use App\Training\Exercise;
 
 class {{ class }} implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
-        return '{{ slug }}';
+        return '{{ key }}';
     }
 
     public function label(): string
@@ -26,15 +28,5 @@ class {{ class }} implements Exercise
     public function isPrimary(): bool
     {
         return false;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'slug' => $this->slug(),
-            'label' => $this->label(),
-            'cues' => $this->cues(),
-            'isPrimary' => $this->isPrimary(),
-        ];
     }
 }

@@ -4,7 +4,7 @@ namespace App\Training\Exercises;
 
 class DeadliftToKnees extends Deadlift
 {
-    public function slug(): string
+    public function key(): string
     {
         return 'deadlift-to-knees';
     }
@@ -23,5 +23,10 @@ class DeadliftToKnees extends Deadlift
             'Focus on first pull strength',
             'Control the descent',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }

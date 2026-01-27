@@ -33,6 +33,7 @@ services:
       CACHE_STORE: "redis"
       SESSION_DRIVER: "redis"
       REDIS_HOST: "redis"
+      LOG_CHANNEL: "stderr"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.laravel.rule=Host(`sasin91.xyz`)"

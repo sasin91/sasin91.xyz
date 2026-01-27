@@ -3,23 +3,28 @@
 namespace {{ namespace }};
 
 use App\Training\Program;
-use App\Training\ProgramType;
+use App\Training\ProgramStyle;
 
 class {{ class }} implements Program
 {
+    use CreatesLifts;
+    use ExtractsPowerliftingMaxes;
+    use HasRampingLifts;
+    use SerializesProgram;
+
     public function name(): string
     {
         return '{{ label }}';
     }
 
-    public function slug(): string
+    public function key(): string
     {
-        return '{{ slug }}';
+        return '{{ key }}';
     }
 
-    public function type(): ProgramType
+    public function style(): ProgramStyle
     {
-        return ProgramType::POWERLIFTING;
+        return {{ style }};
     }
 
     public function days(): int
@@ -34,20 +39,10 @@ class {{ class }} implements Program
 
     public function schemas(array $maxes): array
     {
+        ['squat' => $squat, 'bench' => $bench, 'deadlift' => $deadlift] = $this->extractMaxes($maxes);
+
         return [
             //
-        ];
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'name' => $this->name(),
-            'slug' => $this->slug(),
-            'type' => $this->type(),
-            'days' => $this->days(),
-            'weeks' => $this->weeks(),
-            'exercises' => $this->exercises(),
         ];
     }
 }

@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class MilitaryPress implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'military-press';
     }
@@ -24,5 +26,10 @@ class MilitaryPress implements Exercise
             'Don\'t lean back',
             'Lock out at top',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }

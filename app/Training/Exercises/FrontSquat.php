@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class FrontSquat implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'front-squat';
     }
@@ -25,5 +27,10 @@ class FrontSquat implements Exercise
             'Solid base',
             'Deep squat',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }

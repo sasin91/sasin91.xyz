@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class DeficitDeadlift implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'deficit-deadlift';
     }
@@ -24,5 +26,10 @@ class DeficitDeadlift implements Exercise
             'Chest up',
             'Push floor away',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }

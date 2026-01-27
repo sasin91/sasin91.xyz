@@ -1,8 +1,15 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Play } from 'lucide-react';
-import { useState } from 'react';
+import {
+    useState,
+    useEffect,
+    useRef,
+    useLayoutEffect,
+    ComponentProps,
+} from 'react';
 
 import MaxesComponent from '@/components/training/maxes';
+import RestartProgramDialog from '@/components/training/restart-program-dialog';
 import {
     type Schema,
     WorkoutSchema,
@@ -16,45 +23,71 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import AppLayout from '@/layouts/app-layout';
+import { cn } from '@/lib/utils';
 import { BreadcrumbItem } from '@/types';
-import type { Maxes, Program } from '@/types/training';
+import type { Exercise, Maxes, Program } from '@/types/training';
 import training from '@/wayfinder/routes/training';
+
+function SchemaPreview({
+    schema,
+    isActive,
+    children,
+}: ComponentProps<typeof Collapsible> & {
+    schema: Schema;
+    isActive: boolean;
+}) {
+    const [open, setOpen] = useState(isActive);
+    const collapsibleRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <Collapsible
+            ref={collapsibleRef}
+            open={open}
+            onOpenChange={setOpen}
+            className={cn(
+                'rounded-lg transition-all',
+                isActive && 'border-2 border-primary shadow-lg'
+            )}
+        >
+            <CollapsibleTrigger asChild>
+                <Button
+                    variant="ghost"
+                    className="h-auto w-full justify-start p-4 text-lg font-semibold"
+                >
+                    Week {schema.week} — Day {schema.day}
+                </Button>
+            </CollapsibleTrigger>
+
+            <CollapsibleContent className="space-y-4 p-4 pt-0">
+                {children}
+                <WorkoutSchema schema={schema} />
+            </CollapsibleContent>
+        </Collapsible>
+    );
+}
 
 export default function Program({
     program,
     maxes,
+    exercises,
     schemas,
     nextDay,
     nextWeek,
     programComplete,
 }: {
     program: Program;
+    exercises: Exercise[];
     maxes: Maxes;
     schemas: Schema[];
     nextDay: number;
     nextWeek: number;
     programComplete: boolean;
 }) {
-    const [showRestartDialog, setShowRestartDialog] = useState(
-        () => programComplete,
-    );
-
-    const handleConfirmRestart = () => {
-        setShowRestartDialog(false);
-    };
-
-    const handleCancelRestart = () => {
-        router.visit(training.index.url());
-    };
-
     const searchParams = new URLSearchParams(window.location.search);
     searchParams.set('day', String(nextDay));
     searchParams.set('week', String(nextWeek));
@@ -87,24 +120,16 @@ export default function Program({
                             {program.name}
                         </h1>
                         <p className="text-muted-foreground">
-                            {program.type} • {schemas.length} Workouts
+                            {program.style} • {schemas.length} Workouts
                         </p>
                     </div>
                 </div>
 
-                <MaxesComponent maxes={maxes} updateMaxes={updateMaxes} />
-
-                <div className="flex justify-end">
-                    <Button asChild size="lg" className="w-full md:w-auto">
-                        <Link
-                            href={training.session.url(program.slug, {
-                                query: data,
-                            })}
-                        >
-                            <Play className="mr-2 h-4 w-4" /> Start Training
-                        </Link>
-                    </Button>
-                </div>
+                <MaxesComponent
+                    exercises={exercises}
+                    maxes={maxes}
+                    updateMaxes={updateMaxes}
+                />
 
                 <div className="grid gap-6">
                     <Card>
@@ -113,41 +138,46 @@ export default function Program({
                             <CardDescription>{program.name}</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            {schemas.length > 0 && (
-                                <WorkoutSchema schema={schemas[0]} />
-                            )}
+                            <div className="space-y-4">
+                                {schemas.map((schema) => (
+                                    <SchemaPreview
+                                        key={`week-${schema.week}-day-${schema.day}`}
+                                        schema={schema}
+                                        isActive={
+                                            schema.week === nextWeek &&
+                                            schema.day === nextDay
+                                        }
+                                    >
+                                        <Button
+                                            asChild
+                                            size="lg"
+                                            className="w-full md:w-auto"
+                                        >
+                                            <Link
+                                                href={training.session.url(
+                                                    program.key,
+                                                    {
+                                                        query: {
+                                                            ...data,
+                                                            day: schema.day,
+                                                            week: schema.week,
+                                                        },
+                                                    },
+                                                )}
+                                            >
+                                                <Play className="mr-2 h-4 w-4" />{' '}
+                                                Start Training
+                                            </Link>
+                                        </Button>
+                                    </SchemaPreview>
+                                ))}
+                            </div>
                         </CardContent>
                     </Card>
                 </div>
             </div>
 
-            <Dialog
-                open={showRestartDialog}
-                onOpenChange={(open) => {
-                    if (!open) handleCancelRestart();
-                }}
-            >
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Program Completed</DialogTitle>
-                        <DialogDescription>
-                            You have already completed this program. Do you want
-                            to restart it?
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <Button
-                            variant="secondary"
-                            onClick={handleCancelRestart}
-                        >
-                            No, go back
-                        </Button>
-                        <Button onClick={handleConfirmRestart}>
-                            Yes, restart
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+            <RestartProgramDialog programCompleted={programComplete} />
         </AppLayout>
     );
 }

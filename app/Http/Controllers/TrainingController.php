@@ -3,14 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Training\CreateNewWorkout;
+use App\Actions\Training\UpdateMaxes;
+use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\TrainingProgramRequest;
-use App\Rules\ValidRegistryKey;
-use App\Training\Program;
-use App\Training\ProgramProgress;
-use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
-use App\Training\TemporaryWorkout;
-use Illuminate\Http\Request;
 
 use function inertia;
 use function redirect;
@@ -27,87 +23,69 @@ class TrainingController extends Controller
     }
 
     public function show(
-        TrainingProgramRequest $request,
-        string $program
+        TrainingProgramRequest $request
     ) {
-        $maxes = $request->validated();
-        $program = $this->program($program);
-
-        $progress = new ProgramProgress($program, $request->user());
+        [$exercises, $maxes] = $request->exercisesAndMaxes();
+        $program = $request->program();
+        $progress = $request->progress();
 
         return inertia('training/program', [
             'program' => $program,
             'schemas' => $program->schemas($maxes),
             'maxes' => $maxes,
+            'exercises' => $exercises,
             'nextDay' => $progress->nextDay,
             'nextWeek' => $progress->nextWeek,
-            'programComplete' => $progress->programComplete,
+            'programComplete' => $request->query->get('restart') === '1' ? false : $progress->programComplete,
         ]);
     }
 
-    public function session(TrainingProgramRequest $request, string $program)
+    public function session(TrainingProgramRequest $request, UpdateMaxes $updateMaxes)
     {
-        $maxes = $request->validated();
-        $program = $this->program($program);
+        [$exercises, $maxes] = $request->exercisesAndMaxes();
 
-        $progress = new ProgramProgress($program, $request->user());
-
+        $program = $request->program();
         $schemas = $program->schemas($maxes);
 
+        $progress = $request->progress();
+        $week = $request->query('week', $progress->nextWeek);
+        $day = $request->query('day', $progress->nextDay);
         $found = null;
-
         foreach ($schemas as $schema) {
-            if ($schema->day === $progress->nextDay && $schema->week === $progress->nextWeek) {
+            if ($schema->day === $day && $schema->week === $week) {
                 $found = $schema;
                 break;
             }
         }
 
         if ($found === null) {
-            return abort(404, 'Invalid day or week.');
+            abort(404, 'Invalid day or week.');
         }
+
+        $updateMaxes->update($request->user(), $maxes);
 
         return inertia('training/session', [
             'program' => $program,
             'schema' => $found,
             'maxes' => $maxes,
+            'exercises' => $exercises,
         ]);
     }
 
-    public function store(Request $request)
+    public function store(StoreWorkoutRequest $request, CreateNewWorkout $createWorkout)
     {
-        $validated = $request->validate([
-            'program_name' => ['required', 'string', new ValidRegistryKey(ProgramRegistry::class)],
-            'week' => 'required|integer',
-            'day' => 'required|integer',
-            'duration_seconds' => 'required|integer',
-            'sets' => 'required|array',
-            'sets.*.exercise' => ['required', 'string', new ValidRegistryKey(ExerciseRegistry::class)],
-            'sets.*.weight' => 'required|numeric',
-            'sets.*.reps' => 'required|integer',
-        ]);
+        $pending = $request->toPendingWorkout();
 
         if ($request->user() === null) {
-            TemporaryWorkout::save($validated);
+            $pending->storeInSession();
 
             inertia()->flash('success', 'Workout saved. Please login to complete.');
 
             return redirect()->route('login');
         }
 
-        app(CreateNewWorkout::class)->create($validated, $request->user());
+        $createWorkout->create($pending, $request->user());
 
         return to_route('dashboard');
-    }
-
-    public function program(string $program): Program
-    {
-        $registry = app(ProgramRegistry::class);
-
-        if (! $registry->has($program)) {
-            abort(404, 'Program not found');
-        }
-
-        return $registry->get($program);
     }
 }

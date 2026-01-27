@@ -10,7 +10,7 @@ class Workout extends Model
 {
     protected $fillable = [
         'user_id',
-        'program_name',
+        'program',
         'week',
         'day',
         'duration_seconds',

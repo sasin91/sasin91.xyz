@@ -14,7 +14,7 @@ class Block implements Arrayable
     public function toArray(): array
     {
         return [
-            'exercise' => $this->exercise->slug(),
+            'exercise' => $this->exercise->key(),
             'exerciseLabel' => $this->exercise->label(),
             'lifts' => array_map(fn ($lift) => $lift->toArray(), $this->lifts),
             'cues' => $this->exercise->cues(),

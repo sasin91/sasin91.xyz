@@ -32,20 +32,9 @@ interface WorkoutSchemaProps {
 export function WorkoutSchema({ schema }: WorkoutSchemaProps) {
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <h3 className="text-xl font-semibold">
-                    Week {schema.week} — Day {schema.day}
-                </h3>
-            </div>
-
-            <div className="space-y-4">
-                {schema.blocks.map((block, index) => (
-                    <WorkoutBlock
-                        key={index}
-                        block={block}
-                    />
-                ))}
-            </div>
+            {schema.blocks.map((block, index) => (
+                <WorkoutBlock key={index} block={block} />
+            ))}
         </div>
     );
 }

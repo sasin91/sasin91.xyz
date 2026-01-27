@@ -6,7 +6,9 @@ use App\Training\Exercise;
 
 class HangingLegRaise implements Exercise
 {
-    public function slug(): string
+    use SerializesExercise;
+
+    public function key(): string
     {
         return 'hanging-leg-raise';
     }
@@ -23,5 +25,10 @@ class HangingLegRaise implements Exercise
             'squeeze',
             'pull knees up to sternum',
         ];
+    }
+
+    public function isPrimary(): bool
+    {
+        return false;
     }
 }
