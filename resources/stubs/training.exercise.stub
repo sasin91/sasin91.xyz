@@ -3,7 +3,6 @@
 namespace {{ namespace }};
 
 use App\Training\Exercise;
-use App\Training\SerializesExercise;
 
 class {{ class }} implements Exercise
 {

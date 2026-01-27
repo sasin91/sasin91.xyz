@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Training;
+namespace App\Training\Exercises;
 
 trait SerializesExercise
 {

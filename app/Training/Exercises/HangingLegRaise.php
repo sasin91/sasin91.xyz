@@ -3,7 +3,6 @@
 namespace App\Training\Exercises;
 
 use App\Training\Exercise;
-use App\Training\SerializesExercise;
 
 class HangingLegRaise implements Exercise
 {
