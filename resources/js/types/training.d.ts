@@ -1,7 +1,7 @@
 export interface Program {
     key: string;
     name: string;
-    type: string;
+    style: string;
     days: number;
     weeks: number;
 }

@@ -4,16 +4,9 @@ import { ChevronRight, Dumbbell } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Underline } from '@/components/ui/underline';
 import AppLayout from '@/layouts/app-layout';
+import { Program } from '@/types/training';
 
-interface ProgramSummary {
-    slug: string;
-    name: string;
-    type: string;
-    days: number;
-    weeks: number;
-}
-
-export default function Index({ programs }: { programs: ProgramSummary[] }) {
+export default function Index({ programs }: { programs: Program[] }) {
     const searchParams = new URLSearchParams(window.location.search);
 
     return (
@@ -51,7 +44,7 @@ export default function Index({ programs }: { programs: ProgramSummary[] }) {
                                             </Underline>
                                         </p>
                                         <p className="mt-1 truncate text-xs text-muted-foreground">
-                                            {program.type}
+                                            {program.style}
                                         </p>
                                     </div>
                                 </div>
