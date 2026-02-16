@@ -19,12 +19,14 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Dashboard({
+    workoutsCount,
     workouts,
     startTrainingUrl,
     maxes,
     exercises,
     programComplete
 }: {
+    workoutsCount: number;
     workouts: App.Models.Workout[];
     startTrainingUrl: string;
     maxes: Maxes;
@@ -72,7 +74,7 @@ export default function Dashboard({
                             Recent Activity
                         </h3>
                         <div className="text-2xl font-bold">
-                            {workouts.length} Workouts
+                            {workoutsCount} Workouts
                         </div>
                     </div>
                 </div>

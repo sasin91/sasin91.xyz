@@ -42,6 +42,7 @@ class DashboardController extends Controller
         ]);
 
         return inertia('dashboard', [
+            'workoutsCount' => $user->workouts()->count(),
             'workouts' => $latestWorkouts,
             'startTrainingUrl' => $startTrainingUrl,
             'maxes' => $maxes,
