@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use App\Models\Workout;
 use Inertia\Testing\AssertableInertia as Assert;
 
 use function Pest\Laravel\actingAs;

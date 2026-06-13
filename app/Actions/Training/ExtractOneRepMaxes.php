@@ -2,7 +2,6 @@
 
 namespace App\Actions\Training;
 
-use App\Models\User;
 use App\Training\Exercises\Bench;
 use App\Training\Exercises\Deadlift;
 use App\Training\Exercises\Squat;

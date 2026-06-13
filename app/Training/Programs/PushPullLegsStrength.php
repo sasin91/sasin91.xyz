@@ -10,6 +10,7 @@ use App\Training\Exercises\MilitaryPress;
 use App\Training\Exercises\PullUp;
 use App\Training\Exercises\Squat;
 use App\Training\Lift;
+use App\Training\OneRepMax;
 use App\Training\Program;
 use App\Training\ProgramStyle;
 use App\Training\Schema;
@@ -62,7 +63,7 @@ class PushPullLegsStrength implements Program
     }
 
     /**
-     * @param  array<string, int|float|\App\Training\OneRepMax>  $maxes
+     * @param  array<string, int|float|OneRepMax>  $maxes
      * @return Schema[]
      */
     public function schemas(array $maxes): array

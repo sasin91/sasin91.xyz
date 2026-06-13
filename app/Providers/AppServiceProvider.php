@@ -4,9 +4,9 @@ namespace App\Providers;
 
 use App\Actions\Training\CreateNewWorkout;
 use App\Registry\ClassRegistry;
+use App\Training\PendingWorkout;
 use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
-use App\Training\PendingWorkout;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Filesystem\Filesystem;

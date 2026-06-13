@@ -32,7 +32,7 @@ trait SheikoLiftPatterns
      * Sheiko programs often use pyramid patterns where intensity
      * increases then decreases with corresponding rep changes.
      *
-     * @param  array<array{0: float, 1: int, 2: int}>  $up    Steps going up
+     * @param  array<array{0: float, 1: int, 2: int}>  $up  Steps going up
      * @param  array{0: float, 1: int, 2: int}  $peak  The peak lift [percentage, sets, reps]
      * @param  array<array{0: float, 1: int, 2: int}>  $down  Steps going down
      * @return Lift[]
