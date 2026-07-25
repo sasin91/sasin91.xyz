@@ -63,28 +63,43 @@ test('it covers every day of every week', function () {
 });
 
 test('every day opens with the smolov jr squat work', function () {
-    // 6×6 @ 70%, 7×5 @ 75%, 8×4 @ 80%, 10×3 @ 85%, plus 2.5% per week.
-    $expected = [
-        '1-1' => [70.0, 6, 6], '1-2' => [75.0, 7, 5], '1-3' => [80.0, 8, 4], '1-4' => [85.0, 10, 3],
-        '2-1' => [72.5, 6, 6], '2-2' => [77.5, 7, 5], '2-3' => [82.5, 8, 4], '2-4' => [87.5, 10, 3],
-        '3-1' => [75.0, 6, 6], '3-2' => [80.0, 7, 5], '3-3' => [85.0, 8, 4], '3-4' => [90.0, 10, 3],
+    // Smolov Jr: 6×6 @ 70%, 7×5 @ 75%, 8×4 @ 80%, 10×3 @ 85%.
+    $work = [
+        1 => [70.0, 6, 6],
+        2 => [75.0, 7, 5],
+        3 => [80.0, 8, 4],
+        4 => [85.0, 10, 3],
     ];
+
+    // Weeks 2 and 3 add a fixed weight rather than a percentage.
+    $added = [1 => 0.0, 2 => 2.5, 3 => 5.0];
 
     $max = hybridSquatMax();
 
     foreach (hybridSchemas() as $key => $schema) {
-        [$percentage, $sets, $reps] = $expected[$key];
-        $work = $schema->blocks[0];
+        [$percentage, $sets, $reps] = $work[$schema->day];
+        $block = $schema->blocks[0];
 
-        expect($work->exercise)->toBeInstanceOf(Squat::class)
-            ->and($work->lifts)->toHaveCount(3);
+        expect($block->exercise)->toBeInstanceOf(Squat::class)
+            ->and($block->lifts)->toHaveCount(3);
 
-        // Two ramp sets 20% and 10% under the work weight, then the work sets.
-        expect($work->lifts[0]->weight)->toBe($max->percentage($percentage - 20))
-            ->and($work->lifts[1]->weight)->toBe($max->percentage($percentage - 10))
-            ->and($work->lifts[2]->weight)->toBe($max->percentage($percentage))
-            ->and($work->lifts[2]->sets)->toBe($sets)
-            ->and($work->lifts[2]->reps)->toBe($reps);
+        // Two ramp sets 20% and 10% under the week 1 work weight, unchanged all cycle.
+        expect($block->lifts[0]->weight)->toBe($max->percentage($percentage - 20), $key)
+            ->and($block->lifts[1]->weight)->toBe($max->percentage($percentage - 10), $key)
+            ->and($block->lifts[2]->weight)->toBe($max->percentage($percentage) + $added[$schema->week], $key)
+            ->and($block->lifts[2]->sets)->toBe($sets)
+            ->and($block->lifts[2]->reps)->toBe($reps);
+    }
+});
+
+test('the squat climbs by a fixed weight each week', function () {
+    $schemas = hybridSchemas();
+
+    $working = fn (string $key) => $schemas[$key]->blocks[0]->lifts[2]->weight;
+
+    foreach ([1, 2, 3, 4] as $day) {
+        expect($working("2-{$day}") - $working("1-{$day}"))->toBe(2.5)
+            ->and($working("3-{$day}") - $working("1-{$day}"))->toBe(5.0);
     }
 });
 

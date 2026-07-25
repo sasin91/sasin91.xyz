@@ -31,8 +31,15 @@ use App\Training\Schema;
  * Day 3 — Squat 8×4  + sumo deadlift, rows, pull-ups
  * Day 4 — Squat 10×3 + bench, incline, arms
  *
- * The squat carries the cycle: 70% / 75% / 80% / 85% across the four days, +2.5% in
- * week 2 and +5% in week 3, ramped into with two light sets.
+ * The squat carries the cycle, running the Smolov Jr base mesocycle as prescribed:
+ *
+ *   Day 1 — 6×6 @ 70%    Day 2 — 7×5 @ 75%
+ *   Day 3 — 8×4 @ 80%    Day 4 — 10×3 @ 85%
+ *
+ * Weeks 2 and 3 keep those sets, reps and warmups and add a fixed amount to the working
+ * weight — 5 lb then 10 lb over week 1, taken here as 2.5kg and 5kg. Smolov Jr treats the
+ * jump as subjective: if a week left you failing sets or wrecked, repeat its weight rather
+ * than adding to it.
  *
  * Everything else is there to be trainable alongside that. The ramp-into-work-sets
  * shape and the accessory percentages follow Sheiko 29; the bench and press
@@ -50,6 +57,16 @@ class SmolovJrHybrid implements Program
     use ExtractsPowerliftingMaxes;
     use HasRampingLifts;
     use SerializesProgram;
+
+    /**
+     * Added to the squat working weight in week 2 — Smolov Jr's 5 lb, in kg.
+     */
+    private const WEEK_2_ADDED = 2.5;
+
+    /**
+     * Added to the squat working weight in week 3 — Smolov Jr's 10 lb, in kg.
+     */
+    private const WEEK_3_ADDED = 5.0;
 
     public function name(): string
     {
@@ -243,7 +260,7 @@ class SmolovJrHybrid implements Program
 
             // ─── Week 2 ──────────────────────────────────────────────────────
 
-            // Week 2, Day 1 — Squat 6×6 @ 72.5%
+            // Week 2, Day 1 — Squat 6×6 @ 70% + 2.5kg
             new Schema(
                 day: 1,
                 week: 2,
@@ -251,11 +268,13 @@ class SmolovJrHybrid implements Program
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: $this->ramp($squat, [
-                            [52.5, 1, 5],
-                            [62.5, 1, 3],
-                            [72.5, 6, 6],
-                        ])
+                        lifts: [
+                            ...$this->ramp($squat, [
+                                [50, 1, 5],
+                                [60, 1, 3],
+                            ]),
+                            new Lift(6, 6, $squat->percentage(70) + self::WEEK_2_ADDED),
+                        ]
                     ),
                     new Block(
                         exercise: new Deadlift,
@@ -285,7 +304,7 @@ class SmolovJrHybrid implements Program
                 ]
             ),
 
-            // Week 2, Day 2 — Squat 7×5 @ 77.5%
+            // Week 2, Day 2 — Squat 7×5 @ 75% + 2.5kg
             new Schema(
                 day: 2,
                 week: 2,
@@ -293,11 +312,13 @@ class SmolovJrHybrid implements Program
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: $this->ramp($squat, [
-                            [57.5, 1, 5],
-                            [67.5, 1, 3],
-                            [77.5, 7, 5],
-                        ])
+                        lifts: [
+                            ...$this->ramp($squat, [
+                                [55, 1, 5],
+                                [65, 1, 3],
+                            ]),
+                            new Lift(7, 5, $squat->percentage(75) + self::WEEK_2_ADDED),
+                        ]
                     ),
                     new Block(
                         exercise: new Bench,
@@ -322,7 +343,7 @@ class SmolovJrHybrid implements Program
                 ]
             ),
 
-            // Week 2, Day 3 — Squat 8×4 @ 82.5%
+            // Week 2, Day 3 — Squat 8×4 @ 80% + 2.5kg
             new Schema(
                 day: 3,
                 week: 2,
@@ -330,11 +351,13 @@ class SmolovJrHybrid implements Program
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: $this->ramp($squat, [
-                            [62.5, 1, 5],
-                            [72.5, 1, 3],
-                            [82.5, 8, 4],
-                        ])
+                        lifts: [
+                            ...$this->ramp($squat, [
+                                [60, 1, 5],
+                                [70, 1, 3],
+                            ]),
+                            new Lift(8, 4, $squat->percentage(80) + self::WEEK_2_ADDED),
+                        ]
                     ),
                     new Block(
                         exercise: new SumoDeadlift,
@@ -359,7 +382,7 @@ class SmolovJrHybrid implements Program
                 ]
             ),
 
-            // Week 2, Day 4 — Squat 10×3 @ 87.5%
+            // Week 2, Day 4 — Squat 10×3 @ 85% + 2.5kg
             new Schema(
                 day: 4,
                 week: 2,
@@ -367,11 +390,13 @@ class SmolovJrHybrid implements Program
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: $this->ramp($squat, [
-                            [67.5, 1, 5],
-                            [77.5, 1, 3],
-                            [87.5, 10, 3],
-                        ])
+                        lifts: [
+                            ...$this->ramp($squat, [
+                                [65, 1, 5],
+                                [75, 1, 3],
+                            ]),
+                            new Lift(10, 3, $squat->percentage(85) + self::WEEK_2_ADDED),
+                        ]
                     ),
                     new Block(
                         exercise: new Bench,
@@ -399,7 +424,7 @@ class SmolovJrHybrid implements Program
 
             // ─── Week 3 ──────────────────────────────────────────────────────
 
-            // Week 3, Day 1 — Squat 6×6 @ 75%, pulls back off
+            // Week 3, Day 1 — Squat 6×6 @ 70% + 5kg, pulls back off
             new Schema(
                 day: 1,
                 week: 3,
@@ -407,11 +432,13 @@ class SmolovJrHybrid implements Program
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: $this->ramp($squat, [
-                            [55, 1, 5],
-                            [65, 1, 3],
-                            [75, 6, 6],
-                        ])
+                        lifts: [
+                            ...$this->ramp($squat, [
+                                [50, 1, 5],
+                                [60, 1, 3],
+                            ]),
+                            new Lift(6, 6, $squat->percentage(70) + self::WEEK_3_ADDED),
+                        ]
                     ),
                     new Block(
                         exercise: new Deadlift,
@@ -440,7 +467,7 @@ class SmolovJrHybrid implements Program
                 ]
             ),
 
-            // Week 3, Day 2 — Squat 7×5 @ 80%
+            // Week 3, Day 2 — Squat 7×5 @ 75% + 5kg
             new Schema(
                 day: 2,
                 week: 3,
@@ -448,11 +475,13 @@ class SmolovJrHybrid implements Program
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: $this->ramp($squat, [
-                            [60, 1, 5],
-                            [70, 1, 3],
-                            [80, 7, 5],
-                        ])
+                        lifts: [
+                            ...$this->ramp($squat, [
+                                [55, 1, 5],
+                                [65, 1, 3],
+                            ]),
+                            new Lift(7, 5, $squat->percentage(75) + self::WEEK_3_ADDED),
+                        ]
                     ),
                     new Block(
                         exercise: new Bench,
@@ -477,7 +506,7 @@ class SmolovJrHybrid implements Program
                 ]
             ),
 
-            // Week 3, Day 3 — Squat 8×4 @ 85%, pulls back off
+            // Week 3, Day 3 — Squat 8×4 @ 80% + 5kg, pulls back off
             new Schema(
                 day: 3,
                 week: 3,
@@ -485,11 +514,13 @@ class SmolovJrHybrid implements Program
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: $this->ramp($squat, [
-                            [65, 1, 5],
-                            [75, 1, 3],
-                            [85, 8, 4],
-                        ])
+                        lifts: [
+                            ...$this->ramp($squat, [
+                                [60, 1, 5],
+                                [70, 1, 3],
+                            ]),
+                            new Lift(8, 4, $squat->percentage(80) + self::WEEK_3_ADDED),
+                        ]
                     ),
                     new Block(
                         exercise: new SumoDeadlift,
@@ -514,7 +545,7 @@ class SmolovJrHybrid implements Program
                 ]
             ),
 
-            // Week 3, Day 4 — Squat 10×3 @ 90%
+            // Week 3, Day 4 — Squat 10×3 @ 85% + 5kg
             new Schema(
                 day: 4,
                 week: 3,
@@ -522,11 +553,13 @@ class SmolovJrHybrid implements Program
                 blocks: [
                     new Block(
                         exercise: new Squat,
-                        lifts: $this->ramp($squat, [
-                            [70, 1, 5],
-                            [80, 1, 3],
-                            [90, 10, 3],
-                        ])
+                        lifts: [
+                            ...$this->ramp($squat, [
+                                [65, 1, 5],
+                                [75, 1, 3],
+                            ]),
+                            new Lift(10, 3, $squat->percentage(85) + self::WEEK_3_ADDED),
+                        ]
                     ),
                     new Block(
                         exercise: new Bench,

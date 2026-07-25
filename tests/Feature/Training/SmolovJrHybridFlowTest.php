@@ -37,10 +37,10 @@ test('it can view a smolov jr hybrid session', function () {
                 ->component('training/session')
                 ->where('schema.week', 3)
                 ->where('schema.day', 4)
-                // 10×3 @ 90% of a 160kg squat, after two ramp sets.
+                // 10×3 @ 85% of a 160kg squat plus week 3's 5kg, after two ramp sets.
                 ->where('schema.blocks.0.exercise', 'squat')
                 ->where('schema.blocks.0.lifts.2.sets', 10)
                 ->where('schema.blocks.0.lifts.2.reps', 3)
-                ->where('schema.blocks.0.lifts.2.weight', fn ($weight) => (float) $weight === 144.0)
+                ->where('schema.blocks.0.lifts.2.weight', fn ($weight) => (float) $weight === 141.0)
         );
 });
