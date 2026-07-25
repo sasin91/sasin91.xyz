@@ -2,8 +2,6 @@
 
 use App\Training\Exercises\Squat;
 use App\Training\OneRepMax;
-use App\Training\Programs\PushPullLegsStrength;
-use App\Training\Programs\Sheiko29;
 use App\Training\Programs\SmolovJrHybrid;
 use App\Training\Schema;
 
@@ -12,12 +10,17 @@ function hybridSquatMax(): OneRepMax
     return new OneRepMax(160);
 }
 
+function hybridDeadliftMax(): OneRepMax
+{
+    return new OneRepMax(220);
+}
+
 function hybridMaxes(): array
 {
     return [
         'squat' => hybridSquatMax(),
         'bench' => new OneRepMax(140),
-        'deadlift' => new OneRepMax(220),
+        'deadlift' => hybridDeadliftMax(),
     ];
 }
 
@@ -33,6 +36,17 @@ function hybridSchemas(): array
     }
 
     return $schemas;
+}
+
+/**
+ * @return string[]
+ */
+function hybridExercises(string $weekAndDay): array
+{
+    return array_map(
+        fn ($block) => $block->exercise->key(),
+        hybridSchemas()[$weekAndDay]->blocks
+    );
 }
 
 test('it covers every day of every week', function () {
@@ -74,72 +88,23 @@ test('every day opens with the smolov jr squat work', function () {
     }
 });
 
-test('accessories never add squat volume on top of smolov', function () {
-    foreach (hybridSchemas() as $schema) {
-        $accessories = array_slice($schema->blocks, 1);
-
-        expect($accessories)->not->toBeEmpty();
-
-        foreach ($accessories as $block) {
-            expect($block->exercise->key())->not->toContain('squat');
-        }
+test('the days keep their shape across the cycle', function () {
+    foreach (['1', '2', '3'] as $week) {
+        expect(hybridExercises("{$week}-1"))->toBe([
+            'squat', 'deadlift', 'incline-dumbbell-press',
+            'dumbbell-tricep-extension', 'romanian-deadlift', 'hanging-leg-raise',
+        ])
+            ->and(hybridExercises("{$week}-2"))->toBe([
+                'squat', 'bench', 'military-press', 'lateral-raise', 'barbell-curl',
+            ])
+            ->and(hybridExercises("{$week}-3"))->toBe([
+                'squat', 'sumo-deadlift', 'barbell-row', 'pull-up', 'hanging-leg-raise',
+            ])
+            ->and(hybridExercises("{$week}-4"))->toBe([
+                'squat', 'bench', 'incline-dumbbell-press',
+                'dumbbell-tricep-extension', 'hammer-curl',
+            ]);
     }
-});
-
-test('it derives the non-squat blocks from sheiko 29 and ppl strength', function () {
-    $schemas = hybridSchemas();
-
-    $accessoryKeys = fn (string $key) => array_map(
-        fn ($block) => $block->exercise->key(),
-        array_slice($schemas[$key]->blocks, 1)
-    );
-
-    // Day 1 ← Sheiko 29 day 2, day 4 ← Sheiko 29 day 1 (squat patterns dropped, the first
-    // pull taking the session's stance and Sheiko's second pull becoming a hinge).
-    expect($accessoryKeys('1-1'))->toBe([
-        'deadlift', 'incline-dumbbell-press', 'dumbbell-tricep-extension',
-        'romanian-deadlift', 'hanging-leg-raise',
-    ])
-        ->and($accessoryKeys('2-4'))->toBe([
-            'bench', 'incline-dumbbell-press', 'dumbbell-tricep-extension', 'romanian-deadlift',
-        ]);
-
-    // Day 2 ← PPL Strength day 1, day 3 ← PPL Strength day 2.
-    expect($accessoryKeys('1-2'))->toBe(['bench', 'military-press'])
-        ->and($accessoryKeys('1-3'))->toBe(['sumo-deadlift', 'barbell-row', 'pull-up']);
-});
-
-test('it keeps the source intensity but trims the sets', function () {
-    $maxes = hybridMaxes();
-    $schemas = hybridSchemas();
-
-    $sheikoWeek1Day2 = collect((new Sheiko29)->schemas($maxes))
-        ->first(fn ($schema) => $schema->week === 1 && $schema->day === 2);
-
-    // Sheiko's opening pull, kept at weight, cut to 75% of its sets.
-    $source = $sheikoWeek1Day2->blocks[0];
-    $derived = $schemas['1-1']->blocks[1];
-
-    expect($source->exercise->key())->toBe('deadlift-to-knees')
-        ->and($derived->exercise->key())->toBe('deadlift')
-        ->and($derived->lifts)->toHaveCount(count($source->lifts));
-
-    foreach ($source->lifts as $index => $lift) {
-        expect($derived->lifts[$index]->weight)->toBe($lift->weight)
-            ->and($derived->lifts[$index]->reps)->toBe($lift->reps)
-            ->and($derived->lifts[$index]->sets)->toBe(max(1, (int) round($lift->sets * 0.75)));
-    }
-
-    // The heaviest squat days borrow the least: day 3 keeps 60% of PPL's row sets.
-    $pplWeek1Day2 = collect((new PushPullLegsStrength)->schemas($maxes))
-        ->first(fn ($schema) => $schema->week === 1 && $schema->day === 2);
-
-    $sourceRow = collect($pplWeek1Day2->blocks)->first(fn ($block) => $block->exercise->key() === 'barbell-row');
-    $derivedRow = $schemas['1-3']->blocks[2];
-
-    expect($derivedRow->exercise->key())->toBe('barbell-row')
-        ->and($derivedRow->lifts[0]->weight)->toBe($sourceRow->lifts[0]->weight)
-        ->and($derivedRow->lifts[0]->sets)->toBe(max(1, (int) round($sourceRow->lifts[0]->sets * 0.6)));
 });
 
 test('it only pulls conventional, sumo and romanian deadlifts', function () {
@@ -170,26 +135,18 @@ test('no session pulls off the floor more than once', function () {
     }
 });
 
-test('the pulling stance alternates between sessions', function () {
-    $stances = [];
-
-    foreach (hybridSchemas() as $key => $schema) {
-        foreach ($schema->blocks as $block) {
-            if (in_array($block->exercise->key(), ['deadlift', 'sumo-deadlift'], true)) {
-                $stances[$key] = $block->exercise->key();
+test('the heaviest squat days do not pull at all', function () {
+    foreach (['1', '2', '3'] as $week) {
+        foreach (["{$week}-2", "{$week}-4"] as $key) {
+            foreach (hybridExercises($key) as $exercise) {
+                expect($exercise)->not->toContain('deadlift');
             }
         }
     }
-
-    expect($stances)->toBe([
-        '1-1' => 'deadlift', '1-3' => 'sumo-deadlift',
-        '2-1' => 'deadlift', '2-3' => 'sumo-deadlift',
-        '3-1' => 'deadlift', '3-3' => 'sumo-deadlift',
-    ]);
 });
 
 test('the pull is held under 75 percent of the deadlift max', function () {
-    $ceiling = hybridMaxes()['deadlift']->percentage(75);
+    $ceiling = hybridDeadliftMax()->percentage(75);
 
     foreach (hybridSchemas() as $key => $schema) {
         foreach ($schema->blocks as $block) {
@@ -204,33 +161,28 @@ test('the pull is held under 75 percent of the deadlift max', function () {
     }
 });
 
-test('a second pull becomes a romanian deadlift at accessory loading', function () {
-    // Sheiko's week 1 day 2 pulls twice; the hybrid takes the first and hinges the second.
-    $sheikoWeek1Day2 = collect((new Sheiko29)->schemas(hybridMaxes()))
-        ->first(fn ($schema) => $schema->week === 1 && $schema->day === 2);
+test('pulling backs off in the peak week', function () {
+    $topWeight = function (string $weekAndDay, string $exercise) {
+        $block = collect(hybridSchemas()[$weekAndDay]->blocks)
+            ->first(fn ($block) => $block->exercise->key() === $exercise);
 
-    $sourcePulls = array_filter(
-        $sheikoWeek1Day2->blocks,
-        fn ($block) => str_contains($block->exercise->key(), 'deadlift')
-    );
+        return collect($block->lifts)->max(fn ($lift) => $lift->weight);
+    };
 
-    expect(count($sourcePulls))->toBe(2);
-
-    $hinge = collect(hybridSchemas()['1-1']->blocks)
-        ->first(fn ($block) => $block->exercise->key() === 'romanian-deadlift');
-
-    expect($hinge)->not->toBeNull()
-        ->and($hinge->lifts)->toHaveCount(1)
-        ->and($hinge->lifts[0]->sets)->toBe(3)
-        ->and($hinge->lifts[0]->reps)->toBe(6)
-        ->and($hinge->lifts[0]->weight)->toBe(hybridMaxes()['deadlift']->percentage(57.5));
+    expect($topWeight('3-1', 'deadlift'))->toBeLessThan($topWeight('1-1', 'deadlift'))
+        ->and($topWeight('3-3', 'sumo-deadlift'))->toBeLessThan($topWeight('1-3', 'sumo-deadlift'));
 });
 
-test('trimming never drops a set below one', function () {
+test('bodyweight work carries no load', function () {
     foreach (hybridSchemas() as $schema) {
-        foreach (array_slice($schema->blocks, 1) as $block) {
+        foreach ($schema->blocks as $block) {
+            if (! in_array($block->exercise->key(), ['pull-up', 'hanging-leg-raise'], true)) {
+                continue;
+            }
+
             foreach ($block->lifts as $lift) {
-                expect($lift->sets)->toBeGreaterThanOrEqual(1);
+                expect($lift->weight)->toBe(0.0)
+                    ->and($lift->sets)->toBeGreaterThanOrEqual(3);
             }
         }
     }

@@ -3,8 +3,17 @@
 namespace App\Training\Programs;
 
 use App\Training\Block;
-use App\Training\Exercise;
+use App\Training\Exercises\BarbellCurl;
+use App\Training\Exercises\BarbellRow;
+use App\Training\Exercises\Bench;
 use App\Training\Exercises\Deadlift;
+use App\Training\Exercises\DumbbellTricepExtension;
+use App\Training\Exercises\HammerCurl;
+use App\Training\Exercises\HangingLegRaise;
+use App\Training\Exercises\InclineDumbbellPress;
+use App\Training\Exercises\LateralRaise;
+use App\Training\Exercises\MilitaryPress;
+use App\Training\Exercises\PullUp;
 use App\Training\Exercises\RomanianDeadlift;
 use App\Training\Exercises\Squat;
 use App\Training\Exercises\SumoDeadlift;
@@ -13,37 +22,27 @@ use App\Training\OneRepMax;
 use App\Training\Program;
 use App\Training\ProgramStyle;
 use App\Training\Schema;
-use RuntimeException;
-
-use function str_contains;
 
 /**
- * Smolov Jr Hybrid — a 3-week, 4-day base mesocycle where only the squat is programmed here.
+ * Smolov Jr Hybrid — 3 weeks, 4 days, built around the Smolov Jr squat progression.
  *
- * The squat follows the Smolov Jr base mesocycle, ramped into each day's work sets:
- *   Day 1 — 6×6 @ 70%   Day 2 — 7×5 @ 75%
- *   Day 3 — 8×4 @ 80%   Day 4 — 10×3 @ 85%
- * with +2.5% in week 2 and +5% in week 3.
+ * Day 1 — Squat 6×6  + conventional deadlift, hinge, upper accessories
+ * Day 2 — Squat 7×5  + bench, military press, arms
+ * Day 3 — Squat 8×4  + sumo deadlift, rows, pull-ups
+ * Day 4 — Squat 10×3 + bench, incline, arms
  *
- * Everything that is not a squat is derived from the programs already in the registry
- * rather than written out again — each day borrows the non-squat blocks of a matching
- * day from PPL Strength or Sheiko 29, using the same week:
- *   Day 1 — Sheiko 29 day 2          (deadlift variations, pressing accessories, core)
- *   Day 2 — PPL Strength day 1       (bench, military press)
- *   Day 3 — PPL Strength day 2       (deadlift, rows, pull-ups)
- *   Day 4 — Sheiko 29 day 1          (bench, incline, triceps, posterior chain)
+ * The squat carries the cycle: 70% / 75% / 80% / 85% across the four days, +2.5% in
+ * week 2 and +5% in week 3, ramped into with two light sets.
  *
- * Three rules are applied while borrowing:
- *   1. Squat-pattern blocks are dropped — the Smolov Jr work above is the entire leg stimulus.
- *   2. A session gets at most one pull off the floor, whatever the source prescribed. It takes
- *      over the first pull's loading, capped at 75% of the deadlift max, and its stance
- *      alternates between conventional and sumo from one pull session to the next. Any further
- *      pull in that session becomes a Romanian deadlift at accessory loading — the hinge without
- *      a second dose of spinal and nervous-system fatigue on top of the squat work. Romanian
- *      deadlifts the source already prescribed come across untouched.
- *   3. Working sets are trimmed by a per-day factor so accessory volume recedes as the squat
- *      day gets heavier. Intensity (weight) and reps are left untouched; only sets are cut,
- *      and never below one.
+ * Everything else is there to be trainable alongside that. The ramp-into-work-sets
+ * shape and the accessory percentages follow Sheiko 29; the bench and press
+ * progression follows PPL Strength.
+ *
+ * Pulling is deliberately thin: one trip to the floor per session, never above 75%,
+ * alternating conventional on day 1 with sumo on day 3, and both back off in week 3
+ * where the squat peaks. Days 2 and 4 do not pull at all, so the heaviest squat day
+ * of the week is the only thing loading the spine that day. The Romanian deadlift on
+ * day 1 covers the hinge without a second heavy pull.
  */
 class SmolovJrHybrid implements Program
 {
@@ -51,62 +50,6 @@ class SmolovJrHybrid implements Program
     use ExtractsPowerliftingMaxes;
     use HasRampingLifts;
     use SerializesProgram;
-
-    /**
-     * Smolov Jr base mesocycle work sets, keyed by day: [percentage, sets, reps].
-     */
-    private const SQUAT_WORK = [
-        1 => [70.0, 6, 6],
-        2 => [75.0, 7, 5],
-        3 => [80.0, 8, 4],
-        4 => [85.0, 10, 3],
-    ];
-
-    /**
-     * Percentage added to the squat work sets, keyed by week.
-     */
-    private const WEEKLY_INCREMENT = [
-        1 => 0.0,
-        2 => 2.5,
-        3 => 5.0,
-    ];
-
-    /**
-     * Where each day's non-squat work comes from: [program, day in that program].
-     */
-    private const ACCESSORY_SOURCES = [
-        1 => [Sheiko29::class, 2],
-        2 => [PushPullLegsStrength::class, 1],
-        3 => [PushPullLegsStrength::class, 2],
-        4 => [Sheiko29::class, 1],
-    ];
-
-    /**
-     * Fraction of the source program's accessory sets to keep, keyed by day.
-     */
-    private const ACCESSORY_VOLUME = [
-        1 => 0.75,
-        2 => 0.7,
-        3 => 0.6,
-        4 => 0.5,
-    ];
-
-    /**
-     * Ceiling for the one pull off the floor, as a percentage of the deadlift max.
-     */
-    private const PULL_CEILING = 75.0;
-
-    /**
-     * The Romanian deadlift that stands in for a session's second pull: [sets, reps, percentage].
-     */
-    private const SECOND_PULL = [3, 6, 57.5];
-
-    private const FOCUS = [
-        1 => 'Squat + Pull',
-        2 => 'Squat + Push',
-        3 => 'Squat + Pull',
-        4 => 'Squat + Push',
-    ];
 
     public function name(): string
     {
@@ -139,212 +82,475 @@ class SmolovJrHybrid implements Program
      */
     public function schemas(array $maxes): array
     {
-        ['squat' => $squat, 'deadlift' => $deadlift] = $this->extractMaxes($maxes);
+        ['squat' => $squat, 'bench' => $bench, 'deadlift' => $deadlift] = $this->extractMaxes($maxes);
 
-        $sources = [
-            Sheiko29::class => $this->byWeekAndDay((new Sheiko29)->schemas($maxes)),
-            PushPullLegsStrength::class => $this->byWeekAndDay((new PushPullLegsStrength)->schemas($maxes)),
+        return [
+            // ─── Week 1 ──────────────────────────────────────────────────────
+
+            // Week 1, Day 1 — Squat 6×6 @ 70%
+            new Schema(
+                day: 1,
+                week: 1,
+                focus: 'Squat + Pull',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [50, 1, 5],
+                            [60, 1, 3],
+                            [70, 6, 6],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Deadlift,
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 1, 3],
+                            [70, 1, 3],
+                            [75, 3, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new InclineDumbbellPress,
+                        lifts: [new Lift(4, 8, $bench->percentage(30))]
+                    ),
+                    new Block(
+                        exercise: new DumbbellTricepExtension,
+                        lifts: [new Lift(4, 8, $bench->percentage(25))]
+                    ),
+                    new Block(
+                        exercise: new RomanianDeadlift,
+                        lifts: [new Lift(3, 6, $deadlift->percentage(57.5))]
+                    ),
+                    new Block(
+                        exercise: new HangingLegRaise,
+                        lifts: [$this->bodyweight(3, 12)]
+                    ),
+                ]
+            ),
+
+            // Week 1, Day 2 — Squat 7×5 @ 75%
+            new Schema(
+                day: 2,
+                week: 1,
+                focus: 'Squat + Push',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [55, 1, 5],
+                            [65, 1, 3],
+                            [75, 7, 5],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Bench,
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [65, 1, 3],
+                            [75, 4, 5],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new MilitaryPress,
+                        lifts: [new Lift(3, 5, $bench->percentage(65))]
+                    ),
+                    new Block(
+                        exercise: new LateralRaise,
+                        lifts: [new Lift(3, 15, $bench->percentage(12))]
+                    ),
+                    new Block(
+                        exercise: new BarbellCurl,
+                        lifts: [new Lift(3, 10, $bench->percentage(25))]
+                    ),
+                ]
+            ),
+
+            // Week 1, Day 3 — Squat 8×4 @ 80%
+            new Schema(
+                day: 3,
+                week: 1,
+                focus: 'Squat + Pull',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [60, 1, 5],
+                            [70, 1, 3],
+                            [80, 8, 4],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new SumoDeadlift,
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 1, 2],
+                            [70, 3, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new BarbellRow,
+                        lifts: [new Lift(4, 6, $deadlift->percentage(55))]
+                    ),
+                    new Block(
+                        exercise: new PullUp,
+                        lifts: [$this->bodyweight(3, 8)]
+                    ),
+                    new Block(
+                        exercise: new HangingLegRaise,
+                        lifts: [$this->bodyweight(3, 12)]
+                    ),
+                ]
+            ),
+
+            // Week 1, Day 4 — Squat 10×3 @ 85%
+            new Schema(
+                day: 4,
+                week: 1,
+                focus: 'Squat + Push',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [65, 1, 5],
+                            [75, 1, 3],
+                            [85, 10, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Bench,
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [65, 1, 3],
+                            [75, 1, 2],
+                            [80, 3, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new InclineDumbbellPress,
+                        lifts: [new Lift(3, 10, $bench->percentage(25))]
+                    ),
+                    new Block(
+                        exercise: new DumbbellTricepExtension,
+                        lifts: [new Lift(3, 10, $bench->percentage(25))]
+                    ),
+                    new Block(
+                        exercise: new HammerCurl,
+                        lifts: [new Lift(3, 12, $bench->percentage(18))]
+                    ),
+                ]
+            ),
+
+            // ─── Week 2 ──────────────────────────────────────────────────────
+
+            // Week 2, Day 1 — Squat 6×6 @ 72.5%
+            new Schema(
+                day: 1,
+                week: 2,
+                focus: 'Squat + Pull',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [52.5, 1, 5],
+                            [62.5, 1, 3],
+                            [72.5, 6, 6],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Deadlift,
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 1, 3],
+                            [70, 1, 3],
+                            [75, 3, 2],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new InclineDumbbellPress,
+                        lifts: [new Lift(4, 8, $bench->percentage(32.5))]
+                    ),
+                    new Block(
+                        exercise: new DumbbellTricepExtension,
+                        lifts: [new Lift(4, 8, $bench->percentage(27.5))]
+                    ),
+                    new Block(
+                        exercise: new RomanianDeadlift,
+                        lifts: [new Lift(3, 6, $deadlift->percentage(57.5))]
+                    ),
+                    new Block(
+                        exercise: new HangingLegRaise,
+                        lifts: [$this->bodyweight(3, 15)]
+                    ),
+                ]
+            ),
+
+            // Week 2, Day 2 — Squat 7×5 @ 77.5%
+            new Schema(
+                day: 2,
+                week: 2,
+                focus: 'Squat + Push',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [57.5, 1, 5],
+                            [67.5, 1, 3],
+                            [77.5, 7, 5],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Bench,
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [65, 1, 3],
+                            [77.5, 4, 5],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new MilitaryPress,
+                        lifts: [new Lift(3, 5, $bench->percentage(67.5))]
+                    ),
+                    new Block(
+                        exercise: new LateralRaise,
+                        lifts: [new Lift(3, 15, $bench->percentage(13))]
+                    ),
+                    new Block(
+                        exercise: new BarbellCurl,
+                        lifts: [new Lift(3, 10, $bench->percentage(27.5))]
+                    ),
+                ]
+            ),
+
+            // Week 2, Day 3 — Squat 8×4 @ 82.5%
+            new Schema(
+                day: 3,
+                week: 2,
+                focus: 'Squat + Pull',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [62.5, 1, 5],
+                            [72.5, 1, 3],
+                            [82.5, 8, 4],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new SumoDeadlift,
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 1, 2],
+                            [72.5, 3, 2],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new BarbellRow,
+                        lifts: [new Lift(4, 6, $deadlift->percentage(57.5))]
+                    ),
+                    new Block(
+                        exercise: new PullUp,
+                        lifts: [$this->bodyweight(4, 8)]
+                    ),
+                    new Block(
+                        exercise: new HangingLegRaise,
+                        lifts: [$this->bodyweight(3, 15)]
+                    ),
+                ]
+            ),
+
+            // Week 2, Day 4 — Squat 10×3 @ 87.5%
+            new Schema(
+                day: 4,
+                week: 2,
+                focus: 'Squat + Push',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [67.5, 1, 5],
+                            [77.5, 1, 3],
+                            [87.5, 10, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Bench,
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [65, 1, 3],
+                            [75, 1, 2],
+                            [82.5, 3, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new InclineDumbbellPress,
+                        lifts: [new Lift(3, 10, $bench->percentage(27.5))]
+                    ),
+                    new Block(
+                        exercise: new DumbbellTricepExtension,
+                        lifts: [new Lift(3, 10, $bench->percentage(27.5))]
+                    ),
+                    new Block(
+                        exercise: new HammerCurl,
+                        lifts: [new Lift(3, 12, $bench->percentage(20))]
+                    ),
+                ]
+            ),
+
+            // ─── Week 3 ──────────────────────────────────────────────────────
+
+            // Week 3, Day 1 — Squat 6×6 @ 75%, pulls back off
+            new Schema(
+                day: 1,
+                week: 3,
+                focus: 'Squat + Pull',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [55, 1, 5],
+                            [65, 1, 3],
+                            [75, 6, 6],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Deadlift,
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 1, 3],
+                            [65, 3, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new InclineDumbbellPress,
+                        lifts: [new Lift(4, 8, $bench->percentage(32.5))]
+                    ),
+                    new Block(
+                        exercise: new DumbbellTricepExtension,
+                        lifts: [new Lift(4, 8, $bench->percentage(27.5))]
+                    ),
+                    new Block(
+                        exercise: new RomanianDeadlift,
+                        lifts: [new Lift(3, 6, $deadlift->percentage(55))]
+                    ),
+                    new Block(
+                        exercise: new HangingLegRaise,
+                        lifts: [$this->bodyweight(3, 15)]
+                    ),
+                ]
+            ),
+
+            // Week 3, Day 2 — Squat 7×5 @ 80%
+            new Schema(
+                day: 2,
+                week: 3,
+                focus: 'Squat + Push',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [60, 1, 5],
+                            [70, 1, 3],
+                            [80, 7, 5],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Bench,
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [65, 1, 3],
+                            [80, 4, 5],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new MilitaryPress,
+                        lifts: [new Lift(3, 5, $bench->percentage(70))]
+                    ),
+                    new Block(
+                        exercise: new LateralRaise,
+                        lifts: [new Lift(3, 15, $bench->percentage(13))]
+                    ),
+                    new Block(
+                        exercise: new BarbellCurl,
+                        lifts: [new Lift(3, 10, $bench->percentage(27.5))]
+                    ),
+                ]
+            ),
+
+            // Week 3, Day 3 — Squat 8×4 @ 85%, pulls back off
+            new Schema(
+                day: 3,
+                week: 3,
+                focus: 'Squat + Pull',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [65, 1, 5],
+                            [75, 1, 3],
+                            [85, 8, 4],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new SumoDeadlift,
+                        lifts: $this->ramp($deadlift, [
+                            [50, 1, 3],
+                            [60, 1, 2],
+                            [65, 2, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new BarbellRow,
+                        lifts: [new Lift(4, 6, $deadlift->percentage(60))]
+                    ),
+                    new Block(
+                        exercise: new PullUp,
+                        lifts: [$this->bodyweight(4, 8)]
+                    ),
+                    new Block(
+                        exercise: new HangingLegRaise,
+                        lifts: [$this->bodyweight(3, 15)]
+                    ),
+                ]
+            ),
+
+            // Week 3, Day 4 — Squat 10×3 @ 90%
+            new Schema(
+                day: 4,
+                week: 3,
+                focus: 'Squat + Push',
+                blocks: [
+                    new Block(
+                        exercise: new Squat,
+                        lifts: $this->ramp($squat, [
+                            [70, 1, 5],
+                            [80, 1, 3],
+                            [90, 10, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new Bench,
+                        lifts: $this->ramp($bench, [
+                            [50, 1, 5],
+                            [65, 1, 3],
+                            [75, 1, 2],
+                            [85, 3, 3],
+                        ])
+                    ),
+                    new Block(
+                        exercise: new InclineDumbbellPress,
+                        lifts: [new Lift(3, 10, $bench->percentage(27.5))]
+                    ),
+                    new Block(
+                        exercise: new DumbbellTricepExtension,
+                        lifts: [new Lift(3, 10, $bench->percentage(27.5))]
+                    ),
+                    new Block(
+                        exercise: new HammerCurl,
+                        lifts: [new Lift(3, 12, $bench->percentage(20))]
+                    ),
+                ]
+            ),
         ];
-
-        $schemas = [];
-        $pullSessions = 0;
-
-        for ($week = 1; $week <= $this->weeks(); $week++) {
-            for ($day = 1; $day <= $this->days(); $day++) {
-                [$program, $sourceDay] = self::ACCESSORY_SOURCES[$day];
-                $source = $this->source($sources[$program], $program, $week, $sourceDay);
-
-                $schemas[] = new Schema(
-                    day: $day,
-                    week: $week,
-                    focus: self::FOCUS[$day],
-                    blocks: [
-                        $this->squatBlock($squat, $week, $day),
-                        ...$this->accessories(
-                            $source,
-                            self::ACCESSORY_VOLUME[$day],
-                            $deadlift,
-                            $this->pulls($source) ? $this->stance(++$pullSessions) : null
-                        ),
-                    ]
-                );
-            }
-        }
-
-        return $schemas;
-    }
-
-    /**
-     * Ramp into the Smolov Jr work sets for the given week and day.
-     */
-    private function squatBlock(OneRepMax $squat, int $week, int $day): Block
-    {
-        [$percentage, $sets, $reps] = self::SQUAT_WORK[$day];
-        $percentage += self::WEEKLY_INCREMENT[$week];
-
-        return new Block(
-            exercise: new Squat,
-            lifts: $this->ramp($squat, [
-                [$percentage - 20, 1, 5],
-                [$percentage - 10, 1, 3],
-                [$percentage, $sets, $reps],
-            ])
-        );
-    }
-
-    /**
-     * Borrow a day's non-squat blocks, resolving its pulls and trimming working sets.
-     *
-     * @param  Exercise|null  $stance  The stance this session pulls in, if it pulls at all
-     * @return Block[]
-     */
-    private function accessories(Schema $source, float $volume, OneRepMax $deadlift, ?Exercise $stance): array
-    {
-        $blocks = [];
-        $pulled = false;
-
-        foreach ($source->blocks as $block) {
-            if ($this->isSquatPattern($block->exercise)) {
-                continue;
-            }
-
-            if (! $this->isFloorPull($block->exercise)) {
-                $blocks[] = new Block(
-                    exercise: $block->exercise,
-                    lifts: $this->trim($block->lifts, $volume)
-                );
-
-                continue;
-            }
-
-            // The first pull is the session's only trip to the floor; the rest become hinges.
-            $blocks[] = $pulled
-                ? $this->secondPull($deadlift)
-                : new Block(
-                    exercise: $stance,
-                    lifts: $this->trim($this->cap($block->lifts, $deadlift), $volume)
-                );
-
-            $pulled = true;
-        }
-
-        return $blocks;
-    }
-
-    /**
-     * Alternate the pulling stance from one pull session to the next.
-     */
-    private function stance(int $pullSession): Exercise
-    {
-        return $pullSession % 2 === 1 ? new Deadlift : new SumoDeadlift;
-    }
-
-    /**
-     * A Romanian deadlift in place of a second trip to the floor.
-     */
-    private function secondPull(OneRepMax $deadlift): Block
-    {
-        [$sets, $reps, $percentage] = self::SECOND_PULL;
-
-        return new Block(
-            exercise: new RomanianDeadlift,
-            lifts: [new Lift(sets: $sets, reps: $reps, weight: $deadlift->percentage($percentage))]
-        );
-    }
-
-    /**
-     * Hold the pull under its ceiling — the squat progression owns the heavy work.
-     *
-     * Ramp steps the ceiling flattens onto the weight that follows them are dropped,
-     * so a capped ramp doesn't approach its work sets from the work-set weight.
-     *
-     * @param  Lift[]  $lifts
-     * @return Lift[]
-     */
-    private function cap(array $lifts, OneRepMax $deadlift): array
-    {
-        $ceiling = $deadlift->percentage(self::PULL_CEILING);
-
-        $capped = array_map(fn (Lift $lift) => new Lift(
-            sets: $lift->sets,
-            reps: $lift->reps,
-            weight: min($lift->weight, $ceiling),
-        ), $lifts);
-
-        return array_values(array_filter(
-            $capped,
-            fn (int $index) => ! isset($capped[$index + 1]) || $capped[$index]->weight !== $capped[$index + 1]->weight,
-            ARRAY_FILTER_USE_KEY
-        ));
-    }
-
-    /**
-     * Whether a borrowed session pulls off the floor at all.
-     */
-    private function pulls(Schema $source): bool
-    {
-        foreach ($source->blocks as $block) {
-            if ($this->isFloorPull($block->exercise)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Romanian deadlifts hinge; everything else named deadlift starts on the floor.
-     */
-    private function isFloorPull(Exercise $exercise): bool
-    {
-        return str_contains($exercise->key(), 'deadlift')
-            && $exercise->key() !== (new RomanianDeadlift)->key();
-    }
-
-    /**
-     * Cut sets to the given fraction, keeping intensity and reps intact.
-     *
-     * @param  Lift[]  $lifts
-     * @return Lift[]
-     */
-    private function trim(array $lifts, float $volume): array
-    {
-        return array_map(fn (Lift $lift) => new Lift(
-            sets: max(1, (int) round($lift->sets * $volume)),
-            reps: $lift->reps,
-            weight: $lift->weight,
-        ), $lifts);
-    }
-
-    /**
-     * The Smolov Jr work is the whole leg stimulus, so no borrowed squatting on top of it.
-     */
-    private function isSquatPattern(Exercise $exercise): bool
-    {
-        return str_contains($exercise->key(), 'squat');
-    }
-
-    /**
-     * @param  Schema[]  $schemas
-     * @return array<string, Schema>
-     */
-    private function byWeekAndDay(array $schemas): array
-    {
-        $indexed = [];
-
-        foreach ($schemas as $schema) {
-            $indexed["{$schema->week}-{$schema->day}"] = $schema;
-        }
-
-        return $indexed;
-    }
-
-    /**
-     * @param  array<string, Schema>  $schemas
-     */
-    private function source(array $schemas, string $program, int $week, int $day): Schema
-    {
-        return $schemas["{$week}-{$day}"]
-            ?? throw new RuntimeException("{$program} has no schema for week {$week}, day {$day}.");
     }
 }
