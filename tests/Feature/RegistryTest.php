@@ -21,5 +21,6 @@ it('discovers programs', function () {
 
     expect($items)
         ->toBeArray()
-        ->toHaveKey('sheiko-29');
+        ->toHaveKey('sheiko-29')
+        ->toHaveKey('smolov-jr-hybrid');
 });

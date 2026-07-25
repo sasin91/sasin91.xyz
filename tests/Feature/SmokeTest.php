@@ -11,6 +11,7 @@ describe('Smoke tests', function () {
             '/register',
             '/training',
             '/training/sheiko-29',
+            '/training/smolov-jr-hybrid',
         ])->assertNoSmoke();
     });
 
