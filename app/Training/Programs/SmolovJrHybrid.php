@@ -5,6 +5,7 @@ namespace App\Training\Programs;
 use App\Training\Block;
 use App\Training\Exercise;
 use App\Training\Exercises\Deadlift;
+use App\Training\Exercises\RomanianDeadlift;
 use App\Training\Exercises\Squat;
 use App\Training\Exercises\SumoDeadlift;
 use App\Training\Lift;
@@ -34,9 +35,12 @@ use function str_contains;
  *
  * Three rules are applied while borrowing:
  *   1. Squat-pattern blocks are dropped — the Smolov Jr work above is the entire leg stimulus.
- *   2. Sheiko's partial-range pulls are swapped for full-range ones: the first-pull work becomes
- *      a conventional deadlift and the deficit work becomes a sumo deadlift, at the same loading.
- *      Romanian deadlifts come across untouched.
+ *   2. A session gets at most one pull off the floor, whatever the source prescribed. It takes
+ *      over the first pull's loading, capped at 75% of the deadlift max, and its stance
+ *      alternates between conventional and sumo from one pull session to the next. Any further
+ *      pull in that session becomes a Romanian deadlift at accessory loading — the hinge without
+ *      a second dose of spinal and nervous-system fatigue on top of the squat work. Romanian
+ *      deadlifts the source already prescribed come across untouched.
  *   3. Working sets are trimmed by a per-day factor so accessory volume recedes as the squat
  *      day gets heavier. Intensity (weight) and reps are left untouched; only sets are cut,
  *      and never below one.
@@ -88,13 +92,14 @@ class SmolovJrHybrid implements Program
     ];
 
     /**
-     * Borrowed pulls that get swapped for a full-range variation, keyed by source exercise.
+     * Ceiling for the one pull off the floor, as a percentage of the deadlift max.
      */
-    private const PULL_SUBSTITUTIONS = [
-        'deadlift-to-knees' => Deadlift::class,
-        'deficit-deadlift' => Deadlift::class,
-        'deadlift-on-boxes' => SumoDeadlift::class,
-    ];
+    private const PULL_CEILING = 75.0;
+
+    /**
+     * The Romanian deadlift that stands in for a session's second pull: [sets, reps, percentage].
+     */
+    private const SECOND_PULL = [3, 6, 57.5];
 
     private const FOCUS = [
         1 => 'Squat + Pull',
@@ -134,7 +139,7 @@ class SmolovJrHybrid implements Program
      */
     public function schemas(array $maxes): array
     {
-        ['squat' => $squat] = $this->extractMaxes($maxes);
+        ['squat' => $squat, 'deadlift' => $deadlift] = $this->extractMaxes($maxes);
 
         $sources = [
             Sheiko29::class => $this->byWeekAndDay((new Sheiko29)->schemas($maxes)),
@@ -142,10 +147,12 @@ class SmolovJrHybrid implements Program
         ];
 
         $schemas = [];
+        $pullSessions = 0;
 
         for ($week = 1; $week <= $this->weeks(); $week++) {
             for ($day = 1; $day <= $this->days(); $day++) {
                 [$program, $sourceDay] = self::ACCESSORY_SOURCES[$day];
+                $source = $this->source($sources[$program], $program, $week, $sourceDay);
 
                 $schemas[] = new Schema(
                     day: $day,
@@ -154,8 +161,10 @@ class SmolovJrHybrid implements Program
                     blocks: [
                         $this->squatBlock($squat, $week, $day),
                         ...$this->accessories(
-                            $this->source($sources[$program], $program, $week, $sourceDay),
-                            self::ACCESSORY_VOLUME[$day]
+                            $source,
+                            self::ACCESSORY_VOLUME[$day],
+                            $deadlift,
+                            $this->pulls($source) ? $this->stance(++$pullSessions) : null
                         ),
                     ]
                 );
@@ -184,36 +193,112 @@ class SmolovJrHybrid implements Program
     }
 
     /**
-     * Borrow a day's non-squat blocks, substituting pulls and trimming working sets.
+     * Borrow a day's non-squat blocks, resolving its pulls and trimming working sets.
      *
+     * @param  Exercise|null  $stance  The stance this session pulls in, if it pulls at all
      * @return Block[]
      */
-    private function accessories(Schema $source, float $volume): array
+    private function accessories(Schema $source, float $volume, OneRepMax $deadlift, ?Exercise $stance): array
     {
         $blocks = [];
+        $pulled = false;
 
         foreach ($source->blocks as $block) {
             if ($this->isSquatPattern($block->exercise)) {
                 continue;
             }
 
-            $blocks[] = new Block(
-                exercise: $this->substitute($block->exercise),
-                lifts: $this->trim($block->lifts, $volume)
-            );
+            if (! $this->isFloorPull($block->exercise)) {
+                $blocks[] = new Block(
+                    exercise: $block->exercise,
+                    lifts: $this->trim($block->lifts, $volume)
+                );
+
+                continue;
+            }
+
+            // The first pull is the session's only trip to the floor; the rest become hinges.
+            $blocks[] = $pulled
+                ? $this->secondPull($deadlift)
+                : new Block(
+                    exercise: $stance,
+                    lifts: $this->trim($this->cap($block->lifts, $deadlift), $volume)
+                );
+
+            $pulled = true;
         }
 
         return $blocks;
     }
 
     /**
-     * Swap a partial-range pull for the full-range variation it stands in for.
+     * Alternate the pulling stance from one pull session to the next.
      */
-    private function substitute(Exercise $exercise): Exercise
+    private function stance(int $pullSession): Exercise
     {
-        $substitute = self::PULL_SUBSTITUTIONS[$exercise->key()] ?? null;
+        return $pullSession % 2 === 1 ? new Deadlift : new SumoDeadlift;
+    }
 
-        return $substitute === null ? $exercise : new $substitute;
+    /**
+     * A Romanian deadlift in place of a second trip to the floor.
+     */
+    private function secondPull(OneRepMax $deadlift): Block
+    {
+        [$sets, $reps, $percentage] = self::SECOND_PULL;
+
+        return new Block(
+            exercise: new RomanianDeadlift,
+            lifts: [new Lift(sets: $sets, reps: $reps, weight: $deadlift->percentage($percentage))]
+        );
+    }
+
+    /**
+     * Hold the pull under its ceiling — the squat progression owns the heavy work.
+     *
+     * Ramp steps the ceiling flattens onto the weight that follows them are dropped,
+     * so a capped ramp doesn't approach its work sets from the work-set weight.
+     *
+     * @param  Lift[]  $lifts
+     * @return Lift[]
+     */
+    private function cap(array $lifts, OneRepMax $deadlift): array
+    {
+        $ceiling = $deadlift->percentage(self::PULL_CEILING);
+
+        $capped = array_map(fn (Lift $lift) => new Lift(
+            sets: $lift->sets,
+            reps: $lift->reps,
+            weight: min($lift->weight, $ceiling),
+        ), $lifts);
+
+        return array_values(array_filter(
+            $capped,
+            fn (int $index) => ! isset($capped[$index + 1]) || $capped[$index]->weight !== $capped[$index + 1]->weight,
+            ARRAY_FILTER_USE_KEY
+        ));
+    }
+
+    /**
+     * Whether a borrowed session pulls off the floor at all.
+     */
+    private function pulls(Schema $source): bool
+    {
+        foreach ($source->blocks as $block) {
+            if ($this->isFloorPull($block->exercise)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Romanian deadlifts hinge; everything else named deadlift starts on the floor.
+     */
+    private function isFloorPull(Exercise $exercise): bool
+    {
+        return str_contains($exercise->key(), 'deadlift')
+            && $exercise->key() !== (new RomanianDeadlift)->key();
     }
 
     /**
