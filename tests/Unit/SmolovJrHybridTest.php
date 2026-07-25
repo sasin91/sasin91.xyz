@@ -94,10 +94,11 @@ test('it derives the non-squat blocks from sheiko 29 and ppl strength', function
         array_slice($schemas[$key]->blocks, 1)
     );
 
-    // Day 1 ← Sheiko 29 day 2, day 4 ← Sheiko 29 day 1 (squat patterns dropped).
+    // Day 1 ← Sheiko 29 day 2, day 4 ← Sheiko 29 day 1 (squat patterns dropped,
+    // partial-range pulls swapped for conventional and sumo).
     expect($accessoryKeys('1-1'))->toBe([
-        'deadlift-to-knees', 'incline-dumbbell-press', 'dumbbell-tricep-extension',
-        'deadlift-on-boxes', 'hanging-leg-raise',
+        'deadlift', 'incline-dumbbell-press', 'dumbbell-tricep-extension',
+        'sumo-deadlift', 'hanging-leg-raise',
     ])
         ->and($accessoryKeys('2-4'))->toBe([
             'bench', 'incline-dumbbell-press', 'dumbbell-tricep-extension', 'romanian-deadlift',
@@ -115,11 +116,12 @@ test('it keeps the source intensity but trims the sets', function () {
     $sheikoWeek1Day2 = collect((new Sheiko29)->schemas($maxes))
         ->first(fn ($schema) => $schema->week === 1 && $schema->day === 2);
 
-    // Sheiko's opening deadlift-to-knees ramp, kept at weight, cut to 75% of its sets.
+    // Sheiko's opening pull, kept at weight, cut to 75% of its sets.
     $source = $sheikoWeek1Day2->blocks[0];
     $derived = $schemas['1-1']->blocks[1];
 
-    expect($derived->exercise->key())->toBe($source->exercise->key())
+    expect($source->exercise->key())->toBe('deadlift-to-knees')
+        ->and($derived->exercise->key())->toBe('deadlift')
         ->and($derived->lifts)->toHaveCount(count($source->lifts));
 
     foreach ($source->lifts as $index => $lift) {
@@ -138,6 +140,40 @@ test('it keeps the source intensity but trims the sets', function () {
     expect($derivedRow->exercise->key())->toBe('barbell-row')
         ->and($derivedRow->lifts[0]->weight)->toBe($sourceRow->lifts[0]->weight)
         ->and($derivedRow->lifts[0]->sets)->toBe(max(1, (int) round($sourceRow->lifts[0]->sets * 0.6)));
+});
+
+test('it only pulls conventional, sumo and romanian deadlifts', function () {
+    $pulls = [];
+
+    foreach (hybridSchemas() as $schema) {
+        foreach ($schema->blocks as $block) {
+            if (str_contains($block->exercise->key(), 'deadlift')) {
+                $pulls[$block->exercise->key()] = true;
+            }
+        }
+    }
+
+    expect(array_keys($pulls))->toEqualCanonicalizing([
+        'deadlift', 'sumo-deadlift', 'romanian-deadlift',
+    ]);
+});
+
+test('substituted pulls keep the loading of the block they replace', function () {
+    $sheikoWeek3Day2 = collect((new Sheiko29)->schemas(hybridMaxes()))
+        ->first(fn ($schema) => $schema->week === 3 && $schema->day === 2);
+
+    $source = collect($sheikoWeek3Day2->blocks)
+        ->first(fn ($block) => $block->exercise->key() === 'deadlift-on-boxes');
+
+    $derived = collect(hybridSchemas()['3-1']->blocks)
+        ->first(fn ($block) => $block->exercise->key() === 'sumo-deadlift');
+
+    expect($derived)->not->toBeNull();
+
+    foreach ($source->lifts as $index => $lift) {
+        expect($derived->lifts[$index]->weight)->toBe($lift->weight)
+            ->and($derived->lifts[$index]->reps)->toBe($lift->reps);
+    }
 });
 
 test('trimming never drops a set below one', function () {

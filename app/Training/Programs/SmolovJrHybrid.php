@@ -4,7 +4,9 @@ namespace App\Training\Programs;
 
 use App\Training\Block;
 use App\Training\Exercise;
+use App\Training\Exercises\Deadlift;
 use App\Training\Exercises\Squat;
+use App\Training\Exercises\SumoDeadlift;
 use App\Training\Lift;
 use App\Training\OneRepMax;
 use App\Training\Program;
@@ -30,9 +32,12 @@ use function str_contains;
  *   Day 3 — PPL Strength day 2       (deadlift, rows, pull-ups)
  *   Day 4 — Sheiko 29 day 1          (bench, incline, triceps, posterior chain)
  *
- * Two rules are applied while borrowing:
+ * Three rules are applied while borrowing:
  *   1. Squat-pattern blocks are dropped — the Smolov Jr work above is the entire leg stimulus.
- *   2. Working sets are trimmed by a per-day factor so accessory volume recedes as the squat
+ *   2. Sheiko's partial-range pulls are swapped for full-range ones: the first-pull work becomes
+ *      a conventional deadlift and the deficit work becomes a sumo deadlift, at the same loading.
+ *      Romanian deadlifts come across untouched.
+ *   3. Working sets are trimmed by a per-day factor so accessory volume recedes as the squat
  *      day gets heavier. Intensity (weight) and reps are left untouched; only sets are cut,
  *      and never below one.
  */
@@ -80,6 +85,15 @@ class SmolovJrHybrid implements Program
         2 => 0.7,
         3 => 0.6,
         4 => 0.5,
+    ];
+
+    /**
+     * Borrowed pulls that get swapped for a full-range variation, keyed by source exercise.
+     */
+    private const PULL_SUBSTITUTIONS = [
+        'deadlift-to-knees' => Deadlift::class,
+        'deficit-deadlift' => Deadlift::class,
+        'deadlift-on-boxes' => SumoDeadlift::class,
     ];
 
     private const FOCUS = [
@@ -170,7 +184,7 @@ class SmolovJrHybrid implements Program
     }
 
     /**
-     * Borrow a day's non-squat blocks, trimming their working sets.
+     * Borrow a day's non-squat blocks, substituting pulls and trimming working sets.
      *
      * @return Block[]
      */
@@ -183,25 +197,38 @@ class SmolovJrHybrid implements Program
                 continue;
             }
 
-            $blocks[] = $this->trim($block, $volume);
+            $blocks[] = new Block(
+                exercise: $this->substitute($block->exercise),
+                lifts: $this->trim($block->lifts, $volume)
+            );
         }
 
         return $blocks;
     }
 
     /**
-     * Cut a block's sets to the given fraction, keeping intensity and reps intact.
+     * Swap a partial-range pull for the full-range variation it stands in for.
      */
-    private function trim(Block $block, float $volume): Block
+    private function substitute(Exercise $exercise): Exercise
     {
-        return new Block(
-            exercise: $block->exercise,
-            lifts: array_map(fn (Lift $lift) => new Lift(
-                sets: max(1, (int) round($lift->sets * $volume)),
-                reps: $lift->reps,
-                weight: $lift->weight,
-            ), $block->lifts)
-        );
+        $substitute = self::PULL_SUBSTITUTIONS[$exercise->key()] ?? null;
+
+        return $substitute === null ? $exercise : new $substitute;
+    }
+
+    /**
+     * Cut sets to the given fraction, keeping intensity and reps intact.
+     *
+     * @param  Lift[]  $lifts
+     * @return Lift[]
+     */
+    private function trim(array $lifts, float $volume): array
+    {
+        return array_map(fn (Lift $lift) => new Lift(
+            sets: max(1, (int) round($lift->sets * $volume)),
+            reps: $lift->reps,
+            weight: $lift->weight,
+        ), $lifts);
     }
 
     /**
