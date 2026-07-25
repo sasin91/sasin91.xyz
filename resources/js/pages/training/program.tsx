@@ -1,12 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Play } from 'lucide-react';
-import {
-    useState,
-    useEffect,
-    useRef,
-    useLayoutEffect,
-    ComponentProps,
-} from 'react';
+import { ComponentProps, useRef, useState } from 'react';
 
 import MaxesComponent from '@/components/training/maxes';
 import RestartProgramDialog from '@/components/training/restart-program-dialog';
