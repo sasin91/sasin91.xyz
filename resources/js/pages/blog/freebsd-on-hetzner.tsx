@@ -134,7 +134,7 @@ A=$(sha256sum $I | cut -d' ' -f1)
             </h2>
 
             <p className="mt-4">
-              Three edits: a serial console, an unattended install script, and one line that the installer will otherwise stop on.
+              Three edits: a serial console so we can watch it, the prompt that would otherwise block forever, and the network the scripted install never configures for itself.
             </p>
 
             <CodeBlock
@@ -232,6 +232,10 @@ done < MANIFEST
 
 setsid nohup python3 -m http.server 8000 >/dev/null 2>&1 &`}
             />
+
+            <p className="mt-6 text-sm italic underline decoration-wavy text-primary">
+              Tip: leave that server running. The installer fetches from it in step 7, not now.
+            </p>
           </section>
 
           <section className="mt-10 text-left">
