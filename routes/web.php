@@ -19,6 +19,7 @@ Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/trongate', [BlogController::class, 'trongate'])->name('blog.trongate');
 Route::get('/blog/trongate/mx-transition', [BlogController::class, 'mxTransition'])->name('blog.mx-transition');
 Route::get('/blog/freebsd-on-hetzner', [BlogController::class, 'freebsdOnHetzner'])->name('blog.freebsd-on-hetzner');
+Route::get('/blog/athletos-freebsd', [BlogController::class, 'athletosFreebsd'])->name('blog.athletos-freebsd');
 
 Route::get('training', [TrainingController::class, 'index'])->name('training.index');
 Route::get('training/{program}', [TrainingController::class, 'show'])->name('training.show');

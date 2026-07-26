@@ -23,4 +23,9 @@ class BlogController extends Controller
     {
         return inertia('blog/freebsd-on-hetzner');
     }
+
+    public function athletosFreebsd()
+    {
+        return inertia('blog/athletos-freebsd');
+    }
 }

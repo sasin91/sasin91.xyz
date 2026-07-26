@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 
+import athletosArchImg from '@/../images/blog/athletos-freebsd/architecture.svg';
 import freebsdHeaderImg from '@/../images/blog/freebsd-on-hetzner/header.svg';
 import theFrameworkImg from '@/../images/blog/trongate/the_framework.webp';
 import viewTransitionsImg from '@/../images/blog/trongate/view_transitions.png';
@@ -79,6 +80,27 @@ export default function BlogIndex() {
                                         <img
                                             alt="FreeBSD 15.1 on root-on-ZFS"
                                             src={freebsdHeaderImg}
+                                            className="object-fill rounded-xl shadow-sm py-1.5 px-1.5 w-full"
+                                        />
+                                    </div>
+                                </BlogArticle>
+                            </BackgroundGradient>
+
+                            <BackgroundGradient className="p-1">
+                                <BlogArticle
+                                    title={
+                                        <Link href="/blog/athletos-freebsd" className="hover:text-primary transition-colors">
+                                            <span className="absolute inset-0" />
+                                            One box, two jails and a five second deploy
+                                        </Link>
+                                    }
+                                    date="2026-07-26"
+                                    description="AthletOS runs on a single €7 FreeBSD box. Two jails that are always up, Caddy handling certificates on its own, and a rolling deploy that never leaves zero healthy backends. What the boring choices bought, measured rather than estimated."
+                                >
+                                    <div className="relative mt-8 flex items-center">
+                                        <img
+                                            alt="Caddy in front of two always-running jails on one FreeBSD box"
+                                            src={athletosArchImg}
                                             className="object-fill rounded-xl shadow-sm py-1.5 px-1.5 w-full"
                                         />
                                     </div>
