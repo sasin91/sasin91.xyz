@@ -1,5 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 
+import freebsdHeaderImg from '@/../images/blog/freebsd-on-hetzner/header.svg';
 import theFrameworkImg from '@/../images/blog/trongate/the_framework.webp';
 import viewTransitionsImg from '@/../images/blog/trongate/view_transitions.png';
 import BlogArticle from '@/components/blog-article';
@@ -57,6 +58,27 @@ export default function BlogIndex() {
                                         <img
                                             alt="CSS View transitions"
                                             src={viewTransitionsImg}
+                                            className="object-fill rounded-xl shadow-sm py-1.5 px-1.5 w-full"
+                                        />
+                                    </div>
+                                </BlogArticle>
+                            </BackgroundGradient>
+
+                            <BackgroundGradient className="p-1">
+                                <BlogArticle
+                                    title={
+                                        <Link href="/blog/freebsd-on-hetzner" className="hover:text-primary transition-colors">
+                                            <span className="absolute inset-0" />
+                                            FreeBSD on a Hetzner Cloud VPS
+                                        </Link>
+                                    }
+                                    date="2026-07-26"
+                                    description="Hetzner has no FreeBSD image, and the installer everyone recommends never verifies what it downloads before handing it root. In this article I install 15.1 on root-on-ZFS the honest way, and walk through the five things that broke on the way there."
+                                >
+                                    <div className="relative mt-8 flex items-center">
+                                        <img
+                                            alt="FreeBSD 15.1 on root-on-ZFS"
+                                            src={freebsdHeaderImg}
                                             className="object-fill rounded-xl shadow-sm py-1.5 px-1.5 w-full"
                                         />
                                     </div>

@@ -18,4 +18,9 @@ class BlogController extends Controller
     {
         return inertia('blog/mx-transition');
     }
+
+    public function freebsdOnHetzner()
+    {
+        return inertia('blog/freebsd-on-hetzner');
+    }
 }
