@@ -50,7 +50,7 @@ export default function Dashboard({
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
                 <div className="grid auto-rows-min gap-4 md:grid-cols-2">
-                    <div className="relative flex flex-col items-center justify-center gap-2 rounded-xl border border-sidebar-border/70 p-4 text-center dark:border-sidebar-border">
+                    <div className="relative flex flex-col items-center justify-center gap-2 rounded-xl border border-sidebar-border p-4 text-center">
                         <h3 className="font-medium text-muted-foreground">
                             Next Workout
                         </h3>
@@ -69,7 +69,7 @@ export default function Dashboard({
                             programCompleted={programComplete}
                         />
                     </div>
-                    <div className="relative flex flex-col items-center justify-center gap-2 rounded-xl border border-sidebar-border/70 p-4 dark:border-sidebar-border">
+                    <div className="relative flex flex-col items-center justify-center gap-2 rounded-xl border border-sidebar-border p-4">
                         <h3 className="font-medium text-muted-foreground">
                             Recent Activity
                         </h3>
@@ -78,7 +78,7 @@ export default function Dashboard({
                         </div>
                     </div>
                 </div>
-                <div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 bg-card dark:border-sidebar-border">
+                <div className="relative flex-1 overflow-hidden rounded-xl border border-sidebar-border bg-card">
                     <div className="p-6">
                         <h2 className="mb-4 text-lg font-semibold">
                             Training History

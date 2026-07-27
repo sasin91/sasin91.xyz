@@ -8,8 +8,6 @@ import { toast } from 'sonner';
 
 import { Toaster } from '@/components/ui/sonner';
 
-import { initializeTheme } from './hooks/use-appearance';
-
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 createInertiaApp({
@@ -46,6 +44,3 @@ router.on('flash', (event) => {
         }
     });
 });
-
-// This will set light / dark mode on load...
-initializeTheme();

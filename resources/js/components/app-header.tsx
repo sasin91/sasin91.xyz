@@ -78,7 +78,7 @@ const rightNavItems: NavItem[] = [
 ];
 
 const activeItemStyles =
-    'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
+    'bg-neutral-800 text-neutral-100';
 
 interface AppHeaderProps {
     breadcrumbs?: BreadcrumbItem[];
@@ -214,7 +214,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                             {item.title}
                                         </Link>
                                         {urlIsActive(item.href) && (
-                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"></div>
+                                            <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-white"></div>
                                         )}
                                     </NavigationMenuItem>
                                 ))}
@@ -268,7 +268,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                                                 src={auth.user.avatar}
                                                 alt={auth.user.name}
                                             />
-                                            <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
+                                            <AvatarFallback className="rounded-lg bg-neutral-700 text-white">
                                                 {getInitials(auth.user.name)}
                                             </AvatarFallback>
                                         </Avatar>
