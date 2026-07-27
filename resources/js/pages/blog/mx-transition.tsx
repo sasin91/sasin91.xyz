@@ -135,7 +135,7 @@ function MxTransitionTabs() {
       <div>
         <label
           htmlFor="transition"
-          className="block font-medium text-gray-900 text-sm/6"
+          className="block font-medium text-white text-sm/6"
         >
           Transition
         </label>
@@ -150,7 +150,7 @@ function MxTransitionTabs() {
               )!;
               setTransition(transition);
             }}
-            className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white/5 py-1.5 pr-8 pl-3 text-base text-white outline-1 -outline-offset-1 outline-white/10 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
           >
             {transitionOptions.map((t) => (
               <option key={t}>{t}</option>

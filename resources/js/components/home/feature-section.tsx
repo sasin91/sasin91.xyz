@@ -6,7 +6,7 @@ type Feature = { name: string; description: string; icon: React.ReactNode };
 function FeatureCard(feature: Feature) {
     return (
         <div className="pt-6 h-full">
-            <div className="flow-root h-full px-6 pb-8 rounded-2xl shadow-xl transition-all duration-300 hover:scale-[1.02] bg-white/10 dark:bg-black/20 backdrop-blur-md border border-white/20 ring-1 ring-black/5">
+            <div className="flow-root h-full px-6 pb-8 rounded-2xl shadow-xl transition-all duration-300 hover:scale-[1.02] bg-black/20 backdrop-blur-md border border-white/20 ring-1 ring-black/5">
                 <div className="-mt-6">
                     <div>
                         <span className="inline-flex items-center justify-center p-3 shadow-lg rounded-xl bg-linear-to-br from-purple-500/10 via-pink-400/10 to-cyan-400/10 ring-1 ring-white/20 backdrop-blur-sm">

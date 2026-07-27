@@ -23,30 +23,6 @@ type CodeBlockProps = {
     }
   );
 
-function useDarkMode() {
-  const [isDark, setIsDark] = useState(() => {
-    if (typeof document !== 'undefined') {
-      return document.documentElement.classList.contains('dark');
-    }
-    return false;
-  });
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      setIsDark(document.documentElement.classList.contains('dark'));
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
-  return isDark;
-}
-
 export const CodeBlock = ({
   language,
   filename,
@@ -57,7 +33,6 @@ export const CodeBlock = ({
   viewTransitionName,
   ...rest
 }: ComponentProps<"div"> & CodeBlockProps & { viewTransitionName: string }) => {
-  const dark = useDarkMode();
   const withTransition = useViewTransition();
 
   const [copied, setCopied] = useState(false);
@@ -74,7 +49,7 @@ export const CodeBlock = ({
       codeTabs.map((tab) =>
         codeToHtml(tab.code, {
           lang: tab.language || language,
-          theme: dark ? "github-dark" : "github-light",
+          theme: "github-dark",
           transformers: [
             {
               line(node, line) {
@@ -87,10 +62,10 @@ export const CodeBlock = ({
         }).catch(() => `<pre><code>${tab.code}</code></pre>`)
       )
     ).then(setHighlightedHtml);
-  }, [codeTabs, language, dark, highlightLines]);
+  }, [codeTabs, language, highlightLines]);
 
   return (
-    <div className={cn("relative w-full rounded-lg bg-background text-foreground p-4 font-mono text-sm", className)} {...rest}>
+    <div className={cn("relative mt-8 w-full rounded-lg bg-background text-foreground p-4 font-mono text-sm", className)} {...rest}>
       <div className="flex flex-col gap-2">
         {tabsExist && (
           <div className="flex overflow-x-auto">

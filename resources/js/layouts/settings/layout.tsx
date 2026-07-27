@@ -7,7 +7,6 @@ import { Separator } from '@/components/ui/separator';
 import { useActiveUrl } from '@/hooks/use-active-url';
 import { cn, toUrl } from '@/lib/utils';
 import { type NavItem } from '@/types';
-import { edit as editAppearance } from '@/wayfinder/routes/appearance';
 import { edit } from '@/wayfinder/routes/profile';
 import { show } from '@/wayfinder/routes/two-factor';
 import { edit as editPassword } from '@/wayfinder/routes/user-password';
@@ -26,11 +25,6 @@ const sidebarNavItems: NavItem[] = [
     {
         title: 'Two-Factor Auth',
         href: show(),
-        icon: null,
-    },
-    {
-        title: 'Appearance',
-        href: editAppearance(),
         icon: null,
     },
 ];
