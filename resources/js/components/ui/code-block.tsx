@@ -65,7 +65,7 @@ export const CodeBlock = ({
   }, [codeTabs, language, highlightLines]);
 
   return (
-    <div className={cn("relative w-full rounded-lg bg-background text-foreground p-4 font-mono text-sm", className)} {...rest}>
+    <div className={cn("relative mt-8 w-full rounded-lg bg-background text-foreground p-4 font-mono text-sm", className)} {...rest}>
       <div className="flex flex-col gap-2">
         {tabsExist && (
           <div className="flex overflow-x-auto">

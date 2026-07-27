@@ -26,39 +26,18 @@ export default function BlogIndex() {
                             <BackgroundGradient className="p-1">
                                 <BlogArticle
                                     title={
-                                        <Link href="/blog/trongate" className="hover:text-primary transition-colors">
+                                        <Link href="/blog/athletos-freebsd" className="hover:text-primary transition-colors">
                                             <span className="absolute inset-0" />
-                                            Trongate PHP
+                                            One box, two jails and a five second deploy
                                         </Link>
                                     }
-                                    date="2024-09-14"
-                                    description="Trongate is often misunderstood and gets a bad reputation because it breaks with common standards and takes a journey back to its roots. In this article, I will explore and highlight this rough diamond that deserves a spot in the limelight."
+                                    date="2026-07-26"
+                                    description="AthletOS runs on a single €7 FreeBSD box. Two jails that are always up, Caddy handling certificates on its own, and a rolling deploy that never leaves zero healthy backends. What the boring choices bought, measured rather than estimated."
                                 >
                                     <div className="relative mt-8 flex items-center">
                                         <img
-                                            alt="Trongate: The framework they don't want you to know about"
-                                            src={theFrameworkImg}
-                                            className="object-fill rounded-xl shadow-sm py-1.5 px-1.5"
-                                        />
-                                    </div>
-                                </BlogArticle>
-                            </BackgroundGradient>
-
-                            <BackgroundGradient className="p-1">
-                                <BlogArticle
-                                    title={
-                                        <Link href="/blog/trongate/mx-transition" className="hover:text-primary transition-colors">
-                                            <span className="absolute inset-0" />
-                                            Trongate mx-transition attribute
-                                        </Link>
-                                    }
-                                    date="2025-03-03"
-                                    description="MX transition provides an easy and intuitive way to add animations to items and the whole page."
-                                >
-                                    <div className="relative mt-8 flex items-center">
-                                        <img
-                                            alt="CSS View transitions"
-                                            src={viewTransitionsImg}
+                                            alt="Caddy in front of two always-running jails on one FreeBSD box"
+                                            src={athletosArchImg}
                                             className="object-fill rounded-xl shadow-sm py-1.5 px-1.5 w-full"
                                         />
                                     </div>
@@ -89,19 +68,40 @@ export default function BlogIndex() {
                             <BackgroundGradient className="p-1">
                                 <BlogArticle
                                     title={
-                                        <Link href="/blog/athletos-freebsd" className="hover:text-primary transition-colors">
+                                        <Link href="/blog/trongate/mx-transition" className="hover:text-primary transition-colors">
                                             <span className="absolute inset-0" />
-                                            One box, two jails and a five second deploy
+                                            Trongate mx-transition attribute
                                         </Link>
                                     }
-                                    date="2026-07-26"
-                                    description="AthletOS runs on a single €7 FreeBSD box. Two jails that are always up, Caddy handling certificates on its own, and a rolling deploy that never leaves zero healthy backends. What the boring choices bought, measured rather than estimated."
+                                    date="2025-03-03"
+                                    description="MX transition provides an easy and intuitive way to add animations to items and the whole page."
                                 >
                                     <div className="relative mt-8 flex items-center">
                                         <img
-                                            alt="Caddy in front of two always-running jails on one FreeBSD box"
-                                            src={athletosArchImg}
+                                            alt="CSS View transitions"
+                                            src={viewTransitionsImg}
                                             className="object-fill rounded-xl shadow-sm py-1.5 px-1.5 w-full"
+                                        />
+                                    </div>
+                                </BlogArticle>
+                            </BackgroundGradient>
+
+                            <BackgroundGradient className="p-1">
+                                <BlogArticle
+                                    title={
+                                        <Link href="/blog/trongate" className="hover:text-primary transition-colors">
+                                            <span className="absolute inset-0" />
+                                            Trongate PHP
+                                        </Link>
+                                    }
+                                    date="2024-09-14"
+                                    description="Trongate is often misunderstood and gets a bad reputation because it breaks with common standards and takes a journey back to its roots. In this article, I will explore and highlight this rough diamond that deserves a spot in the limelight."
+                                >
+                                    <div className="relative mt-8 flex items-center">
+                                        <img
+                                            alt="Trongate: The framework they don't want you to know about"
+                                            src={theFrameworkImg}
+                                            className="object-fill rounded-xl shadow-sm py-1.5 px-1.5"
                                         />
                                     </div>
                                 </BlogArticle>
