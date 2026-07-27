@@ -3,6 +3,7 @@ import { Save } from 'lucide-react';
 import { useCallback, useRef } from 'react';
 
 import InputError from '@/components/input-error';
+import GuestProgressNotice from '@/components/training/guest-progress-notice';
 import MaxesComponent from '@/components/training/maxes';
 import { Timer } from '@/components/training/timer';
 import {
@@ -20,7 +21,7 @@ export default function Session({
     program,
     schema,
     maxes,
-    exercises
+    exercises,
 }: {
     program: Program;
     schema: Schema;
@@ -29,7 +30,10 @@ export default function Session({
 }) {
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Training', href: training.index.url() },
-        { title: program.name, href: training.show.url({ program: program.key }) },
+        {
+            title: program.name,
+            href: training.show.url({ program: program.key }),
+        },
         { title: 'Session', href: '' },
     ];
 
@@ -86,7 +90,13 @@ export default function Session({
                     <Timer onTick={handleTick} />
                 </div>
 
-                <MaxesComponent exercises={exercises} maxes={maxes} updateMaxes={updateMaxes} />
+                <MaxesComponent
+                    exercises={exercises}
+                    maxes={maxes}
+                    updateMaxes={updateMaxes}
+                />
+
+                <GuestProgressNotice />
 
                 <Form
                     {...training.store.form(program.key)}

@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Play } from 'lucide-react';
 import { ComponentProps, useRef, useState } from 'react';
 
+import GuestProgressNotice from '@/components/training/guest-progress-notice';
 import MaxesComponent from '@/components/training/maxes';
 import RestartProgramDialog from '@/components/training/restart-program-dialog';
 import {
@@ -45,7 +46,7 @@ function SchemaPreview({
             onOpenChange={setOpen}
             className={cn(
                 'rounded-lg transition-all',
-                isActive && 'border-2 border-primary shadow-lg'
+                isActive && 'border-2 border-primary shadow-lg',
             )}
         >
             <CollapsibleTrigger asChild>
@@ -124,6 +125,8 @@ export default function Program({
                     maxes={maxes}
                     updateMaxes={updateMaxes}
                 />
+
+                <GuestProgressNotice />
 
                 <div className="grid gap-6">
                     <Card>

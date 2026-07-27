@@ -6,6 +6,7 @@ use App\Actions\Training\CreateNewWorkout;
 use App\Actions\Training\UpdateMaxes;
 use App\Http\Requests\StoreWorkoutRequest;
 use App\Http\Requests\TrainingProgramRequest;
+use App\Training\PendingTraining;
 use App\Training\Registries\ProgramRegistry;
 
 use function inertia;
@@ -62,7 +63,16 @@ class TrainingController extends Controller
             abort(404, 'Invalid day or week.');
         }
 
-        $updateMaxes->update($request->user(), $maxes);
+        if ($request->user() !== null) {
+            $updateMaxes->update($request->user(), $maxes);
+        } else {
+            (new PendingTraining(
+                program: $program->key(),
+                week: $found->week,
+                day: $found->day,
+                maxes: $maxes,
+            ))->storeInSession();
+        }
 
         return inertia('training/session', [
             'program' => $program,

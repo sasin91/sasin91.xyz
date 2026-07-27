@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Actions\Training\ExtractOneRepMaxes;
+use App\Training\PendingTraining;
 use App\Training\Program;
 use App\Training\ProgramProgress;
 use App\Training\Registries\ProgramRegistry;
@@ -25,14 +26,12 @@ class TrainingProgramRequest extends FormRequest
 
     public function prepareForValidation(): void
     {
-        $maxes = $this->user() && ! empty($this->user()->maxes)
-            ? $this->user()->maxes
-            : [
-                // barbell weight
-                'squat' => 25,
-                'bench' => 25,
-                'deadlift' => 25,
-            ];
+        $maxes = $this->rememberedMaxes() ?: [
+            // barbell weight
+            'squat' => 25,
+            'bench' => 25,
+            'deadlift' => 25,
+        ];
 
         $this->merge([
             'squat' => $this->integer('squat', $maxes['squat'] ?? 0),
@@ -41,6 +40,18 @@ class TrainingProgramRequest extends FormRequest
             'day' => $this->integer('day', 1),
             'week' => $this->integer('week', 1),
         ]);
+    }
+
+    /**
+     * The maxes we already know about: the user's own, or a guest's session state.
+     */
+    private function rememberedMaxes(): array
+    {
+        if ($this->user() !== null) {
+            return $this->user()->maxes ?? [];
+        }
+
+        return PendingTraining::fromSession()?->maxes ?? [];
     }
 
     /**

@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Actions\Training\CreateNewWorkout;
+use App\Actions\Training\UpdateMaxes;
 use App\Registry\ClassRegistry;
+use App\Training\PendingTraining;
 use App\Training\PendingWorkout;
 use App\Training\Registries\ExerciseRegistry;
 use App\Training\Registries\ProgramRegistry;
@@ -17,6 +19,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
 use function app;
+use function redirect;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -48,12 +51,25 @@ class AppServiceProvider extends ServiceProvider
         $this->configureDefaults();
 
         Event::listen(Login::class, static function (Login $event) {
+            $training = PendingTraining::pullFromSession();
+
+            if ($training !== null) {
+                app(UpdateMaxes::class)->update($event->user, $training->maxes);
+            }
+
             if (PendingWorkout::existsInSession()) {
                 $pending = PendingWorkout::pullFromSession();
 
                 if ($pending !== null) {
                     app(CreateNewWorkout::class)->create($pending, $event->user);
                 }
+
+                // The workout is done, there is nothing left to continue.
+                return;
+            }
+
+            if ($training !== null) {
+                redirect()->setIntendedUrl($training->continueUrl());
             }
         });
     }
