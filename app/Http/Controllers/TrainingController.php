@@ -62,7 +62,9 @@ class TrainingController extends Controller
             abort(404, 'Invalid day or week.');
         }
 
-        $updateMaxes->update($request->user(), $maxes);
+        if ($request->user() !== null) {
+            $updateMaxes->update($request->user(), $maxes);
+        }
 
         return inertia('training/session', [
             'program' => $program,

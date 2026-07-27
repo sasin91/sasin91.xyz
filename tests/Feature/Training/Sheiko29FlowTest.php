@@ -5,6 +5,7 @@ use Inertia\Testing\AssertableInertia as Assert;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\get;
 
 // uses(...) is handled by tests/Pest.php for Feature directory
 
@@ -39,6 +40,39 @@ test('it can view session page', function () {
                 ->has('program')
                 ->has('schema')
         );
+});
+
+test('a guest can view the session page', function () {
+    get(route('training.session', [
+        'program' => 'sheiko-29',
+        'squat' => 150,
+        'bench' => 100,
+        'deadlift' => 180,
+    ]))
+        ->assertStatus(200)
+        ->assertInertia(
+            fn (Assert $page) => $page
+                ->component('training/session')
+                ->has('program')
+                ->has('schema')
+                ->where('maxes.squat', 150)
+        );
+});
+
+test('viewing the session page persists the maxes of an authenticated user', function () {
+    $user = User::factory()->create(['maxes' => []]);
+
+    actingAs($user)
+        ->get(route('training.session', [
+            'program' => 'sheiko-29',
+            'squat' => 150,
+            'bench' => 100,
+            'deadlift' => 180,
+        ]))
+        ->assertStatus(200);
+
+    expect($user->refresh()->maxes)
+        ->toMatchArray(['squat' => 150, 'bench' => 100, 'deadlift' => 180]);
 });
 
 function validCompleteWorkoutParams(array $overrides = []): array
