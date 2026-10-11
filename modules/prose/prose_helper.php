@@ -98,13 +98,3 @@ function diagram(string $src, string $alt): string {
     return Modules::run('prose/diagram', ['src' => $src, 'alt' => $alt]);
 }
 
-/**
- * TeX as MathML.
- *
- * @param string $tex The formula.
- * @param bool $display True for a formula on its own line.
- * @return string The MathML.
- */
-function math(string $tex, bool $display = false): string {
-    return Modules::run('prose/math', ['tex' => $tex, 'display' => $display]);
-}

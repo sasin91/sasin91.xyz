@@ -1,19 +1,5 @@
-+++
-id = "dense-attention"
-title = "Dense attention"
-summary = "In full (dense) attention every token can attend to every earlier token, so the work grows with the square of the sequence length."
-concepts = ["dense attention", "full attention", "quadratic cost", "flashattention"]
-prerequisites = ["qkv"]
-related = ["sparse-attention", "context-window"]
-search_terms = ["quadratic complexity", "n squared", "attention cost", "flash attention", "global attention", "why is attention expensive", "long documents"]
-learning_objectives = [
-    "Explain why attention cost grows quadratically with length",
-    "Distinguish exact optimisations like FlashAttention from approximations",
-]
-misconceptions = ["FlashAttention is an approximation of attention."]
-+++
 <p>In the standard design, every position attends to every position before it.
-For a sequence of <?= math('n') ?> tokens that is roughly <?= math('n^2/2') ?> query-key scores per
+For a sequence of <math><mi>n</mi></math> tokens that is roughly <math><msup><mi>n</mi><mn>2</mn></msup><mo>/</mo><mn>2</mn></math> query-key scores per
 head, per layer. Double the length of the input and the attention work
 roughly quadruples, while the rest of the network’s work only doubles.</p>
 <p>For short prompts this hardly matters. For hundreds of thousands of tokens it

@@ -3,26 +3,20 @@ require_once APPPATH . 'modules/prose/prose_helper.php';
 
 /**
  * A post or a knowledge node: an ordinary PHP view, written with the prose
- * helpers (section_open(), code_open() …), whose file starts with the same
- * +++ TOML header the listing reads.
- *
- * The header is not PHP, so rendering the view outputs it as text first; it
- * is cut off here.
+ * helpers (section_open(), code_open() …). Its details (title, date and the
+ * rest) are in an array beside it: modules/blog/posts.php for a post,
+ * modules/knowledge/nodes.php for a node.
  */
 class Prose_view {
 
     /**
-     * The view's HTML, without its header.
+     * The view's HTML.
      */
     public static function html(string $file): string {
         Modules::run('prose/reset_ids', []);
         ob_start();
         require $file;
-        $output = ob_get_clean();
-
-        $start = strpos($output, '+++');
-        $end = strpos($output, '+++', $start + 3);
-        return ltrim(substr($output, $end + 3));
+        return ltrim(ob_get_clean());
     }
 
     /**

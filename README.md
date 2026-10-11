@@ -62,7 +62,8 @@ php bin/run-tests.php modules/content/tests modules/search/tests
 
 and the search code's tests at `/search/tests/` on the dev server.
 
-Posts live in `modules/blog/views/posts/`, the CV in `modules/cv/cv.toml`, and
+Posts live in `modules/blog/views/posts/` with their details in
+`modules/blog/posts.php`, the CV in `modules/cv/cv.php`, and
 the AI article's knowledge nodes in `modules/knowledge/` — see
 [docs/knowledge-nodes.md](docs/knowledge-nodes.md).
 
@@ -70,5 +71,5 @@ the AI article's knowledge nodes in `modules/knowledge/` — see
 
 <sub>[sasin91.xyz/cv](https://sasin91.xyz/cv/) is itself the source of the
 downloadable [cv_jonas_hansen_software_developer.pdf](https://sasin91.xyz/cv_jonas_hansen_software_developer.pdf):
-both are rendered from the same `modules/cv/cv.toml`, so the content cannot
-diverge. The CV is edited in `cv.toml`, never in a PDF editor.</sub>
+both are rendered from the same `modules/cv/cv.php`, so the content cannot
+diverge. The CV is edited in `cv.php`, never in a PDF editor.</sub>

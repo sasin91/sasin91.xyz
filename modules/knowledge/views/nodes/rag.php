@@ -1,17 +1,3 @@
-+++
-id = "rag"
-title = "Retrieval-augmented generation"
-summary = "RAG searches an external collection at request time and places the most relevant passages in the context before the model answers."
-concepts = ["retrieval-augmented generation", "rag", "retrieval", "vector search", "chunking", "reranking"]
-prerequisites = ["context-window", "embeddings"]
-related = ["retrieval-vs-attention", "external-memory", "code-retrieval"]
-search_terms = ["retrieval augmented generation", "vector database", "semantic search", "knowledge base", "grounding", "citations", "document search"]
-learning_objectives = [
-    "Walk through the steps of a RAG pipeline",
-    "Name the main ways a RAG system fails",
-]
-misconceptions = ["RAG teaches the model new facts by updating it."]
-+++
 <p>A model knows only what it absorbed in training plus what is in its
 <a href="#context-window">context</a>. Retrieval-augmented generation adds a step
 before generation that decides what else should be in that context:</p>

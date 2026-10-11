@@ -4,15 +4,15 @@
     <?php /* The newline after each span is the only break opportunity in the
        line; .sep-list glues each generated "·" to the word before it. */ ?>
     <p class="stack sep-list">
-      <?php foreach ($cv['site']['stack'] as $item) { ?><span><?= out($item) ?></span>
-      <?php } ?>
+      <?php foreach ($cv['site']['stack'] as $item): ?><span><?= out($item) ?></span>
+      <?php endforeach; ?>
     </p>
-<?php if ($cv['site']['available']) { ?>
+<?php if ($cv['site']['available']): ?>
       <p class="available">
         <?= out($cv['site']['available_note']) ?> —
         <a href="<?= out($cv['site']['links']['email']) ?>">get in touch</a>
       </p>
-<?php } ?>
+<?php endif; ?>
 
     <div class="social">
       <a href="<?= out($cv['site']['links']['github']) ?>">GitHub</a>
@@ -23,7 +23,7 @@
 
   <h2>Writing</h2>
   <ul class="post-list">
-<?php foreach ($posts as $post) { ?>
+<?php foreach ($posts as $post): ?>
       <li>
         <div class="meta">
           <time datetime="<?= $post['date_iso'] ?>"><?= $post['date_long'] ?></time>
@@ -31,5 +31,5 @@
         <h3><a href="<?= out($post['url']) ?>"><?= out($post['title']) ?></a></h3>
         <p><?= out($post['description']) ?></p>
       </li>
-<?php } ?>
+<?php endforeach; ?>
   </ul>

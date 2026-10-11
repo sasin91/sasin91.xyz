@@ -1,17 +1,3 @@
-+++
-id = "attention"
-title = "Self-attention"
-summary = "Each token's representation gathers information from other positions in the context, weighted by how relevant the model computes them to be."
-concepts = ["self-attention", "attention", "attention head", "attention weights", "causal mask"]
-prerequisites = ["transformer-layers"]
-related = ["qkv", "retrieval-vs-attention", "context-window"]
-search_terms = ["attention mechanism", "multi-head attention", "attention is all you need", "how does attention work"]
-learning_objectives = [
-    "Explain what attention computes for one position",
-    "State the scope of what attention can reach",
-]
-misconceptions = ["Attention lets the model look things up beyond what is in its context."]
-+++
 <p>Attention is how a transformer moves information between positions. For each
 position, it computes a weight for every position it is allowed to look at,
 then takes a weighted average of information from those positions. In a

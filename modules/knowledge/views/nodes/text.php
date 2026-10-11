@@ -1,16 +1,3 @@
-+++
-id = "text"
-title = "Text"
-summary = "A language model never reads letters directly: before it can do anything, text has to become a sequence of integers."
-concepts = ["text", "input", "unicode", "bytes", "preprocessing"]
-related = ["tokenization"]
-search_terms = ["characters", "letters", "utf-8", "how does an llm read text", "input text"]
-learning_objectives = [
-    "Explain why a neural network cannot consume text as written",
-    "Name the steps between a string and the model's first computation",
-]
-misconceptions = ["A language model reads the letters of a prompt the way a person does."]
-+++
 <p>A computer stores text as bytes: Unicode characters encoded, usually, as
 UTF-8. A neural network does not compute with bytes or letters. It computes
 with numbers arranged in vectors and matrices, and the only thing it can do

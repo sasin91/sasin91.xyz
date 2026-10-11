@@ -1,17 +1,22 @@
 <?php
-require_once __DIR__ . '/Front_matter.php';
-
 /**
- * The blog posts: one view each under modules/blog/views/posts, newest first.
+ * The blog posts, newest first: each one's details from the array in
+ * modules/blog/posts.php, and its body in the view of the same key under
+ * modules/blog/views/posts.
  *
- * Loading reads every header but renders no body; a page that shows one post
- * renders that one (Content::post).
+ * Loading renders no body; a page that shows one post renders that one
+ * (Content::post).
  */
 class Posts {
 
+    private array $details;
     private string $dir;
 
-    public function __construct(string $dir) {
+    /**
+     * @param array<string, array> $details Each post's details, keyed by its view's name.
+     */
+    public function __construct(array $details, string $dir) {
+        $this->details = $details;
         $this->dir = rtrim($dir, '/');
     }
 
@@ -24,8 +29,8 @@ class Posts {
      */
     public function all(): array {
         $posts = [];
-        foreach ($this->files() as $file) {
-            $posts[] = $this->load($file);
+        foreach ($this->details as $view => $details) {
+            $posts[] = $this->load($view, $details);
         }
 
         $anchors = $this->series_anchors($posts);
@@ -60,47 +65,40 @@ class Posts {
         return $anchors;
     }
 
-    /** @return string[] */
-    private function files(): array {
-        $files = [];
-        $walk = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($this->dir, FilesystemIterator::SKIP_DOTS));
-        foreach ($walk as $entry) {
-            if ($entry->getExtension() === 'php') {
-                $files[] = str_replace('\\', '/', $entry->getPathname());
-            }
+    private function load(string $view, array $details): array {
+        $file = $this->dir . '/' . $view . '.php';
+        if (!is_file($file)) {
+            throw new RuntimeException("post \"{$view}\": no view at {$file}");
         }
-        sort($files);
-        return $files;
-    }
-
-    private function load(string $file): array {
-        [$front] = Front_matter::split(file_get_contents($file), $file);
 
         foreach (['path', 'title', 'date', 'description'] as $required) {
-            if (!isset($front[$required])) {
-                throw new RuntimeException($file . ': frontmatter has no ' . $required);
+            if (!isset($details[$required])) {
+                throw new RuntimeException("post \"{$view}\": has no {$required}");
             }
         }
 
-        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $front['date'], new DateTimeZone('UTC'));
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d', $details['date'], new DateTimeZone('UTC'));
+        if ($date === false || $date->format('Y-m-d') !== $details['date']) {
+            throw new RuntimeException("post \"{$view}\": invalid date \"{$details['date']}\" (want YYYY-MM-DD)");
+        }
 
         return [
             'file' => $file,
-            'path' => $front['path'],
-            'url' => '/' . $front['path'] . '/',
-            'title' => $front['title'],
-            'date' => $front['date'],
-            'date_iso' => $front['date'],
+            'path' => $details['path'],
+            'url' => '/' . $details['path'] . '/',
+            'title' => $details['title'],
+            'date' => $details['date'],
+            'date_iso' => $details['date'],
             'date_long' => $date->format('F j, Y'),
             'date_rfc2822' => $date->format('D, j M Y H:i:s O'),
-            'description' => $front['description'],
-            'hero' => $front['hero'] ?? null,
-            'hero_alt' => $front['hero_alt'] ?? null,
-            'card' => $front['card'] ?? null,
-            'card_alt' => $front['card_alt'] ?? null,
-            'series' => $front['series'] ?? null,
-            'part' => $front['part'] ?? null,
-            'ask' => $front['ask'] ?? [],
+            'description' => $details['description'],
+            'hero' => $details['hero'] ?? null,
+            'hero_alt' => $details['hero_alt'] ?? null,
+            'card' => $details['card'] ?? null,
+            'card_alt' => $details['card_alt'] ?? null,
+            'series' => $details['series'] ?? null,
+            'part' => $details['part'] ?? null,
+            'ask' => $details['ask'] ?? [],
         ];
     }
 

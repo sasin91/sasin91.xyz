@@ -1,17 +1,3 @@
-+++
-id = "contextual-representations"
-title = "Context-dependent representations"
-summary = "As vectors pass through the network, each token's representation is rewritten using the tokens around it."
-concepts = ["contextual representation", "hidden state", "residual stream", "contextual embedding"]
-prerequisites = ["embeddings", "position"]
-related = ["transformer-layers", "attention"]
-search_terms = ["hidden states", "activations", "word sense", "polysemy", "meaning in context"]
-learning_objectives = [
-    "Explain how the same token ends up with different vectors in different sentences",
-    "Describe where contextual representations exist and how long they last",
-]
-misconceptions = ["The meaning of a word in context is looked up from a stored table."]
-+++
 <p>The vector a token starts with is the same in every sentence. The vector it
 has after the first layer is not. Each layer mixes in information from other
 positions and transforms the result, so by the middle of the network the

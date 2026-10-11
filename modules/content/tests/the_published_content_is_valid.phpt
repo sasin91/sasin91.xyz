@@ -3,11 +3,11 @@ the content in the repository loads: every post renders, the CV reads, and the A
 --FILE--
 <?php
 require __DIR__ . '/setup.inc';
-$posts = (new Posts(APPPATH . 'modules/blog/views/posts'))->all();
+$posts = (new Posts(require APPPATH . 'modules/blog/posts.php', APPPATH . 'modules/blog/views/posts'))->all();
 foreach ($posts as $post) {
     Prose_view::html($post['file']);
 }
-$cv = Cv_data::load(APPPATH . 'modules/cv/cv.toml');
+$cv = Cv_data::load(require APPPATH . 'modules/cv/cv.php');
 $article = (new Knowledge_article(APPPATH . 'modules/knowledge'))->load();
 var_dump(count($posts) > 0, $cv['site']['name'] !== '', count($article['nodes']) > 0);
 var_dump($article['nodes'][0]['order'], $article['parts'][0]['id']);

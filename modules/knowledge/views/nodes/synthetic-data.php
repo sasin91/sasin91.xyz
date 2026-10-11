@@ -1,17 +1,3 @@
-+++
-id = "synthetic-data"
-title = "Self-training and synthetic data"
-summary = "Model outputs that have been filtered, checked or ranked can become training data for a later model: a learning loop outside generation."
-concepts = ["synthetic data", "self-training", "distillation", "rejection sampling", "model collapse"]
-prerequisites = ["training", "search-and-verification"]
-related = ["self-improvement"]
-search_terms = ["training on model outputs", "ai generated training data", "self improvement loop", "bootstrapping", "data flywheel"]
-learning_objectives = [
-    "Describe a generate, verify and train loop",
-    "Explain why verification quality limits self-training",
-]
-misconceptions = ["A model improves itself every time it generates and checks an answer."]
-+++
 <p>Generated text can be training data. Some common patterns:</p>
 <ul>
 <li>Generate many solutions to problems with checkable answers, keep the ones

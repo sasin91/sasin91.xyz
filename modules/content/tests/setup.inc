@@ -1,6 +1,5 @@
 <?php
 define('APPPATH', str_replace('\\', '/', dirname(__DIR__, 3)) . '/');
-require_once APPPATH . 'packages/autoload.php';
 // The prose helpers reach their module through Trongate, as in a page.
 define('BASE_URL', 'http://localhost/');
 require_once APPPATH . 'engine/Trongate.php';
@@ -23,13 +22,21 @@ function fixture_dir(string $name): string {
     return $dir;
 }
 
-function write_post(string $dir, string $slug, string $path, string $date, string $extra = ''): void {
-    file_put_contents("$dir/$slug.php", "+++\npath = \"$path\"\ntitle = \"$slug\"\ndate = $date\ndescription = \"d\"\n$extra+++\n<p>body</p>\n");
+/** Posts with these details, each with a view of its own in $dir. */
+function posts_in(string $dir, array $details): Posts {
+    foreach (array_keys($details) as $view) {
+        file_put_contents("$dir/$view.php", "<p>body</p>\n");
+    }
+    return new Posts($details, $dir);
+}
+
+function post_details(string $path, string $date, array $extra = []): array {
+    return ['path' => $path, 'title' => basename($path), 'date' => $date, 'description' => 'd'] + $extra;
 }
 
 /** Renders view source written with the prose helpers, as a page would. */
 function render_view(string $source): string {
     $file = fixture_dir('view') . '/view.php';
-    file_put_contents($file, "+++\n+++\n" . $source);
+    file_put_contents($file, $source);
     return Prose_view::html($file);
 }

@@ -1,18 +1,3 @@
-+++
-path = "blog/trongate/recruiter"
-title = "Recruiter: see how your CV matches a job post"
-date = 2026-10-09
-description = "Recruiter matches a CV against every requirement in a job post and shows why: met, partly met or missing, with the line from the CV that decided it. A Trongate app that dogfoods trongate.cloud."
-ask = [
-    "What does Recruiter do?",
-    "What problem does it solve?",
-    "How does cv_match work?",
-    "Is it free?",
-    "Which AI model does it use?",
-    "Why build it on trongate.cloud?",
-    "How accurate is it?",
-]
-+++
 <?= callout_open('note') ?>
 <p>Recruiter is still a work in progress at the time of writing, 9 October 2026.</p>
 <?= callout_close() ?>

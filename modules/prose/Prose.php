@@ -5,7 +5,7 @@
  * Reached through the helper functions in prose_helper.php, the way the form
  * helpers reach the form module: section_open() and section_close(),
  * callout_open() and callout_close(), code_open() and code_close(),
- * diagram() and math(). Every method takes one $data array, so none can be
+ * and diagram(). Every method takes one $data array, so none can be
  * called from a URL.
  */
 
@@ -14,8 +14,6 @@ if (!defined('BASE_URL')) {
 }
 
 require_once APPPATH . 'modules/content/Highlighter.php';
-
-use Latex2MathML\Converter as Latex2MathML;
 
 class Prose extends Trongate {
 
@@ -130,22 +128,6 @@ class Prose extends Trongate {
         }
         return '<figure class="diagram" role="img" aria-label="' . htmlspecialchars($data['alt'], ENT_QUOTES) . '">'
             . file_get_contents($file) . '</figure>';
-    }
-
-    /**
-     * TeX as MathML, which browsers render natively. A formula that does not
-     * convert shows as its source, marked, rather than breaking the page.
-     *
-     * @param array $data 'tex', and 'display' (true for a formula on its own line).
-     */
-    public function math(array $data): string {
-        $display = ($data['display'] ?? false) ? 'block' : 'inline';
-        try {
-            return Latex2MathML::convert($data['tex'], $display);
-        } catch (Throwable $error) {
-            return '<code class="math-error" title="' . htmlspecialchars($error->getMessage(), ENT_QUOTES) . '">'
-                . htmlspecialchars($data['tex'], ENT_QUOTES) . '</code>';
-        }
     }
 
     /**

@@ -1,5 +1,4 @@
 <?php
-require_once APPPATH . 'packages/autoload.php';
 require_once __DIR__ . '/Search_index.php';
 
 /**
@@ -118,7 +117,9 @@ class Search extends Trongate {
      */
     private function content_hash(): string {
         $files = array_merge(glob(APPPATH . 'modules/blog/views/posts/*.php'), glob(APPPATH . 'modules/knowledge/views/nodes/*.php'));
-        $files[] = APPPATH . 'modules/knowledge/article.toml';
+        $files[] = APPPATH . 'modules/blog/posts.php';
+        $files[] = APPPATH . 'modules/knowledge/article.php';
+        $files[] = APPPATH . 'modules/knowledge/nodes.php';
         sort($files);
 
         $hash = hash_init('md5');

@@ -17,15 +17,15 @@
     <meta property="og:description" content="<?= out($meta['description']) ?>" />
     <meta property="og:url" content="<?= out($meta['url']) ?>" />
     <meta property="og:locale" content="en_GB" />
-<?php if ($meta['image'] !== null) { ?>
+<?php if ($meta['image'] !== null): ?>
     <meta property="og:image" content="<?= out($meta['image']) ?>" />
-<?php if ($meta['image_alt'] !== null) { ?>
+<?php if ($meta['image_alt'] !== null): ?>
     <meta property="og:image:alt" content="<?= out($meta['image_alt']) ?>" />
-<?php } ?>
+<?php endif; ?>
     <meta name="twitter:card" content="summary_large_image" />
-<?php } else { ?>
+<?php else: ?>
     <meta name="twitter:card" content="summary" />
-<?php } ?>
+<?php endif; ?>
     <link rel="icon" href="/favicon.png" sizes="any">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <script>
@@ -39,9 +39,9 @@
       })();
     </script>
     <link rel="stylesheet" href="<?= $site_css_url ?>" />
-<?php if ($syntax) { ?>
+<?php if ($syntax): ?>
     <link rel="stylesheet" href="<?= $syntax_css_url ?>" />
-<?php } ?>
+<?php endif; ?>
     <link rel="alternate" type="application/rss+xml" title="<?= out($cv['site']['name']) ?>" href="/rss.xml" />
   </head>
   <body>
@@ -91,9 +91,9 @@
 
       <main id="content" tabindex="-1">
 <?= $content ?>
-<?php if ($lightbox) { ?>
+<?php if ($lightbox): ?>
 <?= $this->view('lightbox', [], true) ?>
-<?php } ?>
+<?php endif; ?>
       </main>
 
       <footer class="site-foot">

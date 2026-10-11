@@ -1,11 +1,3 @@
-+++
-path = "blog/athletos-freebsd"
-title = "One box, two jails and a five second deploy"
-date = 2026-07-26
-description = "AthletOS runs on a single €7 FreeBSD box. Two jails that are always up, Caddy handling certificates on its own, and a rolling deploy that never leaves zero healthy backends. What the boring choices bought, measured rather than estimated."
-hero = "/images/athletos-freebsd/architecture.svg"
-hero_alt = "One FreeBSD box: Caddy in front of two always-running jails, with Postgres on the host"
-+++
 <p>The essence is simple and efficient. That is exactly why I chose
 <a href="/blog/freebsd-on-hetzner/">FreeBSD</a> as the foundation and
 <a href="https://github.com/sasin91/athletos.app/tree/main/backend">Rust</a> as the base.</p>

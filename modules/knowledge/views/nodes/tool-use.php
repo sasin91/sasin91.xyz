@@ -1,17 +1,3 @@
-+++
-id = "tool-use"
-title = "Tool use"
-summary = "A model can emit a structured request to call a tool. Software outside the model runs it and feeds the result back into the context."
-concepts = ["tool use", "function calling", "tool call", "agent", "agent loop"]
-prerequisites = ["sampling", "context-window"]
-related = ["mcp", "rag", "code-retrieval", "external-memory"]
-search_terms = ["function calling", "tools", "agents", "agentic", "api calls", "run code", "plugins"]
-learning_objectives = [
-    "Describe the loop between a model and the application that runs its tool calls",
-    "Explain where tool execution and permissions actually live",
-]
-misconceptions = ["The model itself executes the code or API calls it requests."]
-+++
 <p>When an application describes some tools in the prompt, such as a name, a
 purpose and the arguments each takes, a model trained for it can respond
 with a structured call instead of prose: in effect, “call <code>search</code> with

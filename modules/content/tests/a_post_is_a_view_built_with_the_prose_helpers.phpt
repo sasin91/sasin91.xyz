@@ -1,5 +1,5 @@
 --TEST--
-a post is a plain view built with the prose helpers: sections, callouts and code, ids in page order, its header cut off
+a post is a plain view built with the prose helpers: sections, callouts and code, ids in page order
 --FILE--
 <?php
 require __DIR__ . '/setup.inc';
@@ -7,7 +7,7 @@ $html = render_view(<<<'VIEW'
 <p>Intro.</p>
 <?= section_open('Result') ?>
 <?= callout_open('note', 'Result') ?>
-<p>It worked: <?= math('x^2') ?></p>
+<p>It worked.</p>
 <?= callout_close() ?>
 <?= code_open('bash', 'run.sh') ?>
 ssh root@<ip>
@@ -17,7 +17,6 @@ VIEW);
 var_dump(str_starts_with($html, '<p>Intro.</p>'));
 var_dump(str_contains($html, '<section id="Result">'), str_contains($html, '<h2 id="Result-1">Result</h2>'));
 var_dump(str_contains($html, '<div class="codeblock"><div class="filename">run.sh</div><pre class="hl-code">'), str_contains($html, 'root@&lt;ip&gt;'));
-var_dump(str_contains($html, '<math'));
 
 try {
     callout_open('tip');
@@ -26,7 +25,6 @@ try {
 }
 ?>
 --EXPECT--
-bool(true)
 bool(true)
 bool(true)
 bool(true)

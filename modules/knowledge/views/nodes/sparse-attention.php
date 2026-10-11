@@ -1,17 +1,3 @@
-+++
-id = "sparse-attention"
-title = "Sparse and sliding-window attention"
-summary = "Some attention layers restrict each token to a window or pattern of positions, trading direct reach for lower cost. It all happens inside the model."
-concepts = ["sparse attention", "sliding-window attention", "local attention", "attention pattern", "receptive field"]
-prerequisites = ["dense-attention"]
-related = ["retrieval-vs-attention", "context-window"]
-search_terms = ["sliding window", "local attention", "longformer", "bigbird", "block sparse", "windowed attention"]
-learning_objectives = [
-    "Describe sliding-window attention and how information still travels beyond the window",
-    "Explain why sparse attention is not a form of retrieval",
-]
-misconceptions = ["Sparse attention fetches the relevant parts of a long document, like search."]
-+++
 <p>Sparse attention changes the rule of <a href="#dense-attention">dense attention</a>
 that every token may attend to every earlier one. In <strong>sliding-window</strong>
 attention, each token attends only to the most recent few thousand

@@ -1,17 +1,3 @@
-+++
-id = "transformer-layers"
-title = "Transformer layers"
-summary = "A transformer is a stack of blocks. Each one lets tokens exchange information (attention), then transforms every token on its own (an MLP)."
-concepts = ["transformer", "layer", "transformer block", "feed-forward network", "mlp", "residual connection", "mixture of experts"]
-prerequisites = ["contextual-representations"]
-related = ["attention", "training"]
-search_terms = ["decoder only", "architecture", "ffn", "layer norm", "moe", "how many layers", "parameters"]
-learning_objectives = [
-    "Name the two sublayers of a transformer block and what each does",
-    "Explain why the same weights can process inputs of any length",
-]
-misconceptions = ["Each layer of the model handles a different word of the input."]
-+++
 <p>A large language model is a stack of dozens of transformer blocks, often
 somewhere between 30 and 100 or more. Each block reads the residual stream,
 computes something, and adds its result back, so information accumulates

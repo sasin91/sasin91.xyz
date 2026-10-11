@@ -1,20 +1,6 @@
-+++
-id = "softmax"
-title = "Probabilities and softmax"
-summary = "Softmax turns the logits into a probability distribution over the entire vocabulary."
-concepts = ["softmax", "probability distribution", "probability", "normalization", "calibration"]
-prerequisites = ["logits"]
-related = ["sampling-controls", "qkv"]
-search_terms = ["probabilities", "next token probability", "exponential", "logprobs", "confidence"]
-learning_objectives = [
-    "Compute softmax for a small list of logits",
-    "Explain why a high probability is not the same as a correct answer",
-]
-misconceptions = ["A token with high probability is likely to be factually correct."]
-+++
 <p>Softmax exponentiates each logit and divides by the sum, so every token gets
 a positive probability and all of them add up to one:</p>
-<p><?= math('p_i = \\frac{e^{z_i}}{\\sum_j e^{z_j}}', true) ?></p>
+<p><math display="block"><msub><mi>p</mi><mi>i</mi></msub><mo>=</mo><mfrac><msup><mi>e</mi><msub><mi>z</mi><mi>i</mi></msub></msup><mrow><msub><mo>∑</mo><mi>j</mi></msub><msup><mi>e</mi><msub><mi>z</mi><mi>j</mi></msub></msup></mrow></mfrac></math></p>
 <p>It keeps the order of the logits and exaggerates the gaps between them: a
 logit two points higher than another becomes about seven times as probable.
 Every token in the vocabulary, however unlikely, keeps a probability above

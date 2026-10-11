@@ -1,18 +1,3 @@
-+++
-path = "blog/trongate/benchmarks"
-title = "trongate.cloud: you push, we deploy your Trongate app"
-date = 2026-10-04
-description = "Hosting for Trongate apps on Kubernetes. You push, we deploy: HTTPS, a database and room to grow, with nothing to configure. Tailored for Trongate first, proven by running our own control panel on it, and backed by benchmarks."
-ask = [
-    "How do I deploy my app?",
-    "Do I need to manage servers?",
-    "Does it scale with me?",
-    "Is it built for Trongate?",
-    "Is it a proven platform?",
-    "What did the benchmarks find?",
-    "What is the lazy session fix?",
-]
-+++
 <?= callout_open('note') ?>
 <p>trongate.cloud is still a work in progress at the time of writing, 4 October
 2026.</p>

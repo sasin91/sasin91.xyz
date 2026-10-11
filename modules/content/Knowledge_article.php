@@ -1,11 +1,11 @@
 <?php
-require_once __DIR__ . '/Front_matter.php';
 require_once __DIR__ . '/Prose_view.php';
 
 /**
- * The long-form article at /blog/ai/, assembled from the knowledge nodes in
- * modules/knowledge/views/nodes (one view each) and the reading order in
- * modules/knowledge/article.toml.
+ * The long-form article at /blog/ai/, assembled from the knowledge nodes
+ * (details in modules/knowledge/nodes.php, each body a view in
+ * modules/knowledge/views/nodes) and the reading order in
+ * modules/knowledge/article.php.
  *
  * Nodes do not carry their own position: the article's order is the order
  * their ids appear in the manifest's parts. See docs/knowledge-nodes.md.
@@ -17,7 +17,7 @@ class Knowledge_article {
     const PART_PREFIX = 'part-';
     const MAX_SUMMARY_CHARS = 200;
 
-    const NODE_FIELDS = ['id', 'title', 'summary', 'concepts', 'prerequisites', 'related',
+    const NODE_FIELDS = ['title', 'summary', 'concepts', 'prerequisites', 'related',
         'search_terms', 'learning_objectives', 'misconceptions'];
 
     private string $dir;
@@ -33,40 +33,38 @@ class Knowledge_article {
      * an anchor that does not exist, and so on.
      */
     public function load(bool $render_bodies = true): array {
-        $manifest_file = $this->dir . '/article.toml';
-        $manifest = Front_matter::decode(file_get_contents($manifest_file), $manifest_file);
+        $manifest = require $this->dir . '/article.php';
+        $details = require $this->dir . '/nodes.php';
+
+        foreach (glob($this->dir . '/views/nodes/*.php') as $file) {
+            $id = pathinfo($file, PATHINFO_FILENAME);
+            if (!isset($details[$id])) {
+                throw new RuntimeException("views/nodes/{$id}.php has no entry in nodes.php");
+            }
+        }
 
         $nodes = [];
-        foreach ($this->node_files() as $file) {
-            $nodes[] = $this->load_node($file, $render_bodies);
+        foreach ($details as $id => $node) {
+            $nodes[] = $this->load_node($id, $node, $render_bodies);
         }
 
         return $this->assemble($manifest, $nodes);
     }
 
-    /** @return string[] */
-    private function node_files(): array {
-        $files = glob($this->dir . '/views/nodes/*.php');
-        sort($files);
-        return $files;
-    }
+    private function load_node(string $id, array $details, bool $render_body): array {
+        $file = $this->dir . '/views/nodes/' . $id . '.php';
+        if (!is_file($file)) {
+            throw new RuntimeException("node \"{$id}\": no view at views/nodes/{$id}.php");
+        }
 
-    private function load_node(string $file, bool $render_body): array {
-        [$front] = Front_matter::split(file_get_contents($file), $file);
-
-        $unknown = array_diff(array_keys($front), self::NODE_FIELDS);
+        $unknown = array_diff(array_keys($details), self::NODE_FIELDS);
         if ($unknown !== []) {
-            throw new RuntimeException($file . ': unknown field(s) ' . implode(', ', $unknown));
+            throw new RuntimeException("node \"{$id}\": unknown field(s) " . implode(', ', $unknown));
         }
-        foreach (['id', 'title', 'summary', 'concepts'] as $required) {
-            if (!isset($front[$required])) {
-                throw new RuntimeException($file . ': frontmatter has no ' . $required);
+        foreach (['title', 'summary', 'concepts'] as $required) {
+            if (!isset($details[$required])) {
+                throw new RuntimeException("node \"{$id}\": has no {$required}");
             }
-        }
-
-        $stem = pathinfo($file, PATHINFO_FILENAME);
-        if ($stem !== $front['id']) {
-            throw new RuntimeException($file . ': id "' . $front['id'] . '" must match the file name, so a node is found where its id says');
         }
 
         $html = '';
@@ -75,15 +73,15 @@ class Knowledge_article {
         }
 
         return [
-            'id' => $front['id'],
-            'title' => $front['title'],
-            'summary' => $front['summary'],
-            'concepts' => $front['concepts'],
-            'prerequisites' => $front['prerequisites'] ?? [],
-            'related' => $front['related'] ?? [],
-            'search_terms' => $front['search_terms'] ?? [],
-            'learning_objectives' => $front['learning_objectives'] ?? [],
-            'misconceptions' => $front['misconceptions'] ?? [],
+            'id' => $id,
+            'title' => $details['title'],
+            'summary' => $details['summary'],
+            'concepts' => $details['concepts'],
+            'prerequisites' => $details['prerequisites'] ?? [],
+            'related' => $details['related'] ?? [],
+            'search_terms' => $details['search_terms'] ?? [],
+            'learning_objectives' => $details['learning_objectives'] ?? [],
+            'misconceptions' => $details['misconceptions'] ?? [],
             'file' => $file,
             'body' => $html,
             'order' => 0,
@@ -111,7 +109,7 @@ class Knowledge_article {
 
         $order = [];
         $parts = [];
-        foreach ($manifest['part'] as $index => $part) {
+        foreach ($manifest['parts'] as $index => $part) {
             if ($part['nodes'] === []) {
                 $errors[] = "part \"{$part['title']}\" lists no nodes";
             }
@@ -138,7 +136,7 @@ class Knowledge_article {
         $unlisted = array_diff(array_keys($by_id), $order);
         sort($unlisted);
         foreach ($unlisted as $id) {
-            $errors[] = "node \"{$id}\" is not listed in any part of article.toml";
+            $errors[] = "node \"{$id}\" is not listed in any part of article.php";
         }
 
         $position = array_flip($order);
@@ -147,7 +145,7 @@ class Knowledge_article {
             $errors = array_merge($errors, $this->link_errors($by_id[$id], $by_id, $position, $part_ids, $manifest['path']));
         }
 
-        $errors = array_merge($errors, $this->learning_path_errors($manifest['learning_path'] ?? [], $by_id));
+        $errors = array_merge($errors, $this->learning_path_errors($manifest['learning_paths'] ?? [], $by_id));
 
         if ($errors !== []) {
             throw new RuntimeException("the AI article is invalid:\n  - " . implode("\n  - ", $errors));

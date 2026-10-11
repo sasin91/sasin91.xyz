@@ -1,5 +1,4 @@
 <?php
-require_once APPPATH . 'packages/autoload.php';
 require_once __DIR__ . '/Prose_view.php';
 require_once __DIR__ . '/Posts.php';
 require_once __DIR__ . '/Cv_data.php';
@@ -7,7 +6,7 @@ require_once __DIR__ . '/Knowledge_article.php';
 
 /**
  * Everything the pages show: the posts (modules/blog/views/posts), the CV
- * (modules/cv/cv.toml) and the AI article (modules/knowledge). Other modules ask this one (`$this->content->posts()`); it
+ * (modules/cv/cv.php) and the AI article (modules/knowledge). Other modules ask this one (`$this->content->posts()`); it
  * answers no URL itself.
  *
  * Nothing is built ahead of time. A post renders when its page is asked for,
@@ -22,10 +21,10 @@ class Content extends Trongate {
     }
 
     /**
-     * Every post's header, newest first, without rendering a body.
+     * Every post's details, newest first, without rendering a body.
      */
     public function posts(): array {
-        $posts = new Posts(APPPATH . 'modules/blog/views/posts');
+        $posts = new Posts(require APPPATH . 'modules/blog/posts.php', APPPATH . 'modules/blog/views/posts');
         return $posts->all();
     }
 
@@ -42,7 +41,7 @@ class Content extends Trongate {
     }
 
     public function cv(): array {
-        return Cv_data::load(APPPATH . 'modules/cv/cv.toml');
+        return Cv_data::load(require APPPATH . 'modules/cv/cv.php');
     }
 
     /**

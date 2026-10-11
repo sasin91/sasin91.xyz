@@ -1,17 +1,3 @@
-+++
-id = "code-retrieval"
-title = "Codebase-aware retrieval"
-summary = "Coding agents find the relevant parts of a repository with search tools, such as text search, symbol indexes, embeddings or code graphs, and read them into context."
-concepts = ["code search", "codebase retrieval", "code knowledge graph", "symbol index", "language server", "grep"]
-prerequisites = ["rag", "tool-use"]
-related = ["mcp", "external-memory", "retrieval-vs-attention"]
-search_terms = ["coding agent", "repository", "repo", "ripgrep", "code graph", "how do coding agents understand a codebase", "lsp"]
-learning_objectives = [
-    "List the main ways an agent searches a codebase and when each works best",
-    "Explain why exact identifiers favour lexical search",
-]
-misconceptions = ["A coding agent reads and understands the whole repository at once."]
-+++
 <p>A repository rarely fits in a context window, and most of it is irrelevant
 to any given task. So a coding agent does what a developer new to the code
 would do: it searches, reads, and searches again. The usual instruments:</p>

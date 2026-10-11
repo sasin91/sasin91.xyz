@@ -1,17 +1,3 @@
-+++
-id = "self-improvement"
-title = "Recursive self-improvement"
-summary = "The idea that an AI system could improve its own capabilities, including its ability to improve itself. A research concept, not a current mechanism."
-concepts = ["recursive self-improvement", "intelligence explosion", "automated ai research", "feedback loop"]
-prerequisites = ["synthetic-data"]
-related = ["agi", "training"]
-search_terms = ["singularity", "self improving ai", "ai improving ai", "takeoff", "seed ai"]
-learning_objectives = [
-    "State the recursive self-improvement hypothesis",
-    "Identify which parts of today's training loops resemble it, and which do not",
-]
-misconceptions = ["Current models rewrite their own weights to become smarter while they run."]
-+++
 <p>The hypothesis is old: a system able to improve the system that produces it
 could make each improvement come faster than the last. In 1965 the
 statistician I. J. Good called the possible result an “intelligence

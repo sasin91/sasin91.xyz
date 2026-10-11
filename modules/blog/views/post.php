@@ -1,10 +1,10 @@
   <article class="prose">
-<?php if ($post['hero_html'] !== null) { ?>
+<?php if ($post['hero_html'] !== null): ?>
     <?= $post['hero_html'] ?>
-<?php } ?>
-<?php if ($post['hero_is_img']) { ?>
+<?php endif; ?>
+<?php if ($post['hero_is_img']): ?>
     <img src="<?= out($post['hero']) ?>" alt="<?= out($post['alt_text']) ?>" />
-<?php } ?>
+<?php endif; ?>
 
     <h1><?= out($post['title']) ?></h1>
     <div class="meta">
@@ -25,16 +25,16 @@
         <button type="submit" disabled>Ask</button>
       </div>
       <p id="ask-status" class="ask-status" role="status" aria-live="polite"></p>
-<?php if ($has_examples) { ?>
+<?php if ($has_examples): ?>
       <div class="ask-examples" hidden>
         <p>Try:</p>
         <ul>
-<?php foreach ($post['ask'] as $example) { ?>
+<?php foreach ($post['ask'] as $example): ?>
           <li><button type="button"><?= out($example) ?></button></li>
-<?php } ?>
+<?php endforeach; ?>
         </ul>
       </div>
-<?php } ?>
+<?php endif; ?>
       <section class="ask-results" aria-labelledby="ask-results-title" hidden>
         <h2 id="ask-results-title" class="visually-hidden">Relevant sections</h2>
         <ol id="ask-results"></ol>

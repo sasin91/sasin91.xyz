@@ -1,13 +1,3 @@
-+++
-path = "blog/freebsd-on-hetzner"
-title = "FreeBSD on a Hetzner Cloud VPS"
-date = 2026-07-26
-description = "Hetzner has no FreeBSD image, and the installer everyone recommends never verifies what it downloads before handing it root. In this article I install 15.1 on root-on-ZFS the honest way, and walk through the five things that broke on the way there."
-hero = "/images/freebsd-on-hetzner/header.svg"
-hero_alt = "FreeBSD 15.1 on root-on-ZFS, with the disk partition layout"
-card = "/images/freebsd-on-hetzner/card.png"
-card_alt = "Bar chart of mean latency for a fresh TLS connection at 100, 250 and 500 connections a second: FreeBSD 4.9, 4.7 and 4.0 milliseconds, Ubuntu 5.7, 5.0 and 5.2"
-+++
 <p>Hetzner has no FreeBSD image and their ISO library stops at 15.0. You can still get <strong>any</strong> release on there, unattended, in about an hour.</p>
 <blockquote>
 <p>The box runs AthletOS, a training app I am building. Predefined programs, session logging and tracking.</p>

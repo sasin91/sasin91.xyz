@@ -1560,11 +1560,6 @@ pre.hl-code code {
   outline-offset: 2px;
 }
 
-.math-error {
-  background: var(--warn-bg);
-  border-bottom: 1px dotted var(--warn-edge);
-}
-
 math {
   font-size: 1.05em;
 }

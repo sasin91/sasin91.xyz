@@ -1,17 +1,3 @@
-+++
-id = "embeddings"
-title = "Embeddings"
-summary = "Token IDs select rows of a learned table of vectors: the model's starting point for each token, not its final word on meaning."
-concepts = ["embedding", "embedding table", "vector", "static embedding", "embedding model"]
-prerequisites = ["token-ids"]
-related = ["contextual-representations", "rag", "retrieval-vs-attention"]
-search_terms = ["word vectors", "vector representation", "semantic vectors", "embedding matrix", "meaning of words"]
-learning_objectives = [
-    "Describe what an embedding table is and how it is used",
-    "Distinguish a token's input embedding from its contextual representation",
-]
-misconceptions = ["An embedding is a fixed definition of what a word means."]
-+++
 <p>The model’s first layer is a table with one row per vocabulary entry. Each
 row is a vector of a few hundred to several thousand numbers, and a token ID
 simply selects its row. The values in the table are learned during training,

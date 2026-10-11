@@ -1,16 +1,13 @@
 <?php
-require_once __DIR__ . '/Front_matter.php';
-
 /**
- * modules/cv/cv.toml: the person behind the site. The /cv page, the /about page,
- * the home page header and the CV PDF all read from this one file, so they
- * cannot disagree.
+ * The array in modules/cv/cv.php, the person behind the site, with the
+ * labels the pages show worked out. The /cv page, the /about page, the home
+ * page header and the CV PDF all read from this one array, so they cannot
+ * disagree.
  */
 class Cv_data {
 
-    public static function load(string $file): array {
-        $cv = Front_matter::decode(file_get_contents($file), $file);
-
+    public static function load(array $cv): array {
         $cv['education_note'] = $cv['education_note'] ?? null;
         $cv['site']['stack_line'] = implode(' · ', $cv['site']['stack']);
         $cv['contact']['phone_href'] = str_replace(' ', '', $cv['contact']['phone']);
@@ -41,14 +38,14 @@ class Cv_data {
     }
 
     /**
-     * "2024-09" as "September 2024". Anything else is an error in the file.
+     * "2024-09" as "September 2024". Anything else is an error in the CV.
      */
     private static function month(string $value, string $where): string {
         $date = DateTimeImmutable::createFromFormat('!Y-m', $value);
         $errors = DateTimeImmutable::getLastErrors();
         $invalid = $date === false || ($errors !== false && $errors['warning_count'] + $errors['error_count'] > 0);
         if ($invalid) {
-            throw new RuntimeException("cv.toml has a bad date: {$where}: invalid date \"{$value}\" (want YYYY-MM)");
+            throw new RuntimeException("the CV has a bad date: {$where}: invalid date \"{$value}\" (want YYYY-MM)");
         }
         return $date->format('F Y');
     }

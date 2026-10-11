@@ -1,17 +1,3 @@
-+++
-id = "external-memory"
-title = "External memory"
-summary = "Anything a system should remember beyond one context window has to be stored outside the model and read back in as tokens."
-concepts = ["memory", "external memory", "long-term memory", "persistence", "agent memory"]
-prerequisites = ["context-window", "rag"]
-related = ["kv-cache", "training", "tool-use"]
-search_terms = ["does the model remember", "chat memory", "remember previous conversations", "notes", "scratchpad", "vector store"]
-learning_objectives = [
-    "Explain why a model has no memory across requests by itself",
-    "Describe how memory features are built from storage and retrieval",
-]
-misconceptions = ["A chat assistant remembers you because the model learned from your earlier conversations."]
-+++
 <p>During ordinary use a model’s weights do not change, and its context is
 discarded when a request ends. Left to itself, it remembers nothing from one
 conversation to the next.</p>
