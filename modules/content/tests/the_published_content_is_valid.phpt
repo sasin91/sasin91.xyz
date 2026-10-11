@@ -7,7 +7,7 @@ $posts = (new Posts(require APPPATH . 'modules/blog/posts.php', APPPATH . 'modul
 foreach ($posts as $post) {
     Prose_view::html($post['file']);
 }
-$cv = Cv_data::load(APPPATH . 'modules/cv/cv.toml');
+$cv = Cv_data::load(require APPPATH . 'modules/cv/cv.php');
 $article = (new Knowledge_article(APPPATH . 'modules/knowledge'))->load();
 var_dump(count($posts) > 0, $cv['site']['name'] !== '', count($article['nodes']) > 0);
 var_dump($article['nodes'][0]['order'], $article['parts'][0]['id']);

@@ -1,7 +1,7 @@
 # CV source — Jonas Hansen
 
 Transcribed from `CV_Jonas_Hansen_Softwareengineer.pdf`, 2026-07-28.
-This file is the authoritative record for `content/cv.toml`. It is not rendered.
+This file is the authoritative record for `modules/cv/cv.php`. It is not rendered.
 
 **Jonas Hansen — Software developer**
 Slagelse, 4200 · +45 50106917 · jonas.kerwin.hansen@gmail.com
@@ -115,7 +115,7 @@ Including Cisco CCNA and IP based network management.
 - 2026-09-01: both JUICE stints ended in cuts JUICE made for financial
   reasons, and the second stint is a rehire — from Jonas directly. He asked
   for this to appear on the public CV, so it is a `note` on each JUICE role
-  in `content/cv.toml` and renders on /cv and in the PDF below that role's
+  in `modules/cv/cv.php` and renders on /cv and in the PDF below that role's
   bullets. Neither departure was about performance; the rehire is the
   company's own answer to the first one.
 - 2026-09-01: Jonas reversed the 2026-08-06 call above and asked for the GHC

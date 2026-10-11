@@ -3,20 +3,19 @@ CV dates read as months, and a malformed one names the role it is in
 --FILE--
 <?php
 require __DIR__ . '/setup.inc';
-$cv = Cv_data::load(APPPATH . 'modules/cv/cv.toml');
+$source = require APPPATH . 'modules/cv/cv.php';
+$cv = Cv_data::load($source);
 echo $cv['roles'][0]['start_label'], "\n";
 var_dump(str_contains(implode(' ', array_merge(...array_column($cv['roles'], 'achievements_html'))), '<span class="cv-jump cv-jump-six">6</span>'));
 
-$dir = fixture_dir('cv');
-$toml = str_replace('start = "2024-09"', 'start = "2024-13"', file_get_contents(APPPATH . 'modules/cv/cv.toml'));
-file_put_contents("$dir/cv.toml", $toml);
+$source['roles'][0]['start'] = '2024-13';
 try {
-    Cv_data::load("$dir/cv.toml");
+    Cv_data::load($source);
 } catch (RuntimeException $error) {
     echo $error->getMessage(), "\n";
 }
 ?>
---EXPECTF--
+--EXPECT--
 September 2024
 bool(true)
-%s: invalid date "2024-13" (want YYYY-MM)
+the CV has a bad date: role Web Developer at JUICE ApS: start date: invalid date "2024-13" (want YYYY-MM)

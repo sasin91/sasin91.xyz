@@ -7,7 +7,7 @@ require_once __DIR__ . '/Knowledge_article.php';
 
 /**
  * Everything the pages show: the posts (modules/blog/views/posts), the CV
- * (modules/cv/cv.toml) and the AI article (modules/knowledge). Other modules ask this one (`$this->content->posts()`); it
+ * (modules/cv/cv.php) and the AI article (modules/knowledge). Other modules ask this one (`$this->content->posts()`); it
  * answers no URL itself.
  *
  * Nothing is built ahead of time. A post renders when its page is asked for,
@@ -42,7 +42,7 @@ class Content extends Trongate {
     }
 
     public function cv(): array {
-        return Cv_data::load(APPPATH . 'modules/cv/cv.toml');
+        return Cv_data::load(require APPPATH . 'modules/cv/cv.php');
     }
 
     /**
