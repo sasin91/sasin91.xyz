@@ -4,7 +4,7 @@
  * serves it, for the JavaScript tests to ask real questions of:
  *
  *   php bin/search-index.php > build/search-index.json
- *   node --test modules/search/js/
+ *   node --test modules/search/js/retrieval.test.mjs
  */
 define('APPPATH', str_replace('\\', '/', dirname(__DIR__)) . '/');
 

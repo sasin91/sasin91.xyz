@@ -143,7 +143,7 @@ the static model itself (wrong word sense, paraphrases with no shared words),
 see "When to switch to a transformer model" in `models/README.md`.
 
 Tests: `php bin/run-tests.php modules/search/tests` covers the server side, and
-`node --test modules/search/js/` the browser side, including real questions
+`node --test modules/search/js/retrieval.test.mjs` the browser side, including real questions
 against the index (write it first with
 `php bin/search-index.php > build/search-index.json`).
 

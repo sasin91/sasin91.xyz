@@ -59,7 +59,7 @@ Checks, as CI runs them:
 ```sh
 php bin/run-tests.php modules/content/tests modules/search/tests
 php bin/search-index.php > build/search-index.json
-node --test modules/search/js/   # Node 22+, nothing to install
+node --test modules/search/js/retrieval.test.mjs   # Node 22+, nothing to install
 ```
 
 Posts live in `modules/blog/views/posts/`, the CV in `modules/cv/cv.toml`, and

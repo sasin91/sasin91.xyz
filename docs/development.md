@@ -85,7 +85,7 @@ changes again (`modules/search/Search.php`).
 
 ```sh
 php bin/run-tests.php modules/content/tests modules/search/tests
-php bin/search-index.php > build/search-index.json && node --test modules/search/js/
+php bin/search-index.php > build/search-index.json && node --test modules/search/js/retrieval.test.mjs
 ```
 
 The PHP tests are `.phpt` files next to the code they test. The JavaScript
