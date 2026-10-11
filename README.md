@@ -58,9 +58,9 @@ Checks, as CI runs them:
 
 ```sh
 php bin/run-tests.php modules/content/tests modules/search/tests
-php bin/search-index.php > build/search-index.json
-node --test modules/search/js/retrieval.test.mjs   # Node 22+, nothing to install
 ```
+
+and the search code's tests at `/search/tests/` on the dev server.
 
 Posts live in `modules/blog/views/posts/`, the CV in `modules/cv/cv.toml`, and
 the AI article's knowledge nodes in `modules/knowledge/` — see

@@ -120,7 +120,7 @@ post once, and the box ranks only those. The loader in `modules/layout/views/pag
 `/search/ask.js` (the same script /blog/ai/ask/ inlines) on pages with the
 box. A post may suggest questions in its frontmatter (`ask = ["...", ...]`).
 
-In the browser (`modules/search/js/retrieval.mjs`), only once the reader focuses the
+In the browser (`modules/search/js/retrieval.js`), only once the reader focuses the
 question field, the page fetches that index and the model, then for each
 question:
 
@@ -143,9 +143,8 @@ the static model itself (wrong word sense, paraphrases with no shared words),
 see "When to switch to a transformer model" in `models/README.md`.
 
 Tests: `php bin/run-tests.php modules/search/tests` covers the server side, and
-`node --test modules/search/js/retrieval.test.mjs` the browser side, including real questions
-against the index (write it first with
-`php bin/search-index.php > build/search-index.json`).
+`/search/tests/` on a dev server the browser side, including real questions
+against the index the site serves.
 
 ## The search palette
 
@@ -158,13 +157,13 @@ usually takes it for the window menu before the browser sees it.)
   button and, on first use, imports `/search/palette.js`, so no page is
   heavier for readers who never search.
 - `palette.js` is served by `Search::palette_js` (`modules/search`):
-  `retrieval.mjs` plus `palette.mjs`, with the current index URL prefixed. It searches posts and nodes with the same ranking as Ask, shows
+  `retrieval.js` plus `palette.js`, with the current index URL prefixed. It searches posts and nodes with the same ranking as Ask, shows
   word matches as soon as the index arrives, and adds meaning once the model
   has loaded (skipped when the browser asks to save data).
 - A post result links to the section its best passage is in
   (`/blog/x/#Section-heading`); a node result to the node.
 - With nothing typed, it lists the site's pages and a theme toggle, from the
-  `COMMANDS` list at the top of `modules/search/js/palette.mjs`.
+  `COMMANDS` list at the top of `modules/search/js/palette.js`.
 - Results scoring under 65% of the best one are dropped, so a precise query
   shows one or two results rather than a full list.
 

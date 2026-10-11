@@ -1,6 +1,7 @@
 // Retrieval for /blog/ai/ask/: everything that turns a question into ranked
-// knowledge nodes, with no DOM access, so it can be tested under `node --test`
-// and inlined into the page unchanged (see Search::_ask_script in modules/search/Search.php).
+// knowledge nodes, with no DOM access, so its tests (retrieval.test.js, run at
+// /search/tests/) need nothing but data, and it is inlined into the page
+// unchanged (see Search::_ask_script in modules/search/Search.php).
 //
 // Two independent signals are combined:
 //

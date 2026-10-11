@@ -32,20 +32,11 @@ jobs:
       - name: PHP tests
         run: php bin/run-tests.php -q --show-diff modules/content/tests modules/search/tests
 
-      # The Ask view's retrieval code runs in the browser, so it is tested
-      # with Node's built-in runner (no npm, no dependencies). Its last tests
-      # ask real questions of the index the site serves.
-      - name: Build the search index
-        run: mkdir -p build && php bin/search-index.php > build/search-index.json
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-      - name: Test the Ask view's retrieval
-        run: node --test modules/search/js/retrieval.test.mjs
-
       - name: Serve the site
         run: |
           APP_ENV=prod php -S 127.0.0.1:8000 -t public bin/dev-router.php > /tmp/server.log 2>&1 &
+          # A dev server too, for the retrieval tests, which only dev serves.
+          APP_ENV=dev php -S 127.0.0.1:8001 -t public bin/dev-router.php >> /tmp/server.log 2>&1 &
           sleep 1
 
       - name: Every page answers
@@ -92,6 +83,17 @@ jobs:
             if [ "$external" -ne 0 ] || [ "$n" -ne "$want" ]; then fail=1; fi
           done
           exit $fail
+
+      # The search code runs in the reader's browser, so its tests run in one:
+      # /search/tests runs them and ends its title in PASS or FAIL. Chrome is
+      # already on the runner; nothing to install.
+      - name: Retrieval tests, in headless Chrome
+        run: |
+          set -euo pipefail
+          google-chrome --headless=new --no-sandbox --disable-gpu --virtual-time-budget=60000 \
+            --dump-dom http://127.0.0.1:8001/search/tests/ > /tmp/tests.html
+          grep -o '<li>[^<]*</li>' /tmp/tests.html | sed 's/<[^>]*>//g'
+          grep -q '<title>PASS' /tmp/tests.html
 
       - name: Server log
         if: always()

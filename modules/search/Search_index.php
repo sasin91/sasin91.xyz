@@ -7,7 +7,7 @@ require_once APPPATH . 'modules/content/Prose_view.php';
  * box: the AI article's knowledge nodes and every post, each with its
  * metadata, the words of its body for keyword matching, and one embedding per
  * passage. The browser downloads it only when a reader starts searching, and
- * ranks it with modules/search/js/retrieval.mjs.
+ * ranks it with modules/search/js/retrieval.js.
  *
  * The index carries no full text, which is already on the pages: just a
  * short snippet per passage, so a result can show which part matched.
@@ -221,7 +221,7 @@ class Search_index {
 
     /**
      * Distinct lowercase runs of letters and digits, sorted. Must split
-     * exactly like `words` in retrieval.mjs.
+     * exactly like `words` in retrieval.js.
      */
     public static function lexical_words(string $text): array {
         $words = preg_split('/[^\p{L}\p{N}]+/u', mb_strtolower($text), -1, PREG_SPLIT_NO_EMPTY);

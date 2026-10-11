@@ -30,7 +30,7 @@ class Search extends Trongate {
 
     /** The Ask page's script, inlined into /blog/ai/ask/ as a module. */
     public function _ask_script(): string {
-        return $this->script('ask.mjs');
+        return $this->script('ask.js');
     }
 
     public function index_json(): void {
@@ -47,7 +47,7 @@ class Search extends Trongate {
             . 'const AI_ARTICLE_URL = ' . json_encode('/blog/ai/') . ";\n";
         header('Content-Type: text/javascript; charset=utf-8');
         header('Cache-Control: no-cache');
-        echo $prefix . $this->script('palette.mjs');
+        echo $prefix . $this->script('palette.js');
     }
 
     /** The Ask box at the top of every post, imported only on those pages. */
@@ -55,6 +55,25 @@ class Search extends Trongate {
         header('Content-Type: text/javascript; charset=utf-8');
         header('Cache-Control: no-cache');
         echo $this->_ask_script();
+    }
+
+    /**
+     * The retrieval tests (js/retrieval.test.js), run by the browser that
+     * opens this page: on a dev server only. The page's title ends in PASS
+     * or FAIL, which is what CI reads from headless Chrome.
+     */
+    public function tests(): void {
+        if (strtolower(ENV) !== 'dev') {
+            $this->site->not_found();
+            return;
+        }
+
+        $data = [
+            'index_url' => $this->_assets()['index_url'],
+            'fixture' => file_get_contents($this->model_dir() . '/wordpiece-fixture.json'),
+            'script' => $this->script('retrieval.test.js'),
+        ];
+        $this->view('tests', $data);
     }
 
     public function model_bin(): void {
@@ -126,7 +145,7 @@ class Search extends Trongate {
      */
     private function script(string $file): string {
         $dir = __DIR__ . '/js/';
-        return file_get_contents($dir . 'retrieval.mjs') . "\n" . file_get_contents($dir . $file);
+        return file_get_contents($dir . 'retrieval.js') . "\n" . file_get_contents($dir . $file);
     }
 
     private function send_immutable(string $content_type, string $file): void {
