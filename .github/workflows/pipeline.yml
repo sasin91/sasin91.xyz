@@ -41,7 +41,7 @@ jobs:
         with:
           node-version: 24
       - name: Test the Ask view's retrieval
-        run: node --test modules/search/js/
+        run: node --test modules/search/js/retrieval.test.mjs
 
       - name: Serve the site
         run: |
@@ -95,4 +95,5 @@ jobs:
 
       - name: Server log
         if: always()
-        run: cat /tmp/server.log
+        # Nothing to show when an earlier step failed before the server started.
+        run: cat /tmp/server.log 2>/dev/null || true

@@ -1,4 +1,4 @@
-// Tests for retrieval.mjs. Run with: node --test modules/search/js/
+// Tests for retrieval.mjs. Run with: node --test modules/search/js/retrieval.test.mjs
 //
 // No test framework beyond Node's own. The last group runs real questions
 // against the index the site serves, written by
