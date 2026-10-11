@@ -4,15 +4,16 @@ The site is a [Trongate](https://trongate.io) v2 app. Every post is an ordinary
 PHP view, rendered on request. There is no build step: edit a post, reload the
 page.
 
-Trongate's own modules (`db`, `login`, `templates`, `validation` and the rest)
-and `engine/` are stock v2 and stay that way. Everything the site adds is in
+Trongate's own modules (`db`, `login`, `validation` and the rest) and `engine/`
+are stock v2 and stay that way, apart from `templates`, whose public template
+is the site's page shell, as Trongate intends. Everything the site adds is in
 these modules:
 
 | Module | What it is |
 | --- | --- |
 | `content` | Loads the posts, the CV and the AI article, and renders a post's view (`Prose_view`). Answers no URL itself. |
 | `prose` | What a post is written with: `section_open()`, `code_open()` and the rest (`prose_helper.php`). Answers no URL. |
-| `layout` | The page shell every HTML page shares (`views/page.php`), and the 404 page. |
+| `templates` | The page shell every HTML page shares (`public()`, `views/public.php`), and the 404 page (`error_404()`). |
 | `home` | `/`. |
 | `blog` | `/blog/`, every post under it, `/rss.xml` and `/sitemap.xml`. |
 | `knowledge` | The AI article: `/blog/ai/`, `timeline/`, `ask/`. |

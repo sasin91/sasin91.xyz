@@ -31,14 +31,14 @@ class Blog extends Trongate {
                 'og_type' => 'website',
             ],
         ];
-        $this->layout->page($data);
+        $this->templates->public($data);
     }
 
     public function show(): void {
         $path = 'blog/' . implode('/', array_slice(SEGMENTS, 3));
         $post = $this->content->post($path);
         if ($post === null) {
-            $this->layout->not_found();
+            $this->templates->error_404();
             return;
         }
 
@@ -66,7 +66,7 @@ class Blog extends Trongate {
                 'image_alt' => $og_image['image_alt'],
             ],
         ];
-        $this->layout->page($data);
+        $this->templates->public($data);
     }
 
     /**

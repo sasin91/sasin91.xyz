@@ -121,7 +121,7 @@ nodes, while the site-wide palette below uses all of it.
 
 Every post opens with an Ask box too. The index holds each of a post's
 sections as a document, nested under the post so the palette still finds the
-post once, and the box ranks only those. The loader in `modules/layout/views/page.php` imports
+post once, and the box ranks only those. The loader in `modules/templates/views/public.php` imports
 `/search/ask.js` (the same script /blog/ai/ask/ inlines) on pages with the
 box. A post may suggest questions in its details in `modules/blog/posts.php`
 (`'ask' => ['...', ...]`).
@@ -159,7 +159,7 @@ Every page has a search palette: <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>K</kbd>,
 header. (<kbd>Alt</kbd>+<kbd>Space</kbd> is listened for too, but Windows
 usually takes it for the window menu before the browser sees it.)
 
-- `modules/layout/views/page.php` carries only a small inline loader. It reveals the
+- `modules/templates/views/public.php` carries only a small inline loader. It reveals the
   button and, on first use, imports `/search/palette.js`, so no page is
   heavier for readers who never search.
 - `palette.js` is served by `Search::palette_js` (`modules/search`):

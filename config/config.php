@@ -24,7 +24,7 @@ define('ENV', $app_env);
 define('DEFAULT_MODULE', 'home');
 define('DEFAULT_METHOD', 'index');
 define('MODULE_ASSETS_TRIGGER', '_module');
-define('ERROR_404', 'layout/not_found');
+define('ERROR_404', 'templates/error_404');
 
 // The site's public address, for canonical links, og:url, the feed and the
 // sitemap. Fixed rather than taken from BASE_URL: wherever the app is served

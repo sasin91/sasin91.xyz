@@ -20,7 +20,7 @@ class Home extends Trongate {
                 'og_type' => 'website',
             ],
         ];
-        $this->layout->page($data);
+        $this->templates->public($data);
     }
 
 }

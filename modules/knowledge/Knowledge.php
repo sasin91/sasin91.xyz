@@ -36,7 +36,7 @@ class Knowledge extends Trongate {
                 'og_type' => 'article',
             ],
         ];
-        $this->layout->page($data);
+        $this->templates->public($data);
     }
 
     public function timeline(): void {
@@ -57,7 +57,7 @@ class Knowledge extends Trongate {
                 'og_type' => 'website',
             ],
         ];
-        $this->layout->page($data);
+        $this->templates->public($data);
     }
 
     public function ask(): void {
@@ -88,7 +88,7 @@ class Knowledge extends Trongate {
                 'og_type' => 'website',
             ],
         ];
-        $this->layout->page($data);
+        $this->templates->public($data);
     }
 
     /**
