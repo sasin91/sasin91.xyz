@@ -1,7 +1,8 @@
 <?php
 /**
- * /blog/ and every post under it. A post's URL is the `path` in its details,
- * so nested URLs like /blog/trongate/mx-transition/ survive.
+ * /blog/ and every post under it, and the feeds that list them: /rss.xml and
+ * /sitemap.xml. A post's URL is the `path` in its details, so nested URLs
+ * like /blog/trongate/mx-transition/ survive.
  *
  * config/custom_routing.php sends /blog/<anything> to blog/show; the AI
  * article's three pages under /blog/ai/ are routed to the knowledge module
@@ -37,7 +38,7 @@ class Blog extends Trongate {
         $path = 'blog/' . implode('/', array_slice(SEGMENTS, 3));
         $post = $this->content->post($path);
         if ($post === null) {
-            $this->site->not_found();
+            $this->layout->not_found();
             return;
         }
 
@@ -143,6 +144,34 @@ class Blog extends Trongate {
             }
         }
         return false;
+    }
+
+    public function rss(): void {
+        $posts = $this->content->posts();
+
+        $last_build_date = '';
+        if ($posts !== []) {
+            $last_build_date = $posts[0]['date_rfc2822'];
+        }
+
+        $data = [
+            'cv' => $this->content->cv(),
+            'posts' => $posts,
+            'base' => SITE_URL,
+            'last_build_date' => $last_build_date,
+        ];
+        header('Content-Type: application/rss+xml; charset=utf-8');
+        $this->view('rss', $data);
+    }
+
+    public function sitemap(): void {
+        $data = [
+            'posts' => $this->content->posts(),
+            'article' => $this->content->article_outline(),
+            'base' => SITE_URL,
+        ];
+        header('Content-Type: application/xml; charset=utf-8');
+        $this->view('sitemap', $data);
     }
 
 }

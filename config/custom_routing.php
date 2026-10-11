@@ -4,11 +4,7 @@
 // pages come before the catch-all for posts. There is no tg-admin route: the
 // site has no database, so no admin panel.
 $routes = [
-    'about/?' => 'site/about',
-    'rss\.xml' => 'site/rss',
-    'sitemap\.xml' => 'site/sitemap',
-    'robots\.txt' => 'site/robots',
-
+    'about/?' => 'cv/about',
     'cv/?' => 'cv/index',
     'cv_jonas_hansen_software_developer\.pdf' => 'cv/pdf',
 
@@ -16,6 +12,8 @@ $routes = [
     'blog/ai/timeline/?' => 'knowledge/timeline',
     'blog/ai/ask/?' => 'knowledge/ask',
     'blog/?' => 'blog/index',
+    'rss\.xml' => 'blog/rss',
+    'sitemap\.xml' => 'blog/sitemap',
     'blog/(:all)' => 'blog/show/$1',
 
     'search/index\.json' => 'search/index_json',

@@ -2,7 +2,8 @@
 /**
  * The page shell every HTML page shares: head, site header, footer and the
  * theme and search scripts. A page module hands it the view to put in <main>
- * and the page's meta, and the shell does the rest.
+ * and the page's meta, and the shell does the rest. The 404 page lives here
+ * too, since it is nothing but the shell and a line of text.
  */
 class Layout extends Trongate {
 
@@ -49,6 +50,29 @@ class Layout extends Trongate {
     private function asset_url(string $file): string {
         $hash = substr(md5_file(APPPATH . 'public/' . $file), 0, 16);
         return '/' . $file . '?v=' . $hash;
+    }
+
+    /**
+     * Any URL nothing else answers (ERROR_404 in config/config.php), and
+     * any page whose module finds nothing at its URL.
+     */
+    public function not_found(): void {
+        http_response_code(404);
+        $cv = $this->content->cv();
+
+        $data = [
+            'view_module' => 'layout',
+            'view_file' => 'not_found',
+            'cv' => $cv,
+            'nav' => '',
+            'meta' => [
+                'title' => 'Not found — ' . $cv['site']['name'],
+                'description' => 'There is no page at this address.',
+                'path' => '/',
+                'og_type' => 'website',
+            ],
+        ];
+        $this->layout->page($data);
     }
 
 }
