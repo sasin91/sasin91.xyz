@@ -139,6 +139,7 @@ class Prose extends Trongate {
      * @param array $data 'tex', and 'display' (true for a formula on its own line).
      */
     public function math(array $data): string {
+        require_once APPPATH . 'packages/autoload.php';
         $display = ($data['display'] ?? false) ? 'block' : 'inline';
         try {
             return Latex2MathML::convert($data['tex'], $display);

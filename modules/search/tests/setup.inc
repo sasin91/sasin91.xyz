@@ -1,6 +1,5 @@
 <?php
 define('APPPATH', str_replace('\\', '/', dirname(__DIR__, 3)) . '/');
-require_once APPPATH . 'packages/autoload.php';
 define('BASE_URL', 'http://localhost/');
 require_once APPPATH . 'engine/Trongate.php';
 require_once APPPATH . 'engine/Modules.php';

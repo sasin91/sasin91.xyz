@@ -1,5 +1,4 @@
 <?php
-require_once APPPATH . 'packages/autoload.php';
 require_once __DIR__ . '/Search_index.php';
 
 /**

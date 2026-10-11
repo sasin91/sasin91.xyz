@@ -13,6 +13,7 @@ class Highlighter {
     private \Highlight\Highlighter $highlighter;
 
     public function __construct() {
+        require_once APPPATH . 'packages/autoload.php';
         $this->highlighter = new \Highlight\Highlighter();
     }
 

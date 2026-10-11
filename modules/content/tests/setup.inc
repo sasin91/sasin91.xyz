@@ -1,6 +1,5 @@
 <?php
 define('APPPATH', str_replace('\\', '/', dirname(__DIR__, 3)) . '/');
-require_once APPPATH . 'packages/autoload.php';
 // The prose helpers reach their module through Trongate, as in a page.
 define('BASE_URL', 'http://localhost/');
 require_once APPPATH . 'engine/Trongate.php';

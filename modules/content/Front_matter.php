@@ -32,6 +32,7 @@ class Front_matter {
      * TOML to an array, with every TOML date turned into a Y-m-d string.
      */
     public static function decode(string $toml, string $file): array {
+        require_once APPPATH . 'packages/autoload.php';
         try {
             $data = Toml::decode($toml, true);
         } catch (Throwable $error) {

@@ -1,6 +1,4 @@
 <?php
-require_once APPPATH . 'packages/autoload.php';
-
 /**
  * /cv/ and the same CV as a PDF, both from cv.php in this module.
  */
@@ -33,6 +31,7 @@ class Cv extends Trongate {
      * rendered by dompdf. Nothing remote is loaded.
      */
     public function pdf(): void {
+        require_once APPPATH . 'packages/autoload.php';
         $cv = $this->content->cv();
         $title = $cv['site']['name'] . ' — CV';
         $html = $this->view('pdf', ['cv' => $cv, 'title' => $title], true);
