@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "53ee6e620b7eb45aee0a231e5df1d0ad",
+    "content-hash": "97bcc8ef4781c1e4a60508914e39c632",
     "packages": [
         {
             "name": "devium/toml",
@@ -229,58 +229,6 @@
                 "source": "https://github.com/dompdf/php-svg-lib/tree/1.0.2"
             },
             "time": "2026-01-02T16:01:13+00:00"
-        },
-        {
-            "name": "latex2mathml/latex2mathml-php",
-            "version": "v1.5.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/snorky22/latex2mathml-php.git",
-                "reference": "f5a15110d2f107870e45e8775114b5de4a960183"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/snorky22/latex2mathml-php/zipball/f5a15110d2f107870e45e8775114b5de4a960183",
-                "reference": "f5a15110d2f107870e45e8775114b5de4a960183",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "php": ">=8.4"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^11.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Latex2MathML\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "snorky22",
-                    "email": "chaplains.francois@orange.fr"
-                }
-            ],
-            "description": "Pure PHP library for LaTeX to MathML and OMML conversion",
-            "keywords": [
-                "MathML",
-                "converter",
-                "latex",
-                "omml",
-                "php",
-                "word"
-            ],
-            "support": {
-                "issues": "https://github.com/snorky22/latex2mathml-php/issues",
-                "source": "https://github.com/snorky22/latex2mathml-php/tree/v1.5.0"
-            },
-            "time": "2026-03-09T14:33:21+00:00"
         },
         {
             "name": "masterminds/html5",
@@ -658,5 +606,5 @@
         "ext-mbstring": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

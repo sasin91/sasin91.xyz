@@ -11,13 +11,13 @@ misconceptions = ["Raising the temperature makes the model think more creatively
 +++
 <p>These settings act on the final distribution, just before a token is drawn:</p>
 <ul>
-<li><strong>Temperature</strong> divides every logit by a number <?= math('T') ?> before
+<li><strong>Temperature</strong> divides every logit by a number <math><mi>T</mi></math> before
 <a href="#softmax">softmax</a>. Below 1 the distribution gets sharper and the likely
-tokens dominate; as <?= math('T') ?> approaches 0 it approaches greedy decoding. Above
+tokens dominate; as <math><mi>T</mi></math> approaches 0 it approaches greedy decoding. Above
 1 it flattens, and unlikely tokens are chosen more often.</li>
-<li><strong>Top-k</strong> keeps only the <?= math('k') ?> most probable tokens and renormalises.</li>
+<li><strong>Top-k</strong> keeps only the <math><mi>k</mi></math> most probable tokens and renormalises.</li>
 <li><strong>Top-p</strong>, or nucleus sampling, keeps the smallest set of tokens whose
-probabilities add up to at least <?= math('p') ?>, so the cut adapts to how spread out
+probabilities add up to at least <math><mi>p</mi></math>, so the cut adapts to how spread out
 the distribution is.</li>
 <li><strong>Min-p</strong> keeps tokens whose probability is at least some fraction of the
 top token’s.</li>

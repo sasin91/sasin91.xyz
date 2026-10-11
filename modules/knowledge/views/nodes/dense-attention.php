@@ -13,7 +13,7 @@ learning_objectives = [
 misconceptions = ["FlashAttention is an approximation of attention."]
 +++
 <p>In the standard design, every position attends to every position before it.
-For a sequence of <?= math('n') ?> tokens that is roughly <?= math('n^2/2') ?> query-key scores per
+For a sequence of <math><mi>n</mi></math> tokens that is roughly <math><msup><mi>n</mi><mn>2</mn></msup><mo>/</mo><mn>2</mn></math> query-key scores per
 head, per layer. Double the length of the input and the attention work
 roughly quadruples, while the rest of the network’s work only doubles.</p>
 <p>For short prompts this hardly matters. For hundreds of thousands of tokens it

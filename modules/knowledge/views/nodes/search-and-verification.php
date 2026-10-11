@@ -15,7 +15,7 @@ misconceptions = ["Running more candidates at inference time trains the model."]
 <p>If one sample can be wrong, generate several. That simple idea has many
 forms:</p>
 <ul>
-<li><strong>Best-of-n</strong>: sample <?= math('n') ?> complete answers and pick one with a scoring model
+<li><strong>Best-of-n</strong>: sample <math><mi>n</mi></math> complete answers and pick one with a scoring model
 or a check.</li>
 <li><strong>Self-consistency</strong>: sample several reasoning paths and take the answer most
 of them agree on.</li>

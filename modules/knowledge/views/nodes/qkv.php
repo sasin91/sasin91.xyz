@@ -19,12 +19,12 @@ learned matrices, producing three new vectors:</p>
 <li>a <strong>key</strong>: what this position can be matched on;</li>
 <li>a <strong>value</strong>: what this position contributes if it is attended to.</li>
 </ul>
-<p>The score between position <?= math('i') ?> and position <?= math('j') ?> is the dot product of
-<?= math('i') ?>’s query with <?= math('j') ?>’s key, divided by the square root of the key length to
+<p>The score between position <math><mi>i</mi></math> and position <math><mi>j</mi></math> is the dot product of
+<math><mi>i</mi></math>’s query with <math><mi>j</mi></math>’s key, divided by the square root of the key length to
 keep the numbers in a stable range. A <a href="#softmax">softmax</a> turns each row of
-scores into weights that sum to one, and the output for <?= math('i') ?> is the weighted
+scores into weights that sum to one, and the output for <math><mi>i</mi></math> is the weighted
 sum of the values:</p>
-<p><?= math('\\mathrm{Attention}(Q, K, V) = \\mathrm{softmax}\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right)V', true) ?></p>
+<p><math display="block"><mi>Attention</mi><mo>(</mo><mi>Q</mi><mo>,</mo><mi>K</mi><mo>,</mo><mi>V</mi><mo>)</mo><mo>=</mo><mi>softmax</mi><mrow><mo>(</mo><mfrac><mrow><mi>Q</mi><msup><mi>K</mi><mi>T</mi></msup></mrow><msqrt><msub><mi>d</mi><mi>k</mi></msub></msqrt></mfrac><mo>)</mo></mrow><mi>V</mi></math></p>
 <p>The database vocabulary is only an analogy. Every key matches every query to
 some degree, and the output is a blend, not a single selected record.</p>
 <p>Keys and values depend only on a token and the tokens before it, never on

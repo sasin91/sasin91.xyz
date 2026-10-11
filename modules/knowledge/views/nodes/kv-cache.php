@@ -24,7 +24,7 @@ engine stores them: for every layer, and for every position processed so far.
 Each new step computes the query, key and value for the one new token,
 appends its key and value to the cache, and attends over the stored ones.</p>
 <p>The cache grows linearly with the context. Its size is roughly</p>
-<p><?= math('2 \\times \\text{layers} \\times \\text{kv heads} \\times \\text{head size} \\times \\text{tokens} \\times \\text{bytes per number}', true) ?></p>
+<p><math display="block"><mn>2</mn><mo>×</mo><mtext>layers</mtext><mo>×</mo><mtext>kv heads</mtext><mo>×</mo><mtext>head size</mtext><mo>×</mo><mtext>tokens</mtext><mo>×</mo><mtext>bytes per number</mtext></math></p>
 <p>which for long contexts can exceed the size of the model weights.
 Grouped-query attention, quantised caches and paged memory management all
 exist to keep it in check.</p>

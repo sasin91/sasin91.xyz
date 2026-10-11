@@ -75,8 +75,11 @@ apt-get install -y xorriso qemu-system-x86
   is shown as written, escaped and highlighted. Code that contains PHP's own
   `<?` tags would run there, so it goes to `code($language, $code, $title)` as a
   nowdoc string instead;
-- `diagram($src, $alt)`: a local SVG, inlined so it follows the theme toggle;
-- `math($tex)`: TeX as MathML, `math($tex, true)` on its own line.
+- `diagram($src, $alt)`: a local SVG, inlined so it follows the theme toggle.
+
+A formula is MathML written straight into the view, which browsers render
+natively: `<math><mi>n</mi></math>` in a sentence, `<math display="block">…</math>`
+on a line of its own.
 
 Write typographic quotes and dashes as the characters themselves (“ ” ’ – —).
 
