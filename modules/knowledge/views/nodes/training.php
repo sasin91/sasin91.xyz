@@ -1,20 +1,3 @@
-+++
-id = "training"
-title = "Inference versus training"
-summary = "Training changes a model's weights. Inference, meaning ordinary use, runs fixed weights and changes nothing in the model."
-concepts = ["training", "inference", "pretraining", "fine-tuning", "weights", "in-context learning", "gradient descent"]
-prerequisites = ["transformer-layers", "sampling"]
-related = ["synthetic-data", "external-memory", "kv-cache"]
-search_terms = ["does chatgpt learn from my conversations", "does the model learn while chatting", "rlhf", "backpropagation", "post-training", "weights update"]
-learning_objectives = [
-    "Distinguish what changes during training from what changes during inference",
-    "Explain in-context learning without weight updates",
-]
-misconceptions = [
-    "A model learns from each conversation as it happens.",
-    "In-context learning updates the model's weights.",
-]
-+++
 <p><strong>Training</strong> is where a model’s weights come from. In pretraining, the model
 predicts the next token across an enormous body of text; each prediction is
 compared with the real next token, and gradient descent nudges every weight

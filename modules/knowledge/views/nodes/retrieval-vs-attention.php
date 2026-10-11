@@ -1,20 +1,3 @@
-+++
-id = "retrieval-vs-attention"
-title = "Retrieval versus attention"
-summary = "Attention mixes information among tokens already in the context. Retrieval decides which outside information gets into the context at all."
-concepts = ["retrieval", "attention", "similarity search", "context selection"]
-prerequisites = ["attention", "sparse-attention", "rag"]
-related = ["context-window", "external-memory"]
-search_terms = ["difference between attention and retrieval", "is attention retrieval", "does a bigger context window replace rag", "long context vs rag", "retrieval vs long context"]
-learning_objectives = [
-    "Contrast attention and retrieval by where they run and what they operate on",
-    "Explain why sparse attention and long contexts do not replace retrieval",
-]
-misconceptions = [
-    "Attention and retrieval are the same thing at different scales.",
-    "A long enough context window makes retrieval unnecessary.",
-]
-+++
 <p>Both mechanisms compare vectors and favour the most similar, which is why
 they are easy to confuse. They do different jobs.</p>
 <p><strong>Attention</strong> runs inside the model, in every layer, for every token. Its

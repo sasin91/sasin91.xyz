@@ -1,17 +1,3 @@
-+++
-id = "agi"
-title = "AGI, and why definitions vary"
-summary = "Artificial general intelligence has no single agreed definition, so any claim about it depends on which definition is being used."
-concepts = ["artificial general intelligence", "agi", "definition", "generality", "benchmarks"]
-prerequisites = ["self-improvement"]
-related = ["training"]
-search_terms = ["what is agi", "when will agi arrive", "human level ai", "superintelligence", "general intelligence", "asi"]
-learning_objectives = [
-    "Compare several definitions of AGI",
-    "Evaluate an AGI claim by identifying the definition and the measurement behind it",
-]
-misconceptions = ["AGI is a well-defined threshold that a model either passes or does not."]
-+++
 <p>“Artificial general intelligence” is used in at least four quite different
 senses:</p>
 <ul>

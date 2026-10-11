@@ -1,17 +1,3 @@
-+++
-id = "qkv"
-title = "Queries, keys and values"
-summary = "Each token is projected into a query (what it looks for), a key (what it can be matched on) and a value (what it passes along)."
-concepts = ["query", "key", "value", "qkv", "dot product", "scaled dot-product attention", "grouped-query attention"]
-prerequisites = ["attention"]
-related = ["kv-cache", "position", "softmax"]
-search_terms = ["q k v", "query key value", "attention formula", "gqa", "multi-query attention", "attention scores"]
-learning_objectives = [
-    "Write down scaled dot-product attention and explain each term",
-    "Explain why keys and values are what gets cached",
-]
-misconceptions = ["Attention selects one matching token, like a database lookup."]
-+++
 <p>Inside an attention head, each token’s current vector is multiplied by three
 learned matrices, producing three new vectors:</p>
 <ul>

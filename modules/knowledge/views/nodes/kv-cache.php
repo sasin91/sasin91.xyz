@@ -1,21 +1,3 @@
-+++
-id = "kv-cache"
-title = "KV cache"
-summary = "During generation, keys and values already computed for earlier tokens are kept and reused, so each new token only computes its own."
-concepts = ["kv cache", "key-value cache", "prefix caching", "inference memory"]
-prerequisites = ["qkv", "context-window"]
-related = ["discarded-candidates", "sampling", "training"]
-search_terms = ["kv-cache", "key value cache", "prompt caching", "paged attention", "why is generation slow", "cache"]
-learning_objectives = [
-    "Explain what the KV cache stores and why it speeds up generation",
-    "Estimate how KV cache memory grows with context length",
-    "State what the KV cache does not contain",
-]
-misconceptions = [
-    "The KV cache stores alternative completions the model considered.",
-    "The KV cache is a form of long-term memory or learning.",
-]
-+++
 <p>A model generates text one token at a time, and each new token attends to
 every token before it. Without a cache, every step would recompute the
 <a href="#qkv">keys and values</a> for the entire prefix, again and again.</p>

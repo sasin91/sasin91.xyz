@@ -1,17 +1,3 @@
-+++
-id = "sampling"
-title = "Decoding and sampling"
-summary = "Generation is a loop: choose one token from the distribution, append it to the input, run the model again."
-concepts = ["decoding", "sampling", "autoregressive generation", "greedy decoding", "beam search"]
-prerequisites = ["softmax"]
-related = ["sampling-controls", "discarded-candidates", "kv-cache"]
-search_terms = ["generation loop", "argmax", "next token", "how does an llm generate text", "autoregressive", "streaming", "random", "randomly", "pick words"]
-learning_objectives = [
-    "Describe the autoregressive generation loop",
-    "Explain why decoding settings belong to the inference software rather than the model",
-]
-misconceptions = ["The model writes a whole answer at once and then displays it word by word."]
-+++
 <p>The model only ever predicts one next token. Generating a reply is a loop
 around that:</p>
 <ol>

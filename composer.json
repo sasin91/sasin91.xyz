@@ -1,10 +1,9 @@
 {
     "name": "sasin91/sasin91",
-    "description": "sasin91.xyz (Trongate). Composer is only for the libraries the content needs: TOML, syntax highlighting, and dompdf for the CV PDF.",
+    "description": "sasin91.xyz (Trongate). Composer is only for the libraries the content needs: syntax highlighting, and dompdf for the CV PDF.",
     "type": "project",
     "require": {
         "php": ">=8.4",
-        "devium/toml": "^1.1",
         "scrivo/highlight.php": "^9.18",
         "ext-intl": "*",
         "ext-mbstring": "*",

@@ -2,7 +2,7 @@
 //
 // Served as /search/palette.js by Search::palette_js (modules/search), directly
 // after retrieval.js in the same module and after first lines declaring
-// SEARCH_INDEX_URL and AI_ARTICLE_URL (from content/ai/article.toml), so prepareIndex, rank, resultUrl, fetchIndex and
+// SEARCH_INDEX_URL and AI_ARTICLE_URL (from modules/knowledge/article.php), so prepareIndex, rank, resultUrl, fetchIndex and
 // fetchModel are in scope here without an import. The page shell imports it on
 // first use and calls open().
 //

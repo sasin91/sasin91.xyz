@@ -14,32 +14,35 @@ anywhere: other posts, search results, the timeline, Ask.
 
 ```
 modules/knowledge/
-  article.toml        title, parts (the reading order), learning paths
-  views/nodes/<id>.php  one node per file
+  article.php           title, parts (the reading order), learning paths
+  nodes.php             every node's details, keyed by id
+  views/nodes/<id>.php  one node's body per file
 ```
 
 ## A node
 
-```toml
-+++
-id = "kv-cache"                     # = file name = URL anchor. Never rename casually.
-title = "KV cache"
-summary = "During generation, keys and values ... only computes its own."
-concepts = ["kv cache", "key-value cache", "prefix caching"]
-prerequisites = ["qkv", "context-window"]   # read these first
-related = ["discarded-candidates"]          # see also, either direction
-search_terms = ["kv-cache", "prompt caching", "why is generation slow"]
-learning_objectives = ["Explain what the KV cache stores ..."]
-misconceptions = ["The KV cache stores alternative completions the model considered."]
-+++
+Its details are an entry in `modules/knowledge/nodes.php`:
 
-<p>Body in HTML, like a blog post, with the same helpers: code_open() and
-code_close(), math(), diagram(). See docs/development.md.</p>
+```php
+'kv-cache' => [                     // = view name = URL anchor. Never rename casually.
+    'title' => 'KV cache',
+    'summary' => 'During generation, keys and values ... only computes its own.',
+    'concepts' => ['kv cache', 'key-value cache', 'prefix caching'],
+    'prerequisites' => ['qkv', 'context-window'],   // read these first
+    'related' => ['discarded-candidates'],          // see also, either direction
+    'search_terms' => ['kv-cache', 'prompt caching', 'why is generation slow'],
+    'learning_objectives' => ['Explain what the KV cache stores ...'],
+    'misconceptions' => ['The KV cache stores alternative completions the model considered.'],
+],
 ```
+
+Its body is `modules/knowledge/views/nodes/kv-cache.php`: HTML, like a blog
+post, with the same helpers (`code_open()`, `code_close()`, `diagram()`). See
+docs/development.md.
 
 | Field | Required | Used for |
 | --- | --- | --- |
-| `id` | yes | anchor, file name, every reference to the node. Lowercase letters, digits, single hyphens. |
+| the key | yes | anchor, view name, every reference to the node. Lowercase letters, digits, single hyphens. |
 | `title` | yes | the node's heading, timeline entry, Ask result |
 | `summary` | yes | the timeline line and Ask result text; at most 200 characters |
 | `concepts` | yes, ≥ 1 | the ideas the node explains, in a reader's words. Ask matches them as exact phrases. |
@@ -54,9 +57,11 @@ Unknown fields are an error, so a misspelt `prerequisite` cannot silently mean
 
 ## Adding a node
 
-1. Create `modules/knowledge/views/nodes/<id>.php` with the header above.
-2. Add its id to a `[[part]]` in `modules/knowledge/article.toml`, where it should be
-   read.
+1. Add its details to `modules/knowledge/nodes.php` and its body as
+   `modules/knowledge/views/nodes/<id>.php`. A view without details, or details
+   without a view, is an error.
+2. Add its id to a part's `nodes` in `modules/knowledge/article.php`, where it
+   should be read.
 3. Reload and check `/blog/ai/#<id>`, `/blog/ai/timeline/` and a question in
    `/blog/ai/ask/` that should find it.
 
@@ -71,7 +76,7 @@ Unknown fields are an error, so a misspelt `prerequisite` cannot silently mean
 
 ## Reordering
 
-The article's order is the order ids appear in the `[[part]]` lists. Move the
+The article's order is the order ids appear in the parts' `nodes` lists. Move the
 id. Nothing in the node changes. The build fails if a node now appears before
 one of its `prerequisites`; either move the prerequisite too, or change it to
 `related`.
@@ -173,15 +178,15 @@ usually takes it for the window menu before the browser sees it.)
 The content model already leaves room for both without changing a node's
 shape:
 
-- **Lessons** are `[[learning_path]]` entries in `article.toml`: an id, a
+- **Lessons** are `learning_paths` entries in `article.php`: an id, a
   title and an ordered list of node ids, validated today but not rendered. A
   lesson view would render those nodes in that order, reusing the node markup
   from `modules/knowledge/views/read.php`, at `/blog/ai/learn/<path-id>/`.
 - **Quizzes** can be built from what nodes already carry:
   `learning_objectives` as what to test, `misconceptions` as plausible wrong
-  answers. Hand-written questions would be a new optional frontmatter table,
-  for example `[[question]]` with `prompt`, `answer` and `explanation`, added
-  to `NodeFront` as an optional field so existing nodes stay valid.
+  answers. Hand-written questions would be a new optional node field,
+  for example `questions`, each with `prompt`, `answer` and `explanation`,
+  added to `NODE_FIELDS` so existing nodes stay valid.
 - **Progress and mastery** would live in the reader's browser, in
   localStorage or IndexedDB keyed by node id, with no accounts. Node ids are
   already the stable keys this needs, which is one more reason not to rename

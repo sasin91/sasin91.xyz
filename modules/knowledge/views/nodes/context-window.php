@@ -1,21 +1,3 @@
-+++
-id = "context-window"
-title = "Context windows"
-summary = "The context window is the most tokens a model can process at once: prompt, documents, tool results and its own output together."
-concepts = ["context window", "context length", "context", "long context", "prompt"]
-prerequisites = ["attention", "tokenization"]
-related = ["kv-cache", "rag", "retrieval-vs-attention", "external-memory"]
-search_terms = ["context size", "token limit", "max tokens", "128k", "1 million tokens", "lost in the middle", "larger context window"]
-learning_objectives = [
-    "Define the context window precisely",
-    "Explain why a larger context window does not remove the need for retrieval",
-]
-misconceptions = [
-    "The context window is a slice of the model's embeddings.",
-    "Everything inside the context window is used equally well.",
-    "A large enough context window makes retrieval unnecessary.",
-]
-+++
 <p>The context window is a limit on sequence length: the largest number of
 tokens the model can process in one pass. It is not a region of memory inside
 the model, and not a slice of its embeddings. It is simply the input,

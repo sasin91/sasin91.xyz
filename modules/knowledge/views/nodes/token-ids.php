@@ -1,14 +1,3 @@
-+++
-id = "token-ids"
-title = "Token IDs"
-summary = "Each token is replaced by its position in the vocabulary. The number is an index, and carries no meaning of its own."
-concepts = ["token id", "vocabulary index", "special tokens", "integer"]
-prerequisites = ["tokenization"]
-related = ["embeddings"]
-search_terms = ["token ids", "input ids", "vocab index", "bos", "eos", "end of sequence token"]
-learning_objectives = ["Explain why token IDs are indices rather than quantities"]
-misconceptions = ["Tokens with nearby IDs have similar meanings."]
-+++
 <p>Once text is split, each token is looked up in the vocabulary and replaced by
 its index. The sequence of these integers is what the model actually
 receives.</p>

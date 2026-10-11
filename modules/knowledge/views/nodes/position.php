@@ -1,17 +1,3 @@
-+++
-id = "position"
-title = "Positional information"
-summary = "Attention on its own ignores word order, so position has to be injected. Most current models do it by rotating queries and keys (RoPE)."
-concepts = ["positional encoding", "position", "word order", "rotary position embedding", "rope"]
-prerequisites = ["embeddings"]
-related = ["attention", "qkv", "context-window"]
-search_terms = ["positional embeddings", "sinusoidal", "alibi", "relative position", "token order", "rotary embeddings"]
-learning_objectives = [
-    "Explain why a transformer needs positional information",
-    "Contrast absolute position embeddings with rotary embeddings",
-]
-misconceptions = ["Every model adds a position vector to each token embedding."]
-+++
 <p><a href="#attention">Self-attention</a> compares tokens with each other, but nothing in
 that comparison depends on where they are. Without extra information, “dog
 bites man” and “man bites dog” would give the model the same tokens in a

@@ -25,7 +25,7 @@ the address it had as a static site.
 ## Run it
 
 PHP 8.4 with `intl` and `mbstring`, and Composer for the libraries the site
-needs (league/commonmark, TOML, highlight.php, LaTeX to MathML, dompdf):
+needs (highlight.php for code, dompdf for the CV PDF):
 
 ```sh
 composer install

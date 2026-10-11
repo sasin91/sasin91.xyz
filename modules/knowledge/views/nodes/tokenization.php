@@ -1,17 +1,3 @@
-+++
-id = "tokenization"
-title = "Tokenization"
-summary = "Text is split into units from a fixed vocabulary: whole words, pieces of words, or raw bytes."
-concepts = ["tokenization", "token", "vocabulary", "subword", "byte pair encoding", "wordpiece"]
-prerequisites = ["text"]
-related = ["token-ids", "context-window"]
-search_terms = ["tokenizer", "tokens", "bpe", "sentencepiece", "subwords", "word pieces", "how many tokens"]
-learning_objectives = [
-    "Describe how a subword tokenizer splits common and rare words",
-    "Explain why token counts differ between models",
-]
-misconceptions = ["One token is one word."]
-+++
 <p>A tokenizer splits text into units drawn from a fixed vocabulary, typically
 tens of thousands to a few hundred thousand entries. Modern tokenizers work
 on <strong>subwords</strong>: common words get a single token, while rare words are built

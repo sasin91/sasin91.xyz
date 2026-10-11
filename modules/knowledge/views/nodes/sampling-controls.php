@@ -1,14 +1,3 @@
-+++
-id = "sampling-controls"
-title = "Temperature, top-k and top-p"
-summary = "Temperature reshapes the distribution; top-k and top-p cut off its unlikely tail before a token is drawn."
-concepts = ["temperature", "top-k", "top-p", "nucleus sampling", "min-p"]
-prerequisites = ["sampling"]
-related = ["softmax"]
-search_terms = ["top p", "top k", "nucleus", "creativity", "randomness", "deterministic output", "temperature 0"]
-learning_objectives = ["Describe the effect of temperature, top-k and top-p on the next-token distribution"]
-misconceptions = ["Raising the temperature makes the model think more creatively."]
-+++
 <p>These settings act on the final distribution, just before a token is drawn:</p>
 <ul>
 <li><strong>Temperature</strong> divides every logit by a number <math><mi>T</mi></math> before

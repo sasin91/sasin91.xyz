@@ -1,17 +1,3 @@
-+++
-id = "search-and-verification"
-title = "Multiple samples, search and verification"
-summary = "Systems can explore alternatives deliberately: generate several candidates, search over partial solutions, and check the results. It is an outer loop around generation."
-concepts = ["best-of-n", "self-consistency", "verification", "tree search", "test-time compute", "reward model"]
-prerequisites = ["discarded-candidates"]
-related = ["synthetic-data", "tool-use"]
-search_terms = ["multiple samples", "majority vote", "verifier", "reasoning models", "thinking", "test time compute", "generate and test"]
-learning_objectives = [
-    "Describe best-of-n sampling and self-consistency",
-    "Explain why multi-candidate search is an outer loop rather than part of token generation",
-]
-misconceptions = ["Running more candidates at inference time trains the model."]
-+++
 <p>If one sample can be wrong, generate several. That simple idea has many
 forms:</p>
 <ul>

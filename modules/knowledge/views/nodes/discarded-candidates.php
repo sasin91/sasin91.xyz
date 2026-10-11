@@ -1,17 +1,3 @@
-+++
-id = "discarded-candidates"
-title = "What happens to the tokens not chosen"
-summary = "Next-token candidates that were not chosen are normally discarded. The model does not keep them as alternative lines of reasoning."
-concepts = ["rejected candidates", "alternative completions", "single sequence", "logprobs", "speculative decoding"]
-prerequisites = ["sampling", "kv-cache"]
-related = ["search-and-verification"]
-search_terms = ["does the model consider alternatives", "branches", "other answers", "parallel reasoning", "unchosen tokens", "tokens not chosen", "not picked", "rejected tokens"]
-learning_objectives = [
-    "Explain why ordinary decoding produces exactly one sequence",
-    "Distinguish implicit alternatives in a distribution from explicitly generated alternatives",
-]
-misconceptions = ["During generation the model explores several answers in parallel and keeps the best one."]
-+++
 <p>At every step the model produces a probability for every token in its
 vocabulary, and the decoding loop picks one. What happens to the rest is
 simple: nothing. They are not fed back into the model, so no hidden states

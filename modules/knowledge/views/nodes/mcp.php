@@ -1,17 +1,3 @@
-+++
-id = "mcp"
-title = "Model Context Protocol (MCP)"
-summary = "MCP is an open protocol for exposing tools, data and prompts to AI applications. It standardises the connection, not the retrieval."
-concepts = ["model context protocol", "mcp", "protocol", "mcp server", "mcp client", "json-rpc"]
-prerequisites = ["tool-use"]
-related = ["rag", "code-retrieval"]
-search_terms = ["mcp server", "what is mcp", "is mcp rag", "connectors", "integrations", "anthropic mcp"]
-learning_objectives = [
-    "Describe the parts of an MCP connection and what a server can expose",
-    "Explain why MCP is not itself retrieval or memory",
-]
-misconceptions = ["MCP is a kind of RAG.", "MCP gives the model direct access to systems."]
-+++
 <p>The Model Context Protocol, introduced by Anthropic in late 2024 and now
 implemented by many applications, is a standard way to connect AI
 applications to outside capabilities. A <strong>host</strong> application, such as a chat
