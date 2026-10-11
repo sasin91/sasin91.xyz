@@ -2,14 +2,14 @@
 /**
  * The home page: who this is, and the latest writing.
  */
-class Home extends Trongate {
+class Welcome extends Trongate {
 
     public function index(): void {
         $cv = $this->content->cv();
 
         $data = [
-            'view_module' => 'home',
-            'view_file' => 'home',
+            'view_module' => 'welcome',
+            'view_file' => 'default_homepage',
             'cv' => $cv,
             'posts' => $this->content->posts(),
             'nav' => '',

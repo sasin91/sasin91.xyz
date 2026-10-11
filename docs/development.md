@@ -14,7 +14,7 @@ these modules:
 | `content` | Loads the posts, the CV and the AI article, and renders a post's view (`Prose_view`). Answers no URL itself. |
 | `prose` | What a post is written with: `section_open()`, `code_open()` and the rest (`prose_helper.php`). Answers no URL. |
 | `templates` | The page shell every HTML page shares (`public()`, `views/public.php`), and the 404 page (`error_404()`). |
-| `home` | `/`. |
+| `welcome` | `/`, the home page (Trongate's default module). |
 | `blog` | `/blog/`, every post under it, `/rss.xml` and `/sitemap.xml`. |
 | `knowledge` | The AI article: `/blog/ai/`, `timeline/`, `ask/`. |
 | `cv` | `/cv/`, `/cv_jonas_hansen_software_developer.pdf` and `/about/`. |

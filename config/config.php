@@ -21,7 +21,7 @@ $app_env = (static function (): string {
 })();
 // Keep this define on one line: the host rewrites config lines one at a time.
 define('ENV', $app_env);
-define('DEFAULT_MODULE', 'home');
+define('DEFAULT_MODULE', 'welcome');
 define('DEFAULT_METHOD', 'index');
 define('MODULE_ASSETS_TRIGGER', '_module');
 define('ERROR_404', 'templates/error_404');
