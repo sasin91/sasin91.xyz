@@ -3,7 +3,7 @@ the content in the repository loads: every post renders, the CV reads, and the A
 --FILE--
 <?php
 require __DIR__ . '/setup.inc';
-$posts = (new Posts(APPPATH . 'modules/blog/views/posts'))->all();
+$posts = (new Posts(require APPPATH . 'modules/blog/posts.php', APPPATH . 'modules/blog/views/posts'))->all();
 foreach ($posts as $post) {
     Prose_view::html($post['file']);
 }

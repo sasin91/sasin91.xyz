@@ -118,6 +118,7 @@ class Search extends Trongate {
      */
     private function content_hash(): string {
         $files = array_merge(glob(APPPATH . 'modules/blog/views/posts/*.php'), glob(APPPATH . 'modules/knowledge/views/nodes/*.php'));
+        $files[] = APPPATH . 'modules/blog/posts.php';
         $files[] = APPPATH . 'modules/knowledge/article.toml';
         sort($files);
 

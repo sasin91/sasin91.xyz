@@ -3,17 +3,16 @@ posts are newest first, ties break on path, nested paths survive, and a series r
 --FILE--
 <?php
 require __DIR__ . '/setup.inc';
-$dir = fixture_dir('posts');
-write_post($dir, 'later', 'blog/later', '2026-08-09');
-write_post($dir, 'three', 'blog/three', '2026-08-04', "series = \"s\"\npart = 3\n");
-write_post($dir, 'one', 'blog/one', '2026-08-01', "series = \"s\"\npart = 1\n");
-write_post($dir, 'two', 'blog/two', '2026-08-02', "series = \"s\"\npart = 2\n");
-write_post($dir, 'b-post', 'blog/b-post', '2026-07-26');
-write_post($dir, 'a-post', 'blog/a-post', '2026-07-26');
-write_post($dir, 'nested', 'blog/trongate/mx-transition', '2025-03-03');
-file_put_contents("$dir/ignored.txt", 'not a post');
+$posts = posts_in(fixture_dir('posts'), [
+    'later' => post_details('blog/later', '2026-08-09'),
+    'three' => post_details('blog/three', '2026-08-04', ['series' => 's', 'part' => 3]),
+    'one' => post_details('blog/one', '2026-08-01', ['series' => 's', 'part' => 1]),
+    'two' => post_details('blog/two', '2026-08-02', ['series' => 's', 'part' => 2]),
+    'b-post' => post_details('blog/b-post', '2026-07-26'),
+    'a-post' => post_details('blog/a-post', '2026-07-26'),
+    'nested' => post_details('blog/trongate/mx-transition', '2025-03-03'),
+])->all();
 
-$posts = (new Posts($dir))->all();
 foreach ($posts as $post) {
     echo $post['url'], ' ', $post['date_long'], ' ', $post['date_rfc2822'], "\n";
 }

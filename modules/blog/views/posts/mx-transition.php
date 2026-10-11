@@ -1,9 +1,3 @@
-+++
-path = "blog/trongate/mx-transition"
-title = "Trongate mx-transition attribute"
-date = 2025-03-03
-description = "MX transition provides an easy and intuitive way to add animations to items and the whole page."
-+++
 <p><img src="/images/trongate/trongate_logo_trans_bg.png" alt="Trongate: The framework they don’t want you to know about" /></p>
 <video controls loop muted playsinline width="100%">
   <source src="/videos/blog/trongate/view_transitions.webm" type="video/webm">

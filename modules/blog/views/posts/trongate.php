@@ -1,9 +1,3 @@
-+++
-path = "blog/trongate"
-title = "Trongate PHP"
-date = 2024-09-14
-description = "Trongate is often misunderstood and gets a bad reputation because it breaks with common standards and takes a journey back to its roots. In this article, I will explore and highlight this rough diamond that deserves a spot in the limelight."
-+++
 <p><img src="/images/trongate/trongate_logo_trans_bg.png" alt="Trongate: The framework they don’t want you to know about" /></p>
 <p>An exciting PHP framework that challenges the established standards and offers a simple yet effective approach to development.</p>
 <p>I have worked with PHP since 2014, and one recurring thing is <em>unnecessary</em> code

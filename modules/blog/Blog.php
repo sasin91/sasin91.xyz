@@ -1,6 +1,6 @@
 <?php
 /**
- * /blog/ and every post under it. A post's URL is the `path` in its header,
+ * /blog/ and every post under it. A post's URL is the `path` in its details,
  * so nested URLs like /blog/trongate/mx-transition/ survive.
  *
  * config/custom_routing.php sends /blog/<anything> to blog/show; the AI

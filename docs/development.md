@@ -35,10 +35,23 @@ php -S 127.0.0.1:8000 -t public bin/dev-router.php
 Or point Herd (or any web server) at `public/`; `public/.htaccess` sends every
 request that is not a file to `index.php`.
 
-A post is one view under `modules/blog/views/posts/`, starting with a `+++` TOML
-header. The
-`path` key is the URL, and is deliberately not derived from the filename, which
-is what keeps `/blog/trongate/mx-transition` nested rather than flattened.
+A post is one view under `modules/blog/views/posts/` holding its body, and one
+entry in the array in `modules/blog/posts.php` holding its details, under the
+view's name:
+
+```php
+'trongate' => [
+    'path' => 'blog/trongate',
+    'title' => 'Trongate PHP',
+    'date' => '2024-09-14',
+    'description' => 'Trongate is often misunderstood …',
+],
+```
+
+`path`, `title`, `date` and `description` are required; `hero`, `hero_alt`,
+`card`, `card_alt`, `series`, `part` and `ask` are optional. The `path` is the
+URL, and is deliberately not derived from the view's name, which is what keeps
+`/blog/trongate/mx-transition` nested rather than flattened.
 
 The body is plain HTML, with helpers in the style of Trongate's `form_open()` and
 `form_close()` for the parts that need more than a tag:

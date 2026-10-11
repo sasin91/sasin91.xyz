@@ -118,7 +118,8 @@ Every post opens with an Ask box too. The index holds each of a post's
 sections as a document, nested under the post so the palette still finds the
 post once, and the box ranks only those. The loader in `modules/layout/views/page.php` imports
 `/search/ask.js` (the same script /blog/ai/ask/ inlines) on pages with the
-box. A post may suggest questions in its frontmatter (`ask = ["...", ...]`).
+box. A post may suggest questions in its details in `modules/blog/posts.php`
+(`'ask' => ['...', ...]`).
 
 In the browser (`modules/search/js/retrieval.js`), only once the reader focuses the
 question field, the page fetches that index and the model, then for each

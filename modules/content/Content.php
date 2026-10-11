@@ -22,10 +22,10 @@ class Content extends Trongate {
     }
 
     /**
-     * Every post's header, newest first, without rendering a body.
+     * Every post's details, newest first, without rendering a body.
      */
     public function posts(): array {
-        $posts = new Posts(APPPATH . 'modules/blog/views/posts');
+        $posts = new Posts(require APPPATH . 'modules/blog/posts.php', APPPATH . 'modules/blog/views/posts');
         return $posts->all();
     }
 

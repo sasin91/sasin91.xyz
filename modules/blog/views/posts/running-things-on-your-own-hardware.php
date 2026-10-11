@@ -1,11 +1,3 @@
-+++
-path = "blog/running-things-on-your-own-hardware"
-title = "Where to start with self-hosting"
-date = 2026-08-04
-series = "self-hosting"
-part = 0
-description = "I set up Kubernetes to learn it, then packaged the second cluster so it would launch in an afternoon. What the kit costs, what it uses before your own code runs, and where k3s is genuinely stronger than the simple options."
-+++
 <p>I set up Kubernetes to learn it. The cluster itself took an afternoon, but
 everything after it took the rest of the week: delivery, secrets, certificates,
 isolation between tenants, observability, backups. I did not want to pay for

@@ -1,5 +1,5 @@
 --TEST--
-a post needs a +++ header that is closed
+a knowledge node needs a +++ header that is closed
 --FILE--
 <?php
 require __DIR__ . '/setup.inc';

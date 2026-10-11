@@ -1,11 +1,3 @@
-+++
-path = "blog/what-a-game-world-server-needs"
-title = "What a game world server actually needs"
-date = 2026-08-04
-series = "self-hosting"
-part = 2
-description = "Hosting a WoW emulator: the world daemon's tick runs on one thread, so clock speed buys you everything and core count buys you almost nothing. What that means for what you buy, why the gaming chip is the wrong pick, and the routing gotcha that catches everyone."
-+++
 <p>WoW emulation has always been interesting to me. Here is what actually matters
 if you want to host one, starting with the CPU, because that is where the usual
 advice goes wrong.</p>

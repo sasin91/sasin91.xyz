@@ -1,13 +1,3 @@
-+++
-path = "blog/k3s-platform-kit"
-title = "K3s starter kit on Hetzner cloud"
-date = 2026-08-04
-hero = "/images/k3s-platform-kit/architecture.svg"
-hero_alt = "Inside a k3s cluster: a git fork reconciled by Flux, a visitor request arriving through Traefik to a tenant application, and telemetry from both flowing to a collector and on to VictoriaMetrics, VictoriaLogs and Tempo"
-description = "A fork-and-edit k3s platform for Hetzner Cloud: GitOps delivery, encrypted secrets, certificates, per-tenant isolation and observability. What is in it, what it costs to run, and the one thing it does that three FreeBSD boxes or Docker Swarm cannot."
-series = "self-hosting"
-part = 1
-+++
 <p>Creating a Kubernetes cluster is a solved problem. What comes after it is not:
 delivery, secrets, certificates, isolation between tenants, observability,
 backups. That is where the week goes.</p>

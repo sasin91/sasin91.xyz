@@ -1,5 +1,5 @@
 --TEST--
-a post is a plain view built with the prose helpers: sections, callouts and code, ids in page order, its header cut off
+a post is a plain view built with the prose helpers: sections, callouts and code, ids in page order
 --FILE--
 <?php
 require __DIR__ . '/setup.inc';
