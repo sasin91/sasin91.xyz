@@ -3,7 +3,7 @@
 `potion-base-4M/` is the model behind the AI article's Ask view. The server uses
 it to embed every passage of the article (`modules/search/Static_model.php`), and
 the reader's browser downloads the same files to embed their question
-(`modules/search/js/retrieval.mjs`). Nothing is fetched from a model registry at
+(`modules/search/js/retrieval.js`). Nothing is fetched from a model registry at
 any time; the files are committed so the site is reproducible and works offline.
 
 ## What it is
@@ -49,7 +49,7 @@ To regenerate, download `model.safetensors` and `vocab.txt` from that revision
 into a directory, then:
 
 ```sh
-node tools/quantize-model.mjs <download-dir> models/potion-base-4M
+php bin/quantize-model.php <download-dir> models/potion-base-4M
 ```
 
 ## Why this model
@@ -66,11 +66,11 @@ The larger model did not help on a corpus this size, at twice the download.
 
 The trade-off being accepted: a static model has no context. "bank" gets
 one vector whether it is a river or an account, and word order is ignored.
-The lexical half of the ranking (`modules/search/js/retrieval.mjs`) makes up for that on
+The lexical half of the ranking (`modules/search/js/retrieval.js`) makes up for that on
 this site's technical vocabulary.
 
 Changing to another *static* model means converting it with
-`tools/quantize-model.mjs` and changing `MODEL_DIR` and `MODEL_NAME` in
+`bin/quantize-model.php` and changing `MODEL_DIR` and `MODEL_NAME` in
 `modules/search/Search.php`; the index is rebuilt with it automatically.
 
 ## When to switch to a transformer model
@@ -94,8 +94,8 @@ What changes, and what does not:
 
 | Changes | Stays |
 | --- | --- |
-| The in-browser query embedding: `StaticModel` in `modules/search/js/retrieval.mjs` is replaced by a Transformers.js pipeline, lazy-loaded the same way | The hybrid ranking (`rank`, `lexicalMatch`, the weights) |
-| The server-side passage embedding in `modules/search/Static_model.php`, which must use the identical model: an ONNX runtime for PHP, or a small Node step that writes the index | The palette, the Ask page and their loading and fallback behaviour |
+| The in-browser query embedding: `StaticModel` in `modules/search/js/retrieval.js` is replaced by a Transformers.js pipeline, lazy-loaded the same way | The hybrid ranking (`rank`, `lexicalMatch`, the weights) |
+| The server-side passage embedding in `modules/search/Static_model.php`, which must use the identical model: an ONNX runtime for PHP | The palette, the Ask page and their loading and fallback behaviour |
 | The index's vectors, and `model` in the index header (dimension 384 instead of 128) | The index format: documents, passages, snippets, anchors |
 | `models/`, and the tokenizer fixture tests | The knowledge node and post content, and everything that validates it |
 

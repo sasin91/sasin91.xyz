@@ -5,7 +5,7 @@
  * the mean of its known tokens' rows, normalised to unit length.
  *
  * This is the same tokenizer and arithmetic as StaticModel in
- * modules/search/js/retrieval.mjs, which embeds the reader's question in the
+ * modules/search/js/retrieval.js, which embeds the reader's question in the
  * browser. The two must agree, or a question would be compared against
  * passages embedded some other way; models/potion-base-4M/wordpiece-fixture.json
  * is checked by both test suites for that reason.

@@ -85,15 +85,16 @@ changes again (`modules/search/Search.php`).
 
 ```sh
 php bin/run-tests.php modules/content/tests modules/search/tests
-php bin/search-index.php > build/search-index.json && node --test modules/search/js/retrieval.test.mjs
 ```
 
-The PHP tests are `.phpt` files next to the code they test. The JavaScript
-tests use Node's built-in test runner (Node 22 or later); there is no
-`package.json` and nothing to install. Their last group asks real questions of
-the index the site serves, which is why it is written to `build/` first.
+The PHP tests are `.phpt` files next to the code they test. The search code
+runs in the reader's browser, so its tests run in one: open `/search/tests/` on
+a dev server and the page runs them, listing each and ending its title in PASS
+or FAIL. Their last group asks real questions of the index the site serves.
+There is no Node.js and nothing to install.
 
-CI (`.github/workflows/pipeline.yml`) runs both, then serves the site and
+CI (`.github/workflows/pipeline.yml`) runs both, the browser tests in headless
+Chrome, then serves the site and
 checks that every page answers without a PHP warning and carries no script it
 should not.
 

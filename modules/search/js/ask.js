@@ -1,5 +1,5 @@
 // Drives the Ask form: on /blog/ai/ask/, and the box at the top of every post
-// (where it arrives as /search/ask.js, imported by the loader in modules/layout/views/page.php). Inlined directly after retrieval.mjs into the
+// (where it arrives as /search/ask.js, imported by the loader in modules/layout/views/page.php). Inlined directly after retrieval.js into the
 // same module script (see Search::_ask_script in modules/search/Search.php), so
 // prepareIndex, rank, fetchIndex and fetchModel are in scope here without an
 // import.

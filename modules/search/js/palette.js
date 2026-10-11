@@ -1,7 +1,7 @@
 // The site-wide search palette: Ctrl/⌘+K, Ctrl+Space or "/" on any page.
 //
 // Served as /search/palette.js by Search::palette_js (modules/search), directly
-// after retrieval.mjs in the same module and after first lines declaring
+// after retrieval.js in the same module and after first lines declaring
 // SEARCH_INDEX_URL and AI_ARTICLE_URL (from content/ai/article.toml), so prepareIndex, rank, resultUrl, fetchIndex and
 // fetchModel are in scope here without an import. The page shell imports it on
 // first use and calls open().

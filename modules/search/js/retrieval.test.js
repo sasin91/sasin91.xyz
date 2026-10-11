@@ -1,43 +1,57 @@
-// Tests for retrieval.mjs. Run with: node --test modules/search/js/retrieval.test.mjs
+// Tests for retrieval.js, run in a browser: /search/tests on a dev server.
 //
-// No test framework beyond Node's own. The last group runs real questions
-// against the index the site serves, written by
-// `php bin/search-index.php > build/search-index.json`; CI does that (see
-// .github/workflows/pipeline.yml), and locally those tests are skipped with a
-// note if build/search-index.json is missing.
+// Served after retrieval.js in one module script, like ask.js and
+// palette.js, so StaticModel, rank and the rest are in scope without an
+// import. The page lists each test and ends its title with PASS or FAIL;
+// CI loads it in headless Chrome and reads the title (see
+// .github/workflows/pipeline.yml).
+//
+// The last group asks real questions of the index this site serves.
 
-import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
-import { test } from "node:test";
+const tests = [];
 
-import {
-  StaticModel,
-  WEIGHTS,
-  contentWords,
-  cosine,
-  prepareIndex,
-  rank,
-  resultUrl,
-  words,
-} from "./retrieval.mjs";
-
-const MODEL_DIR = new URL("../../../models/potion-base-4M/", import.meta.url);
-
-function loadModel() {
-  const bytes = readFileSync(new URL("embeddings.q8.bin", MODEL_DIR));
-  const buffer = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
-  return new StaticModel(readFileSync(new URL("vocab.txt", MODEL_DIR), "utf8"), buffer);
+function test(name, fn) {
+  tests.push({ name, fn });
 }
 
-const model = loadModel();
+const assert = {
+  ok(value, message = "expected a truthy value") {
+    if (!value) throw new Error(message);
+  },
+  equal(actual, expected, message = "") {
+    if (!Object.is(actual, expected)) {
+      throw new Error(`${message ? message + ": " : ""}expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+    }
+  },
+  deepEqual(actual, expected, message = "") {
+    const a = JSON.stringify(actual);
+    const e = JSON.stringify(expected);
+    if (a !== e) throw new Error(`${message ? message + ": " : ""}expected ${e}, got ${a}`);
+  },
+  throws(fn) {
+    try {
+      fn();
+    } catch {
+      return;
+    }
+    throw new Error("expected an error");
+  },
+  match(actual, pattern) {
+    if (!pattern.test(actual)) throw new Error(`${JSON.stringify(actual)} does not match ${pattern}`);
+  },
+};
+
+const page = document.querySelector("[data-retrieval-tests]");
+const fixture = JSON.parse(document.getElementById("wordpiece-fixture").textContent);
+const site = await fetchIndex(page.dataset.index);
+const model = await fetchModel(site.model);
 
 // ---------- tokenizer and model ----------
 
 test("tokenizes exactly like the reference Hugging Face tokenizer", () => {
   // Same fixture as modules/search/tests, so the browser and the server agree.
-  const cases = JSON.parse(readFileSync(new URL("wordpiece-fixture.json", MODEL_DIR), "utf8"));
-  assert.ok(cases.length >= 10);
-  for (const { text, tokens } of cases) {
+  assert.ok(fixture.length >= 10);
+  for (const { text, tokens } of fixture) {
     assert.deepEqual(model.tokenize(text), tokens, `for ${JSON.stringify(text)}`);
   }
 });
@@ -180,14 +194,8 @@ test("a result links to the section its best passage is in", () => {
 
 // ---------- the real site ----------
 
-const indexFile = new URL("../../../build/search-index.json", import.meta.url);
-const skip = existsSync(indexFile)
-  ? false
-  : "build/search-index.json missing; run `php bin/search-index.php > build/search-index.json` first";
-
 function realIndex(kind = null) {
-  const index = JSON.parse(readFileSync(indexFile, "utf8"));
-  return prepareIndex(kind ? { ...index, nodes: index.nodes.filter((n) => n.kind === kind) } : index);
+  return prepareIndex(kind ? { ...site, nodes: site.nodes.filter((n) => n.kind === kind) } : site);
 }
 
 /** As /blog/ai/ask/ asks: the article's nodes only. */
@@ -197,9 +205,8 @@ function ask(question) {
 
 /** As the Ask box at the top of a post asks: that post's sections only. */
 function askPost(path, question) {
-  const index = JSON.parse(readFileSync(indexFile, "utf8"));
-  const post = index.nodes.find((n) => n.kind === "post" && n.id === path);
-  const prepared = prepareIndex({ ...index, nodes: post.sections });
+  const post = site.nodes.find((n) => n.kind === "post" && n.id === path);
+  const prepared = prepareIndex({ ...site, nodes: post.sections });
   return rank(prepared, question, model.encode(question).vector).map(resultUrl);
 }
 
@@ -208,7 +215,7 @@ function searchSite(question) {
   return rank(realIndex(), question, model.encode(question).vector);
 }
 
-test("the palette finds posts as well as article sections", { skip }, () => {
+test("the palette finds posts as well as article sections", () => {
   const top = (q) => searchSite(q)[0];
   assert.equal(top("FreeBSD on Hetzner Cloud").node.id, "blog/freebsd-on-hetzner");
   assert.equal(top("k3s platform kit").node.id, "blog/k3s-platform-kit");
@@ -219,7 +226,7 @@ test("the palette finds posts as well as article sections", { skip }, () => {
   assert.equal(top("MCP").node.id, "mcp");
 });
 
-test("palette results deep-link into the section that matched", { skip }, () => {
+test("palette results deep-link into the section that matched", () => {
   const linked = searchSite("what does the k3s cluster cost to run per month")
     .filter((r) => r.node.kind === "post")
     .map(resultUrl);
@@ -232,7 +239,7 @@ test("palette results deep-link into the section that matched", { skip }, () => 
   );
 });
 
-test("exact technical terms find their node first", { skip }, () => {
+test("exact technical terms find their node first", () => {
   for (const [question, id] of [
     ["KV cache", "kv-cache"],
     ["What is stored in the KV cache?", "kv-cache"],
@@ -247,7 +254,7 @@ test("exact technical terms find their node first", { skip }, () => {
   }
 });
 
-test("natural questions find the sections that answer them", { skip }, () => {
+test("natural questions find the sections that answer them", () => {
   const top3 = ask("Why doesn't a larger context window replace RAG?").slice(0, 3);
   for (const id of ["context-window", "rag", "retrieval-vs-attention"]) {
     assert.ok(top3.includes(id), `${id} in ${top3}`);
@@ -257,7 +264,7 @@ test("natural questions find the sections that answer them", { skip }, () => {
   assert.equal(ask("does the model remember previous chats")[0], "external-memory");
 });
 
-test("a post's Ask box answers from that post's sections", { skip }, () => {
+test("a post's Ask box answers from that post's sections", () => {
   const benchmarks = "/blog/trongate/benchmarks/";
   for (const [question, anchor] of [
     ["How do I deploy my app?", "You-push-we-deploy"],
@@ -283,9 +290,25 @@ test("a post's Ask box answers from that post's sections", { skip }, () => {
   }
 });
 
-test("every post's sections are in the index", { skip }, () => {
-  const index = JSON.parse(readFileSync(indexFile, "utf8"));
-  for (const post of index.nodes.filter((n) => n.kind === "post")) {
+test("every post's sections are in the index", () => {
+  for (const post of site.nodes.filter((n) => n.kind === "post")) {
     assert.ok(post.sections?.length, post.id);
   }
 });
+
+// ---------- run ----------
+
+const list = document.getElementById("results");
+let failed = 0;
+for (const { name, fn } of tests) {
+  const line = document.createElement("li");
+  try {
+    await fn();
+    line.textContent = `ok ${name}`;
+  } catch (error) {
+    failed++;
+    line.textContent = `FAIL ${name}: ${error.message}`;
+  }
+  list.append(line);
+}
+document.title = failed === 0 ? `PASS ${tests.length}` : `FAIL ${failed} of ${tests.length}`;

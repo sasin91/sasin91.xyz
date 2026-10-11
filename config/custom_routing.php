@@ -23,5 +23,6 @@ $routes = [
     'search/ask\.js' => 'search/ask_js',
     'search/model\.bin' => 'search/model_bin',
     'search/vocab\.txt' => 'search/vocab_txt',
+    'search/tests/?' => 'search/tests',
 ];
 define('CUSTOM_ROUTES', $routes);
