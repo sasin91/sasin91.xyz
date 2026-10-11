@@ -3,19 +3,19 @@
     <p class="lede"><?= out($article['description']) ?></p>
     <div class="meta">
       <time datetime="<?= $article['published_iso'] ?>"><?= $article['published_long'] ?></time>
-<?php if ($article['was_updated']) { ?>
+<?php if ($article['was_updated']): ?>
         · updated <time datetime="<?= $article['updated_iso'] ?>"><?= $article['updated_long'] ?></time>
-<?php } ?>
+<?php endif; ?>
       · <?= $node_count ?> sections
     </div>
 
 <?= $this->view('views_nav', ['view_module' => 'knowledge', 'views' => $views], true) ?>
 
-<?php foreach ($article['parts'] as $part) { ?>
+<?php foreach ($article['parts'] as $part): ?>
       <section class="knowledge-part">
         <h2 id="<?= $part['id'] ?>"><?= out($part['title']) ?></h2>
 
-<?php foreach ($part['nodes'] as $node) { ?>
+<?php foreach ($part['nodes'] as $node): ?>
           <?php /* The id is on the whole section, so a deep link scrolls to
              the heading and :target can mark the node being linked to. */ ?>
           <section class="node" id="<?= $node['id'] ?>">
@@ -29,33 +29,33 @@
 
             <?= $node['body'] ?>
 
-<?php if ($node['has_misconceptions']) { ?>
+<?php if ($node['has_misconceptions']): ?>
               <div class="node-misreadings">
                 <p>Often misread as:</p>
                 <ul>
-<?php foreach ($node['misconceptions'] as $belief) { ?>
+<?php foreach ($node['misconceptions'] as $belief): ?>
                     <li>“<?= out($belief) ?>”</li>
-<?php } ?>
+<?php endforeach; ?>
                 </ul>
               </div>
-<?php } ?>
+<?php endif; ?>
 
-<?php if ($node['has_links']) { ?>
+<?php if ($node['has_links']): ?>
               <p class="node-links">
-<?php if ($node['has_builds_on']) { ?>
+<?php if ($node['has_builds_on']): ?>
                   <span>Builds on
-                    <?php foreach ($node['builds_on'] as $link) { ?><a href="#<?= $link['id'] ?>"><?= out($link['title']) ?></a><?= $link['separator'] ?><?php } ?></span>
-<?php } ?>
-<?php if ($node['has_see_also']) { ?>
+                    <?php foreach ($node['builds_on'] as $link): ?><a href="#<?= $link['id'] ?>"><?= out($link['title']) ?></a><?= $link['separator'] ?><?php endforeach; ?></span>
+<?php endif; ?>
+<?php if ($node['has_see_also']): ?>
                   <span>See also
-                    <?php foreach ($node['see_also'] as $link) { ?><a href="#<?= $link['id'] ?>"><?= out($link['title']) ?></a><?= $link['separator'] ?><?php } ?></span>
-<?php } ?>
+                    <?php foreach ($node['see_also'] as $link): ?><a href="#<?= $link['id'] ?>"><?= out($link['title']) ?></a><?= $link['separator'] ?><?php endforeach; ?></span>
+<?php endif; ?>
               </p>
-<?php } ?>
+<?php endif; ?>
           </section>
-<?php } ?>
+<?php endforeach; ?>
       </section>
-<?php } ?>
+<?php endforeach; ?>
 
     <p class="knowledge-coda">
       Looking for one idea in particular? <a href="<?= $article['url'] ?>ask/">Ask this

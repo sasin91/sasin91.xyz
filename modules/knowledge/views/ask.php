@@ -40,9 +40,9 @@
   <div class="ask-examples" hidden>
     <p>Or try:</p>
     <ul>
-<?php foreach ($examples as $example) { ?>
+<?php foreach ($examples as $example): ?>
       <li><button type="button"><?= out($example) ?></button></li>
-<?php } ?>
+<?php endforeach; ?>
     </ul>
   </div>
 

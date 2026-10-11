@@ -8,7 +8,7 @@
     <language>en</language>
     <lastBuildDate><?= $last_build_date ?></lastBuildDate>
     <atom:link href="<?= $base ?>/rss.xml" rel="self" type="application/rss+xml" />
-<?php foreach ($posts as $post) { ?>
+<?php foreach ($posts as $post): ?>
     <item>
       <title><?= out($post['title'], 'xml') ?></title>
       <link><?= $base . out($post['url'], 'xml') ?></link>
@@ -16,6 +16,6 @@
       <pubDate><?= $post['date_rfc2822'] ?></pubDate>
       <description><?= out($post['description'], 'xml') ?></description>
     </item>
-<?php } ?>
+<?php endforeach; ?>
   </channel>
 </rss>

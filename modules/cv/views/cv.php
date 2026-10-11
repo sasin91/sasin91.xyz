@@ -15,63 +15,63 @@
       </p>
     </header>
 
-<?php foreach ($cv['intro'] as $paragraph) { ?>
+<?php foreach ($cv['intro'] as $paragraph): ?>
       <p><?= out($paragraph) ?></p>
-<?php } ?>
+<?php endforeach; ?>
 
     <h2>Experience</h2>
-<?php foreach ($cv['roles'] as $role) { ?>
+<?php foreach ($cv['roles'] as $role): ?>
       <article class="cv-role">
         <h3><?= out($role['title']) ?> · <?= out($role['company']) ?></h3>
         <p class="meta">
           <time datetime="<?= $role['start'] ?>"><?= $role['start_label'] ?></time>
-<?php if ($role['end'] !== null) { ?>
+<?php if ($role['end'] !== null): ?>
             – <time datetime="<?= $role['end'] ?>"><?= $role['end_label'] ?></time>
-<?php } else { ?>
+<?php else: ?>
             – present
-<?php } ?>
+<?php endif; ?>
           — <?= out($role['location']) ?>
         </p>
         <p><?= out($role['summary']) ?></p>
-<?php if ($role['achievements'] !== []) { ?>
+<?php if ($role['achievements'] !== []): ?>
           <ul>
-<?php foreach ($role['achievements_html'] as $achievement) { ?>
+<?php foreach ($role['achievements_html'] as $achievement): ?>
               <li><?= $achievement ?></li>
-<?php } ?>
+<?php endforeach; ?>
           </ul>
-<?php } ?>
-<?php if ($role['note'] !== null) { ?>
+<?php endif; ?>
+<?php if ($role['note'] !== null): ?>
           <p class="cv-note"><?= out($role['note']) ?></p>
-<?php } ?>
+<?php endif; ?>
       </article>
-<?php } ?>
+<?php endforeach; ?>
 
     <h2>Skills</h2>
     <ul class="cv-skills">
-<?php foreach ($cv['skills'] as $skill) { ?>
+<?php foreach ($cv['skills'] as $skill): ?>
         <li><?= out($skill['name']) ?></li>
-<?php } ?>
+<?php endforeach; ?>
     </ul>
 
     <h2>Education</h2>
-<?php if ($cv['education_note'] !== null) { ?>
+<?php if ($cv['education_note'] !== null): ?>
       <p class="lede"><?= out($cv['education_note']) ?></p>
-<?php } ?>
-<?php foreach ($cv['education'] as $education) { ?>
+<?php endif; ?>
+<?php foreach ($cv['education'] as $education): ?>
       <article class="cv-role">
         <h3><?= out($education['title']) ?> · <?= out($education['school']) ?></h3>
         <p class="meta">
           <time datetime="<?= $education['start'] ?>"><?= $education['start_label'] ?></time>
-<?php if ($education['end'] !== null) { ?>
+<?php if ($education['end'] !== null): ?>
             – <time datetime="<?= $education['end'] ?>"><?= $education['end_label'] ?></time>
-<?php } else { ?>
+<?php else: ?>
             – present
-<?php } ?>
+<?php endif; ?>
           — <?= out($education['location']) ?>
         </p>
-<?php if ($education['note'] !== null) { ?>
+<?php if ($education['note'] !== null): ?>
           <p><?= out($education['note']) ?></p>
-<?php } ?>
+<?php endif; ?>
       </article>
-<?php } ?>
+<?php endforeach; ?>
   </article>

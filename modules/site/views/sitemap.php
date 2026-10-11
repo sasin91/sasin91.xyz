@@ -13,10 +13,10 @@
     <loc><?= $base . $article['url'] ?>timeline/</loc>
     <lastmod><?= $article['updated_iso'] ?></lastmod>
   </url>
-<?php foreach ($posts as $post) { ?>
+<?php foreach ($posts as $post): ?>
   <url>
     <loc><?= $base . out($post['url'], 'xml') ?></loc>
     <lastmod><?= $post['date_iso'] ?></lastmod>
   </url>
-<?php } ?>
+<?php endforeach; ?>
 </urlset>
