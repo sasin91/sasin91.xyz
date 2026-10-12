@@ -63,7 +63,7 @@ class Search extends Trongate {
      */
     public function tests(): void {
         if (strtolower(ENV) !== 'dev') {
-            $this->site->not_found();
+            $this->templates->error_404();
             return;
         }
 

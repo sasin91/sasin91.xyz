@@ -1,21 +1,25 @@
 <?php
 /**
- * Default homepage class serving as the entry point for public website access.
- * Renders the initial landing page as configured in the framework settings.
+ * The home page: who this is, and the latest writing.
  */
 class Welcome extends Trongate {
 
-    /**
-     * Renders the (default) homepage for public access.
-     *
-     * @return void
-     */
     public function index(): void {
+        $cv = $this->content->cv();
+
         $data = [
             'view_module' => 'welcome',
-            'view_file' => 'default_homepage'
+            'view_file' => 'default_homepage',
+            'cv' => $cv,
+            'posts' => $this->content->posts(),
+            'nav' => '',
+            'meta' => [
+                'title' => $cv['site']['name'] . ' — ' . $cv['site']['title'],
+                'description' => $cv['site']['stack_line'],
+                'path' => '/',
+                'og_type' => 'website',
+            ],
         ];
-
         $this->templates->public($data);
     }
 

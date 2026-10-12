@@ -33,15 +33,33 @@ class Templates extends Trongate {
     }
 
     /**
-     * Display public theme template with provided data.
-     * Loads the public template with optional theme variation support.
+     * The page shell every HTML page on the site shares: head, site header,
+     * footer and the theme and search scripts, with the page's own view
+     * (view_module, view_file) in <main>.
+     *
+     * Expects in $data: view_module and view_file, cv, nav ('', 'blog',
+     * 'about' or 'cv'), and meta: title, description, path (the page's own
+     * path, for canonical and og:url), og_type, and optionally image and
+     * image_alt. syntax and lightbox say whether the page needs syntax.css
+     * and the diagram lightbox.
      *
      * @param array $data The data to pass to the template view
      * @return void
      */
     public function public(array $data): void {
-        $data['additional_includes_top'] = $this->build_additional_includes($data['additional_includes_top'] ?? []);
-        $data['additional_includes_btm'] = $this->build_additional_includes($data['additional_includes_btm'] ?? []);
+        $data['meta']['url'] = SITE_URL . $data['meta']['path'];
+        $data['meta']['image'] = $data['meta']['image'] ?? null;
+        $data['meta']['image_alt'] = $data['meta']['image_alt'] ?? null;
+        $data['syntax'] = $data['syntax'] ?? false;
+        $data['lightbox'] = $data['lightbox'] ?? false;
+        $data['site_css_url'] = $this->asset_url('css/site.css');
+        $data['syntax_css_url'] = $this->asset_url('css/syntax.css');
+        $data['year'] = date('Y');
+        $data['nav_current'] = [
+            'blog' => $data['nav'] === 'blog',
+            'about' => $data['nav'] === 'about',
+            'cv' => $data['nav'] === 'cv',
+        ];
         $this->display('public', $data);
     }
 
@@ -59,19 +77,28 @@ class Templates extends Trongate {
     }
 
     /**
-     * Display 404 error page.
-     *
-     * If BASE_URL is still the '****' placeholder, shows the URL
-     * configuration form instead of a generic 404.
+     * The 404 page: any URL nothing else answers (ERROR_404 in
+     * config/config.php), and any page whose module finds nothing at its URL.
      *
      * @return void
      */
     public function error_404(): void {
-        if ((BASE_URL === '****') && (strtolower(ENV) === 'dev')) {
-            $this->show_url_setup();
-            return;
-        }
-        $this->display('error_404');
+        http_response_code(404);
+        $cv = $this->content->cv();
+
+        $data = [
+            'view_module' => 'templates',
+            'view_file' => 'error_404',
+            'cv' => $cv,
+            'nav' => '',
+            'meta' => [
+                'title' => 'Not found — ' . $cv['site']['name'],
+                'description' => 'There is no page at this address.',
+                'path' => '/',
+                'og_type' => 'website',
+            ],
+        ];
+        $this->public($data);
     }
 
     /**
@@ -166,6 +193,16 @@ class Templates extends Trongate {
      * @return void
      * @throws Exception If template file is not found
      */
+    /**
+     * A file under public/ with a hash of its bytes in the query string, so a
+     * browser can cache it for as long as it likes and still never keeps an
+     * old copy after the file changes.
+     */
+    private function asset_url(string $file): string {
+        $hash = substr(md5_file(APPPATH . 'public/' . $file), 0, 16);
+        return '/' . $file . '?v=' . $hash;
+    }
+
     private function display(string $template_name, array $data = []): void {
         $template_path = __DIR__ . "/views/{$template_name}.php";
         

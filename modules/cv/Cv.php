@@ -1,6 +1,7 @@
 <?php
 /**
- * /cv/ and the same CV as a PDF, both from cv.php in this module.
+ * The person: /cv/, the same CV as a PDF, and /about/, all from cv.php in
+ * this module.
  */
 class Cv extends Trongate {
 
@@ -23,7 +24,7 @@ class Cv extends Trongate {
                 'og_type' => 'website',
             ],
         ];
-        $this->layout->page($data);
+        $this->templates->public($data);
     }
 
     /**
@@ -55,6 +56,24 @@ class Cv extends Trongate {
         header('Content-Disposition: inline; filename="' . self::PDF_NAME . '"');
         header('Content-Length: ' . strlen($pdf));
         echo $pdf;
+    }
+
+    public function about(): void {
+        $cv = $this->content->cv();
+
+        $data = [
+            'view_module' => 'cv',
+            'view_file' => 'about',
+            'cv' => $cv,
+            'nav' => 'about',
+            'meta' => [
+                'title' => 'About — ' . $cv['site']['name'],
+                'description' => $cv['site']['title'] . ' in ' . $cv['contact']['town'] . '. ' . $cv['site']['available_note'] . '.',
+                'path' => '/about/',
+                'og_type' => 'website',
+            ],
+        ];
+        $this->templates->public($data);
     }
 
 }

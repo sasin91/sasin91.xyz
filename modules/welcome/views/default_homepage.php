@@ -1,15 +1,35 @@
-<h1 class="mt-2">Enjoy Trongate!</h1>
-<h2>The Native PHP Framework</h2>
-<p class="mt-2">You have successfully installed Trongate. You're now ready to start building fast, efficient web applications.</p>
+  <section class="intro">
+    <h1><?= out($cv['site']['name']) ?></h1>
+    <p class="lede"><?= out($cv['site']['title']) ?></p>
+    <?php /* The newline after each span is the only break opportunity in the
+       line; .sep-list glues each generated "·" to the word before it. */ ?>
+    <p class="stack sep-list">
+      <?php foreach ($cv['site']['stack'] as $item): ?><span><?= out($item) ?></span>
+      <?php endforeach; ?>
+    </p>
+<?php if ($cv['site']['available']): ?>
+      <p class="available">
+        <?= out($cv['site']['available_note']) ?> —
+        <a href="<?= out($cv['site']['links']['email']) ?>">get in touch</a>
+      </p>
+<?php endif; ?>
 
-<div class="mt-3">
-    <?php
-    if (strtolower(ENV) === 'dev') {
-        echo anchor('trongate_administrators/manage', 'Admin Panel', ['class' => 'button']);
-    } else {
-        echo anchor('https://trongate.io', 'Visit Trongate.io', ['class' => 'button', 'target' => '_blank']);
-    }
+    <div class="social">
+      <a href="<?= out($cv['site']['links']['github']) ?>">GitHub</a>
+      <a href="<?= out($cv['site']['links']['linkedin']) ?>">LinkedIn</a>
+      <a href="<?= out($cv['site']['links']['email']) ?>">Email</a>
+    </div>
+  </section>
 
-    echo anchor('https://trongate.io/docs', 'View Documentation', ['class' => 'button alt', 'target' => '_blank']);
-    ?>
-</div>
+  <h2>Writing</h2>
+  <ul class="post-list">
+<?php foreach ($posts as $post): ?>
+      <li>
+        <div class="meta">
+          <time datetime="<?= $post['date_iso'] ?>"><?= $post['date_long'] ?></time>
+        </div>
+        <h3><a href="<?= out($post['url']) ?>"><?= out($post['title']) ?></a></h3>
+        <p><?= out($post['description']) ?></p>
+      </li>
+<?php endforeach; ?>
+  </ul>
