@@ -45,6 +45,10 @@ return [
             ],
         ],
         [
+            'title' => 'Running a model yourself',
+            'nodes' => ['quantization', 'local-inference'],
+        ],
+        [
             'title' => 'Bringing in outside information',
             'nodes' => [
                 'rag',
@@ -57,7 +61,7 @@ return [
         ],
         [
             'title' => 'Learning, and what the words mean',
-            'nodes' => ['training', 'synthetic-data', 'self-improvement', 'agi'],
+            'nodes' => ['training', 'hallucination', 'synthetic-data', 'self-improvement', 'agi'],
         ],
     ],
     // Learning paths: named routes through the same nodes. Validated (every id
